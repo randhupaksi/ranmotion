@@ -3027,9 +3027,6 @@ progress::-moz-progress-bar {
   .header-actions {
     gap: 2px;
   }
-  .settings-trigger {
-    display: none;
-  }
   .hero {
     grid-template-columns: 20px 1fr 1.03fr;
     gap: 19px;
@@ -3865,7 +3862,7 @@ progress::-moz-progress-bar {
   }
   .demo-settings label {
     gap: 3px;
-    font-size: 6px;
+    font-size: 9px;
   }
   .home-facts > span {
     font-size: 6px;
@@ -3878,7 +3875,7 @@ progress::-moz-progress-bar {
     font-size: 16px;
   }
   .home-facts > div > span {
-    font-size: 6px;
+    font-size: 9px;
   }
   .section-intro h2 {
     font-size: 34px;

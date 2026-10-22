@@ -1,0 +1,475 @@
+/* Mobile layouts prioritize readable content and reachable controls. */
+@media (max-width: 800px) {
+  :root {
+    --header-height: 64px;
+  }
+  .header-inner {
+    min-height: var(--header-height);
+  }
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+  }
+  .hero-rail {
+    display: none;
+  }
+  .hero-copy h1 {
+    font-size: clamp(58px, 11vw, 84px);
+  }
+  .hero-copy,
+  .hero-lab {
+    min-width: 0;
+  }
+  .hero-lead {
+    max-width: 60ch;
+    font-size: 14px;
+  }
+  .hero-actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .hero-actions .button {
+    min-height: 44px;
+    font-size: 12px;
+  }
+  .hero-lab {
+    max-width: 620px;
+    width: 100%;
+    justify-self: center;
+  }
+  .dialog {
+    max-height: calc(100dvh - 32px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  .dialog-heading {
+    align-items: flex-start;
+  }
+  .dialog-heading h2 {
+    line-height: 1.3;
+  }
+  .dialog-heading .icon-button {
+    flex-shrink: 0;
+  }
+  .settings-select-content {
+    max-height: min(var(--radix-select-content-available-height), 50dvh);
+    overflow-y: auto;
+  }
+  .breadcrumbs {
+    flex-wrap: wrap;
+  }
+  .footer-nav > a,
+  .footer-resources > a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: 12px;
+  }
+  .footer-nav,
+  .footer-resources {
+    gap: 0;
+  }
+}
+
+@media (max-width: 620px) {
+  :root {
+    --header-height: 64px;
+  }
+  body {
+    padding-bottom: calc(72px + env(safe-area-inset-bottom));
+  }
+  .header-inner {
+    height: var(--header-height);
+    width: calc(100% - 24px);
+    gap: 8px;
+  }
+  .header-actions {
+    gap: 0;
+  }
+  .header-actions :is(.icon-button, .search-trigger, .locale-button) {
+    min-width: 44px;
+    min-height: 44px;
+    justify-content: center;
+  }
+  .locale-button {
+    gap: 3px;
+  }
+  .search-trigger {
+    padding-inline: 8px;
+  }
+  .mobile-nav > a {
+    min-height: 52px;
+    font-size: 10px;
+  }
+  .mobile-nav {
+    padding-top: 6px;
+    padding-bottom: calc(6px + env(safe-area-inset-bottom));
+  }
+  .hero-actions {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .hero-actions .button {
+    width: 100%;
+    padding: 13px 16px;
+    font-size: 13px;
+  }
+  .hero-footnote,
+  .hero-next-note,
+  .hero-index-strip {
+    font-size: 11px;
+  }
+  .hero-copy .eyebrow {
+    font-size: 10px;
+  }
+  .hero-lead,
+  .page-lead,
+  .lesson-header > .page-lead,
+  .playground-header p:not(.eyebrow) {
+    font-size: 14px;
+    line-height: 1.8;
+  }
+  .demo-settings {
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 14px;
+  }
+  .demo-settings label {
+    font-size: 12px;
+    min-height: 44px;
+    flex-wrap: wrap;
+  }
+  .demo-settings select {
+    min-height: 44px;
+    font-size: 13px;
+  }
+  .demo-controls {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .demo-controls .button,
+  .demo-controls .icon-button {
+    min-height: 44px;
+    min-width: 44px;
+    font-size: 12px;
+  }
+  .home-facts > div > span,
+  .home-module p,
+  .path-meta,
+  .module-title p,
+  .lesson-list small {
+    font-size: 11px;
+  }
+  .home-facts > div {
+    flex-wrap: wrap;
+  }
+  .home-module h3,
+  .module-title h2,
+  .lesson-list strong {
+    font-size: 14px;
+  }
+  .section-intro > div:last-child > p,
+  .section-intro > p,
+  .method-columns p,
+  .prerequisites p {
+    font-size: 14px;
+    line-height: 1.8;
+  }
+  .filter-tabs > button {
+    min-height: 44px;
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+  .inline-search,
+  .search-field {
+    min-height: 48px;
+  }
+  .inline-search input,
+  .search-field input,
+  select {
+    font-size: 16px;
+  }
+  .mobile-lesson-picker {
+    font-size: 12px;
+  }
+  .mobile-lesson-picker > select,
+  .playground-example-picker > select {
+    min-height: 48px;
+    font-size: 16px;
+  }
+  .lesson-list a {
+    padding-block: 12px;
+  }
+  .lesson-section-nav {
+    gap: 16px;
+    padding-block: 6px;
+  }
+  .lesson-section-nav > a {
+    min-height: 44px;
+    font-size: 12px;
+  }
+  .lesson-header .breadcrumbs,
+  .lesson-meta > .eyebrow {
+    font-size: 10px;
+  }
+  .lesson-objective p,
+  .lesson-recap li,
+  .lesson-section > p:not(.eyebrow, .mental-model),
+  .experiment-guide li > p {
+    font-size: 14px;
+    line-height: 1.85;
+  }
+  .lesson-pagination {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+  .lesson-pagination > div {
+    padding-block: 10px;
+    border-top: 1px solid var(--border);
+  }
+  .lesson-pagination strong {
+    font-size: 13px;
+  }
+  .lesson-pagination a > span {
+    font-size: 11px;
+  }
+  .practice-heading > .text-link,
+  .playground-example-picker .quiet-note,
+  .playground-bottom > p {
+    font-size: 12px;
+  }
+  .challenge-card {
+    grid-template-columns: minmax(0, 1fr);
+    padding-block: 22px;
+    gap: 12px;
+  }
+  .challenge-detail h2 {
+    font-size: 19px;
+  }
+  .challenge-detail > p {
+    font-size: 14px;
+    line-height: 1.75;
+  }
+  .challenge-card-meta > .eyebrow {
+    font-size: 10px;
+  }
+  .challenge-card-footer {
+    justify-items: start;
+    gap: 6px;
+  }
+  .challenge-card-footer code {
+    font-size: 12px;
+    overflow-wrap: anywhere;
+  }
+  .challenge-card-footer > span {
+    font-size: 11px;
+    text-align: left;
+  }
+  .progress-summary > div > span {
+    font-size: 11px;
+  }
+  .continue-panel p:not(.eyebrow),
+  .privacy-note,
+  .reference-list p {
+    font-size: 14px;
+    line-height: 1.8;
+  }
+  .progress-modules > a > strong,
+  .completed-links > a {
+    font-size: 13px;
+  }
+  .progress-modules > a > span:not(.module-number),
+  .reference-list > section > code {
+    font-size: 12px;
+  }
+  .completed-links > a {
+    min-height: 56px;
+  }
+  .footer-identity > p,
+  .footer-next__description,
+  .footer-note {
+    font-size: 12px;
+  }
+  .footer-next__action {
+    min-height: 44px;
+    font-size: 12px;
+  }
+  .footer-group-title {
+    font-size: 10px;
+  }
+  .setting-row {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .setting-row > div {
+    flex: 1 1 180px;
+  }
+  .setting-row strong,
+  .settings-progress strong {
+    font-size: 14px;
+  }
+  .setting-row p,
+  .settings-progress p,
+  .reset-section > p {
+    font-size: 13px;
+    line-height: 1.75;
+  }
+  .compact-select {
+    min-height: 44px;
+    font-size: 14px;
+  }
+  .switch {
+    min-width: 44px;
+    min-height: 30px;
+    padding: 6px;
+  }
+  .switch.on > span {
+    transform: translateX(15px);
+  }
+  .reset-section .text-button {
+    min-height: 44px;
+    text-align: left;
+  }
+  .dialog .button-row {
+    gap: 10px;
+  }
+  .dialog .button-row .button {
+    flex: 1 1 160px;
+  }
+  .dialog .quiet-note {
+    font-size: 12px;
+  }
+  .concept-study .concept-settings {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .concept-study .concept-settings label {
+    min-width: 0;
+    font-size: 14px;
+  }
+  .concept-study .concept-settings select {
+    width: 100%;
+    min-height: 44px;
+    font-size: 16px;
+  }
+  .concept-study .concept-playback {
+    gap: 12px;
+  }
+  .concept-study .concept-scrubber {
+    flex-basis: 100%;
+  }
+  .concept-study .concept-motion-note,
+  .concept-study .concept-observations,
+  .concept-choices label {
+    font-size: 13px;
+    line-height: 1.8;
+  }
+  .lesson-coach .coach-tabs {
+    flex-wrap: wrap;
+  }
+  .lesson-coach .coach-tabs button {
+    flex: 1 1 100px;
+    min-height: 48px;
+  }
+  .lesson-coach .coach-level {
+    display: none;
+  }
+  .lesson-coach .walkthrough-picks button {
+    min-height: 44px;
+    font-size: 12px;
+  }
+  .lesson-coach .walkthrough-note .icon-button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+  .motion-lab.motion-lab .lab-workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .motion-lab.motion-lab .code-tabs {
+    height: 48px;
+  }
+  .motion-lab.motion-lab .code-tabs .tab-buttons > button:not(.copy-button) {
+    min-height: 44px;
+    font-size: 12px;
+  }
+  .motion-lab.motion-lab .copy-button,
+  .motion-lab.motion-lab .editor-run,
+  .motion-lab.motion-lab .playback-controls > .icon-button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+  .motion-lab.motion-lab .code-editor .cm-scroller {
+    font-size: 13px;
+  }
+  .motion-lab.motion-lab .playback-controls {
+    height: auto;
+    min-height: 56px;
+    gap: 6px;
+    padding-inline: 6px;
+  }
+  .motion-lab.motion-lab .lab-actionbar .button {
+    min-height: 44px;
+    font-size: 12px;
+  }
+  .motion-lab.motion-lab .lab-actionbar .button-row {
+    width: 100%;
+  }
+  .motion-lab.motion-lab .run-status {
+    font-size: 11px;
+  }
+  .motion-lab.motion-lab .experiment-controls {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+    padding: 18px 14px;
+  }
+  .motion-lab.motion-lab .experiment-controls > label {
+    font-size: 13px;
+  }
+  .motion-lab.motion-lab .experiment-controls output {
+    font-size: 12px;
+  }
+  .motion-lab.motion-lab .experiment-controls select {
+    font-size: 16px;
+    min-height: 44px;
+    flex: 1;
+  }
+  .motion-lab.motion-lab .preview-help,
+  .lab-limit-note {
+    font-size: 12px;
+    line-height: 1.8;
+  }
+  .motion-lab.motion-lab .lab-variations {
+    flex-direction: column;
+  }
+  .motion-lab.motion-lab .lab-variation-actions {
+    max-width: 100%;
+  }
+  .motion-lab.motion-lab .lab-variation-actions button {
+    min-height: 44px;
+    font-size: 12px;
+  }
+  .motion-lab.motion-lab .scroll-mode-controls {
+    flex-wrap: wrap;
+  }
+  .motion-lab.motion-lab .scroll-mode-controls > button {
+    min-height: 44px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 360px) {
+  .header-actions :is(.icon-button, .search-trigger, .locale-button) {
+    min-width: 40px;
+  }
+  .progress-summary {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .progress-summary > div,
+  .progress-summary > div:first-child {
+    padding: 14px 0;
+  }
+  .progress-summary > div + div {
+    border-left: 0;
+    border-top: 1px solid var(--border);
+  }
+}

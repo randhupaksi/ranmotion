@@ -19,6 +19,14 @@ export default function Dialog({
   const headingId = useId()
   const { c } = useApp()
   useEffect(() => {
+    if (!open) return
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = previousOverflow
+    }
+  }, [open])
+  useEffect(() => {
     const dialog = ref.current
     if (!dialog) return
     if (open && !dialog.open) {
