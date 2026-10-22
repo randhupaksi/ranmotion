@@ -37,6 +37,10 @@ jobs:
         run: npm ci
         timeout-minutes: 8
 
+      - name: Check formatting
+        run: npm run format:check
+        timeout-minutes: 4
+
       - name: Lint
         run: npm run lint
         timeout-minutes: 4

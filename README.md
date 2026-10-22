@@ -30,15 +30,15 @@ The npm configuration includes a peer-resolution workaround for npm 11.1.0. Revi
 
 ## Routes
 
-| Route | Purpose |
-| --- | --- |
-| `/` | Introduction, working animation demo, prerequisites, and learning path overview |
-| `/learn` | Complete curriculum, completion filters, and lesson search |
-| `/learn/:lessonId` | A complete lesson and its interactive challenge |
-| `/playground?example=to` | Open practice with an example selector |
-| `/challenges` | All challenges, filtered by completion |
-| `/progress` | Saved progress and next recommended lesson |
-| `/reference` | Searchable concept reminders and links back to lessons |
+| Route                    | Purpose                                                                         |
+| ------------------------ | ------------------------------------------------------------------------------- |
+| `/`                      | Introduction, working animation demo, prerequisites, and learning path overview |
+| `/learn`                 | Complete curriculum, completion filters, and lesson search                      |
+| `/learn/:lessonId`       | A complete lesson and its interactive challenge                                 |
+| `/playground?example=to` | Open practice with an example selector                                          |
+| `/challenges`            | All challenges, filtered by completion                                          |
+| `/progress`              | Saved progress and next recommended lesson                                      |
+| `/reference`             | Searchable concept reminders and links back to lessons                          |
 
 All lessons are available without locking earlier stages. The suggested order helps beginners build on what they have learned.
 
@@ -75,6 +75,8 @@ The heavy editor and sandbox runtime load only when a learning or playground rou
 
 ```sh
 npm run typecheck
+npm run format
+npm run format:check
 npm test
 npm run build
 npm run preview
@@ -84,7 +86,9 @@ npm run test:e2e
 
 The Playwright wrapper uses the ignored workspace-local `.playwright-browsers` directory. It reuses an existing RanMotion server on port 4173 or starts and closes its own direct Vite child process, avoiding Windows process-tree teardown problems. To test production output, run a built preview on port 4173 before starting the suite. E2E coverage includes every initial example and challenge solution, progress and draft persistence, language switching, broken-code recovery, parent-storage isolation, actual timeline and scroll controls, reduced motion, search, and horizontal overflow at 1440, 768, 390, and 320 pixels. Screenshot artifacts are written to ignored `.artifacts/`.
 
-`npm run lint` is available for Oxlint. `npm test` runs Vitest; browser behavior is covered by the E2E suite.
+`npm run format` formats the project with Prettier; `npm run format:check` checks formatting without changing files. `npm run lint` runs Oxlint. `npm test` runs Vitest; browser behavior is covered by the E2E suite.
+
+VS Code workspaces recommend the Prettier extension and format supported files on save.
 
 ## Static hosting
 
@@ -92,12 +96,12 @@ The Playwright wrapper uses the ignored workspace-local `.playwright-browsers` d
 
 ## CI/CD
 
-GitHub Actions runs the quality workflow in [`.github/workflows/ci.yml`](.github/workflows/ci.yml) for pull requests targeting `main`, pushes to `main`, and manual dispatch. It installs the lockfile dependencies with `npm ci`, runs Oxlint and curriculum integrity tests, type-checks and builds the production site, installs Chromium with its Linux dependencies, and runs the Playwright browser suite. The workflow uses read-only repository permission, cancels superseded runs, and retains browser diagnostics for seven days when E2E fails. It requires no GitHub secrets and does not deploy the site.
+GitHub Actions runs the quality workflow in [`.github/workflows/ci.yml`](.github/workflows/ci.yml) for pull requests targeting `main`, pushes to `main`, and manual dispatch. It installs the lockfile dependencies with `npm ci`, checks Prettier formatting, runs Oxlint and curriculum integrity tests, type-checks and builds the production site, installs Chromium with its Linux dependencies, and runs the Playwright browser suite. The workflow uses read-only repository permission, cancels superseded runs, and retains browser diagnostics for seven days when E2E fails. It requires no GitHub secrets and does not deploy the site.
 
 For continuous deployment, connect `randhupaksi/ranmotion` to a Vercel project through Vercel Git Integration and set `main` as the production branch. Vercel can then create preview deployments for pull requests and deploy production from the configured production branch. This provider connection and branch setting live in the Vercel dashboard; repository files cannot create them. To ensure production promotion waits for CI, enable Vercel Deployment Checks or require the CI status before merging to `main`. See [Vercel Git deployments](https://vercel.com/docs/git) and [Vercel Deployment Checks](https://vercel.com/docs/deployment-checks).
 
 ## References and third-party code
 
-Lesson explanations and examples are original to RanMotion. API behavior follows the [GSAP documentation](https://gsap.com/docs/v3/), [timeline documentation](https://gsap.com/docs/v3/GSAP/Timeline/), [ScrollTrigger documentation](https://gsap.com/docs/v3/Plugins/ScrollTrigger/), [MotionPath documentation](https://gsap.com/docs/v3/Plugins/MotionPathPlugin/), and [matchMedia documentation](https://gsap.com/docs/v3/GSAP/gsap.matchMedia()/). The editor follows [CodeMirror's basic setup](https://codemirror.net/examples/basic/).
+Lesson explanations and examples are original to RanMotion. API behavior follows the [GSAP documentation](https://gsap.com/docs/v3/), [timeline documentation](https://gsap.com/docs/v3/GSAP/Timeline/), [ScrollTrigger documentation](https://gsap.com/docs/v3/Plugins/ScrollTrigger/), [MotionPath documentation](https://gsap.com/docs/v3/Plugins/MotionPathPlugin/), and [matchMedia documentation](<https://gsap.com/docs/v3/GSAP/gsap.matchMedia()/>). The editor follows [CodeMirror's basic setup](https://codemirror.net/examples/basic/).
 
 GSAP's bundled copyright and license notices are preserved in the iframe source. GSAP is subject to its [standard license](https://gsap.com/standard-license); it should not be described as MIT-licensed. Dependencies retain their own licenses. MotionPath and introductory SVG lessons are included. Flip, DrawSVGPlugin, and framework-specific integration remain beyond the current curriculum; the SVG stroke exercise uses native stroke properties.

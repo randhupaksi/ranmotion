@@ -195,25 +195,43 @@ document.querySelector(".demo-button").addEventListener("click", () => {
 }
 
 export const expandedSolutions: Record<string, string> = {
-  coordinates: expandedExamples.coordinates.replace('xPercent: 100', 'xPercent: 200').replace('yPercent: -30', 'yPercent: -100'),
-  'from-to': expandedExamples['from-to'].replace('x: 0, opacity: 0.2', 'x: -30, opacity: 0').replace('x: 180', 'x: 240'),
+  coordinates: expandedExamples.coordinates
+    .replace('xPercent: 100', 'xPercent: 200')
+    .replace('yPercent: -30', 'yPercent: -100'),
+  'from-to': expandedExamples['from-to']
+    .replace('x: 0, opacity: 0.2', 'x: -30, opacity: 0')
+    .replace('x: 180', 'x: 240'),
   relative: expandedExamples.relative.replace('+=80', '+=120').replace('+=45', '+=90'),
   origin: expandedExamples.origin.replace('50% 50%', '0% 100%'),
   'auto-alpha': expandedExamples['auto-alpha'].replace('autoAlpha: 0.35', 'autoAlpha: 0'),
-  'repeat-delay': expandedExamples['repeat-delay'].replace('repeat: 1', 'repeat: 2').replace('repeatDelay: 0.2', 'repeatDelay: 0.8'),
-  keyframes: expandedExamples.keyframes.replace('{ x: 0, y: 0, duration: 0.5 }', '{ x: 0, y: 0, duration: 0.5 },\n    { rotation: 90, duration: 0.5 }'),
+  'repeat-delay': expandedExamples['repeat-delay']
+    .replace('repeat: 1', 'repeat: 2')
+    .replace('repeatDelay: 0.2', 'repeatDelay: 0.8'),
+  keyframes: expandedExamples.keyframes.replace(
+    '{ x: 0, y: 0, duration: 0.5 }',
+    '{ x: 0, y: 0, duration: 0.5 },\n    { rotation: 90, duration: 0.5 }',
+  ),
   defaults: expandedExamples.defaults.replace('duration = 0.6', 'duration = 1.5'),
-  'stagger-order': expandedExamples['stagger-order'].replace('each: 0.12, from: "start"', 'each: 0.2, from: "end"'),
+  'stagger-order': expandedExamples['stagger-order'].replace(
+    'each: 0.12, from: "start"',
+    'each: 0.2, from: "end"',
+  ),
   speed: expandedExamples.speed.replace('timeScale(1)', 'timeScale(0.5)'),
   callbacks: expandedExamples.callbacks.replace('"Ready"', '"Complete"'),
   overwrite: expandedExamples.overwrite.replace('x: 180', 'x: 240'),
   utils: expandedExamples.utils.replace('clamp(0, 180, 360)', 'clamp(0, 240, 360)'),
   'scroll-timeline': expandedExamples['scroll-timeline'].replace('rotation: 90', 'rotation: 180'),
   'svg-attributes': expandedExamples['svg-attributes'].replace('r: 40, cx: 110', 'r: 50, cx: 120'),
-  'svg-stroke': expandedExamples['svg-stroke'].replace('strokeDashoffset: 60', 'strokeDashoffset: 0'),
+  'svg-stroke': expandedExamples['svg-stroke'].replace(
+    'strokeDashoffset: 60',
+    'strokeDashoffset: 0',
+  ),
   'motion-path': expandedExamples['motion-path'].replace('end: 0.65', 'end: 1'),
   context: expandedExamples.context.replace('y: 35, opacity: 0,', 'y: 35, opacity: 0, scale: 0.8,'),
   'match-media': expandedExamples['match-media'].replace('duration = 1;', 'duration = 2;'),
-  'reduced-motion': expandedExamples['reduced-motion'].replace('opacity: 0,', 'opacity: 0,\n    scale: reduce ? 1 : 0.9,'),
+  'reduced-motion': expandedExamples['reduced-motion'].replace(
+    'opacity: 0,',
+    'opacity: 0,\n    scale: reduce ? 1 : 0.9,',
+  ),
   'project-menu': expandedExamples['project-menu'].replace('stagger: 0.1', 'stagger: 0.25'),
 }

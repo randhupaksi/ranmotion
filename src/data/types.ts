@@ -1,7 +1,17 @@
 export type Locale = 'id' | 'en'
 export type Copy = { id: string; en: string }
 export const b = (id: string, en: string): Copy => ({ id, en })
-export type Scene = 'box' | 'items' | 'timeline' | 'interaction' | 'scroll' | 'project' | 'cards' | 'cards-action' | 'svg' | 'path'
+export type Scene =
+  | 'box'
+  | 'items'
+  | 'timeline'
+  | 'interaction'
+  | 'scroll'
+  | 'project'
+  | 'cards'
+  | 'cards-action'
+  | 'svg'
+  | 'path'
 export interface LearningActivity {
   question: Copy
   choices: Copy[]

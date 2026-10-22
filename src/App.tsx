@@ -12,8 +12,30 @@ const ProgressPage = lazy(() => import('./pages/ProgressPage'))
 const ReferencePage = lazy(() => import('./pages/ReferencePage'))
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'))
 export default function App() {
-  return <AppProvider><ErrorBoundary><Suspense fallback={<div className="route-loading" role="status">RanMotion · Memuat / Loading…</div>}><Routes><Route element={<SiteLayout/>}>
-    <Route index element={<HomePage/>}/><Route path="learn" element={<LearnPage/>}/><Route path="learn/:lessonId" element={<LessonPage/>}/>
-    <Route path="playground" element={<PlaygroundPage/>}/><Route path="challenges" element={<ChallengesPage/>}/><Route path="progress" element={<ProgressPage/>}/><Route path="reference" element={<ReferencePage/>}/><Route path="*" element={<NotFoundPage/>}/>
-  </Route></Routes></Suspense></ErrorBoundary></AppProvider>
+  return (
+    <AppProvider>
+      <ErrorBoundary>
+        <Suspense
+          fallback={
+            <div className="route-loading" role="status">
+              RanMotion · Memuat / Loading…
+            </div>
+          }
+        >
+          <Routes>
+            <Route element={<SiteLayout />}>
+              <Route index element={<HomePage />} />
+              <Route path="learn" element={<LearnPage />} />
+              <Route path="learn/:lessonId" element={<LessonPage />} />
+              <Route path="playground" element={<PlaygroundPage />} />
+              <Route path="challenges" element={<ChallengesPage />} />
+              <Route path="progress" element={<ProgressPage />} />
+              <Route path="reference" element={<ReferencePage />} />
+              <Route path="*" element={<NotFoundPage />} />
+            </Route>
+          </Routes>
+        </Suspense>
+      </ErrorBoundary>
+    </AppProvider>
+  )
 }
