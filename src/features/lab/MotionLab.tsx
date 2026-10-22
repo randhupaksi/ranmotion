@@ -12,52 +12,18 @@ import {
   Terminal,
 } from 'lucide-react'
 import { useApp } from '../../app/AppProvider'
-import type { Lesson } from '../../data/types'
+import type { PracticeLesson } from '../../data/types'
 import { readConstant, replaceConstant } from '../../data/examples'
 import PreviewFrame from './PreviewFrame'
 import type { PreviewControls } from './PreviewFrame'
 import { checkChallenge } from './model'
 import type { LabReport } from './model'
 import { sceneCSS, sceneMarkup } from './scene'
+import { explainRuntimeError, validateCode } from './diagnostics'
+import type { LabDiagnostic } from './diagnostics'
 import './lab.css'
 const CodeEditor = lazy(() => import('./CodeEditor'))
 
-async function validate(code: string, english: boolean): Promise<string | null> {
-  const message = (id: string, en: string) => (english ? en : id)
-  if (!code.trim())
-    return message(
-      'Editor masih kosong. Tulis tween atau gunakan Reset.',
-      'The editor is empty. Write a tween or use Reset.',
-    )
-  if (code.length > 12000)
-    return message(
-      'Contoh terlalu panjang. Batasi eksperimen hingga 12.000 karakter.',
-      'This example is too long. Keep experiments below 12,000 characters.',
-    )
-  const { javascriptLanguage } = await import('@codemirror/lang-javascript')
-  let error: string | null = null
-  javascriptLanguage.parser.parse(code).iterate({
-    enter(node) {
-      if (node.type.isError && !error) {
-        const line = code.slice(0, node.from).split('\n').length
-        error = message(
-          `Periksa sintaks di sekitar baris ${line}. Pastikan kurung, koma, dan tanda kutip berpasangan.`,
-          `Check syntax near line ${line}. Make sure braces, commas, and quotes are balanced.`,
-        )
-      }
-      if (
-        /^(ForStatement|WhileStatement|DoStatement|ImportDeclaration|ExportDeclaration)$/.test(
-          node.name,
-        )
-      )
-        error = message(
-          'Latihan ini tidak mendukung loop atau import. GSAP, ScrollTrigger, dan MotionPathPlugin sudah tersedia; gunakan tween, timeline, atau event.',
-          'Loops and imports are not supported in this exercise. GSAP, ScrollTrigger, and MotionPathPlugin are already available; use tweens, timelines, or events.',
-        )
-    },
-  })
-  return error
-}
 function readDraft(key: string, initial: string) {
   try {
     const value = localStorage.getItem(key)
@@ -74,7 +40,7 @@ export default function MotionLab({
   challenge = true,
   namespace = 'lesson',
 }: {
-  lesson: Lesson
+  lesson: PracticeLesson
   challenge?: boolean
   namespace?: string
 }) {
@@ -89,7 +55,12 @@ export default function MotionLab({
   const [submitted, setSubmitted] = useState<string | null>(null)
   const [runId, setRunId] = useState(0)
   const generation = useRef(0)
-  const [error, setError] = useState<string | null>(null)
+  const [error, setError] = useState<LabDiagnostic | null>(null)
+  const [focusRequest, setFocusRequest] = useState<{ key: number; line?: number }>()
+  const editorPane = useRef<HTMLElement>(null)
+  const executedCode = useRef<string | null>(null)
+  const latestCode = useRef(code)
+  latestCode.current = code
   const [report, setReport] = useState<LabReport | null>(null)
   const [progress, setProgress] = useState(0)
   const [paused, setPaused] = useState(true)
@@ -139,7 +110,17 @@ export default function MotionLab({
   }, [copyStatus])
   const changeCode = (next: string) => {
     setCode(next)
+    setError(null)
     setFeedback(null)
+  }
+  const focusEditor = (line?: number) => {
+    setTab('js')
+    setFocusRequest(previous => ({ key: (previous?.key ?? 0) + 1, line }))
+    editorPane.current?.scrollIntoView({ block: 'nearest', behavior: 'instant' })
+  }
+  const showError = (problem: LabDiagnostic) => {
+    setError(problem)
+    focusEditor(problem.line ?? latestCode.current.split('\n').length)
   }
   const loadPreset = (next: string) => {
     if (code !== lesson.code && code !== lesson.activity?.variation.code) {
@@ -151,10 +132,12 @@ export default function MotionLab({
       }
     }
     changeCode(next)
+    focusEditor()
   }
   const restoreComparison = () => {
     if (!comparisonCode) return
     changeCode(comparisonCode)
+    focusEditor()
     setComparisonCode(null)
     try {
       localStorage.removeItem(comparisonKey)
@@ -165,25 +148,32 @@ export default function MotionLab({
   const run = async () => {
     clearRunTimeout()
     const currentGeneration = ++generation.current
+    executedCode.current = code
     setLoading(true)
     setReport(null)
     setError(null)
     setPaused(true)
-    let problem: string | null
+    let problem: LabDiagnostic | null
     try {
-      problem = await validate(code, locale === 'en')
+      problem = await validateCode(code, locale === 'en')
     } catch {
-      problem = c(
-        'Pemeriksaan kode belum tersedia. Muat ulang halaman untuk mencoba lagi.',
-        'Code validation is unavailable. Reload this page to try again.',
-      )
+      problem = {
+        message: c(
+          'Pemeriksaan kode belum tersedia. Muat ulang halaman untuk mencoba lagi.',
+          'Code validation is unavailable. Reload this page to try again.',
+        ),
+      }
     }
     if (currentGeneration !== generation.current) return
+    if (latestCode.current !== executedCode.current) {
+      setLoading(false)
+      return
+    }
     setFeedback(null)
     if (problem) {
       preview.current?.send('pause')
       setPaused(true)
-      setError(problem)
+      showError(problem)
       setLoading(false)
       return
     }
@@ -196,18 +186,23 @@ export default function MotionLab({
     setRunId(currentGeneration)
     timeout.current = setTimeout(() => {
       setLoading(false)
-      setError(
-        c(
+      if (latestCode.current !== executedCode.current) return
+      showError({
+        message: c(
           'Preview belum merespons. Coba Reset, lalu jalankan contoh yang lebih sederhana.',
           'The preview has not responded. Try Reset, then run a simpler example.',
         ),
-      )
+      })
     }, 6500)
   }
   const activatePreview = () => {
     if (loading) return
     if (submitted !== code || !report || error) {
       void run()
+      return
+    }
+    if (reducedMotion) {
+      preview.current?.send('replay')
       return
     }
     const resume = paused
@@ -232,30 +227,40 @@ export default function MotionLab({
   const receiveReport = (next: LabReport) => {
     clearRunTimeout()
     setLoading(false)
-    if (!next.animations.length) {
-      setError(
-        c(
+    if (executedCode.current !== code) {
+      setReport(next)
+      return
+    }
+    if (
+      !next.animations.length &&
+      !['interaction', 'cards-action', 'project'].includes(lesson.scene)
+    ) {
+      showError({
+        message: c(
           'Belum ada tween yang dibuat. Coba gsap.to() dengan target dari tab HTML.',
           'No tweens were created. Try gsap.to() with a target from the HTML tab.',
         ),
-      )
+      })
       return
     }
-    if (next.animations.every(a => a.targets === 0)) {
-      setError(
-        c(
+    if (next.animations.length && next.animations.every(a => a.targets === 0)) {
+      const target = next.animations[0].target
+      const position = code.split('\n').findIndex(line => line.includes(target))
+      showError({
+        message: c(
           'Target animasi tidak ditemukan. Cocokkan selector dengan class di tab HTML.',
           'No animation targets were found. Match your selector to a class in the HTML tab.',
         ),
-      )
+        line: position < 0 ? undefined : position + 1,
+      })
       return
     }
     setReport(next)
   }
-  const receiveError = (message: string) => {
+  const receiveError = (problem: LabDiagnostic) => {
     clearRunTimeout()
     setLoading(false)
-    setError(message)
+    if (executedCode.current === code) showError(explainRuntimeError(problem, locale === 'en'))
     setReport(null)
     setPaused(true)
   }
@@ -372,7 +377,11 @@ export default function MotionLab({
           </div>
         )}
         <div className="lab-workspace">
-          <section className="editor-pane" aria-label={c('Panel kode', 'Code panel')}>
+          <section
+            className="editor-pane"
+            ref={editorPane}
+            aria-label={c('Panel kode', 'Code panel')}
+          >
             <div className="code-tabs">
               <div
                 className="tab-buttons"
@@ -401,6 +410,15 @@ export default function MotionLab({
                 ))}
               </div>
               <button
+                className="icon-button editor-run"
+                onClick={run}
+                disabled={loading}
+                aria-label={c('Jalankan kode dari editor', 'Run code from editor')}
+                title={c('Jalankan kode (Ctrl / ⌘ + Enter)', 'Run code (Ctrl / ⌘ + Enter)')}
+              >
+                <Play size={15} />
+              </button>
+              <button
                 className="icon-button copy-button"
                 onClick={copyCode}
                 aria-label={c('Salin kode', 'Copy code')}
@@ -427,11 +445,26 @@ export default function MotionLab({
                     onChange={changeCode}
                     onRun={run}
                     label={c('Editor JavaScript', 'JavaScript editor')}
+                    problem={error}
+                    problemLabel={
+                      error
+                        ? `${error.line ? `${c('Baris', 'Line')} ${error.line} · ` : ''}${error.message}`
+                        : ''
+                    }
+                    focusRequest={focusRequest}
                   />
                 </Suspense>
               </div>
               {tab !== 'js' && (
-                <pre className="readonly-code">
+                <pre
+                  className="readonly-code"
+                  tabIndex={0}
+                  role="region"
+                  aria-label={c(
+                    `${tab.toUpperCase()} preview, hanya baca`,
+                    `${tab.toUpperCase()} preview, read only`,
+                  )}
+                >
                   <code>
                     {tab === 'html'
                       ? sceneMarkup(lesson.scene, locale, lesson.id === 'easing')
@@ -441,11 +474,23 @@ export default function MotionLab({
               )}
             </div>
             <div className="editor-footnote">
-              <span>
-                {tab === 'js'
-                  ? c('Dapat diedit', 'Editable')
-                  : c('Struktur preview · hanya baca', 'Preview structure · read only')}
-              </span>
+              {error ? (
+                <button
+                  className="editor-problem-link"
+                  onClick={() => focusEditor(error.line ?? code.split('\n').length)}
+                >
+                  !{' '}
+                  {error.line
+                    ? `${c('Periksa baris', 'Check line')} ${error.line}`
+                    : c('Periksa pesan di kode', 'Check the message in your code')}
+                </button>
+              ) : (
+                <span>
+                  {tab === 'js'
+                    ? c('Dapat diedit', 'Editable')
+                    : c('Struktur preview · hanya baca', 'Preview structure · read only')}
+                </span>
+              )}
               <kbd>Ctrl / ⌘ + Enter</kbd>
             </div>
           </section>
@@ -469,8 +514,8 @@ export default function MotionLab({
                 onReport={value => {
                   if (runId === generation.current) receiveReport(value)
                 }}
-                onError={message => {
-                  if (runId === generation.current) receiveError(message)
+                onError={problem => {
+                  if (runId === generation.current) receiveError(problem)
                 }}
                 onState={(value, isPaused) => {
                   if (runId === generation.current) {
@@ -668,23 +713,13 @@ export default function MotionLab({
                   ? c('Menjalankan kode…', 'Running code…')
                   : submitted && submitted !== code
                     ? c('Kode berubah · jalankan lagi', 'Code changed · run again')
-                    : report && !error
-                      ? c('Kode berhasil dijalankan', 'Code ran successfully')
-                      : c('Siap bereksperimen', 'Ready to experiment')}
+                    : error
+                      ? c('Periksa pesan di editor', 'Check the message in the editor')
+                      : report && !error
+                        ? c('Kode berhasil dijalankan', 'Code ran successfully')
+                        : c('Siap bereksperimen', 'Ready to experiment')}
           </span>
         </div>
-        {error && (
-          <div className="lab-error" role="alert">
-            <strong>{c('Ada yang perlu diperiksa', 'Something needs attention')}</strong>
-            <p>{error}</p>
-            <small>
-              {c(
-                'Materi dan progres tetap tersedia. Periksa kode atau gunakan Reset contoh.',
-                'Your lesson and progress are still available. Check your code or use Reset example.',
-              )}
-            </small>
-          </div>
-        )}
       </div>
       {(lesson.scene === 'timeline' ||
         ['stagger', 'stagger-order', 'keyframes', 'scroll-timeline'].includes(lesson.id)) && (
@@ -832,14 +867,14 @@ export default function MotionLab({
                   'Compare it with your code. Understand the change before trying again.',
                 )}
               </p>
-              <pre>
+              <pre tabIndex={0} aria-label={c('Contoh jawaban kode', 'Example solution code')}>
                 <code>{lesson.solution}</code>
               </pre>
               <button
                 className="button secondary small"
                 onClick={() => {
                   changeCode(lesson.solution)
-                  setTab('js')
+                  focusEditor()
                 }}
               >
                 {c('Gunakan contoh ini di editor', 'Use this example in the editor')}

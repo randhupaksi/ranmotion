@@ -3,11 +3,13 @@ import scrollSource from 'gsap/dist/ScrollTrigger.min.js?raw'
 import pathSource from 'gsap/dist/MotionPathPlugin.min.js?raw'
 import type { Locale, Scene } from '../../data/types'
 import { sceneCSS, sceneMarkup } from './scene'
+import { userCodeLocation } from './diagnostics'
 
 // Runs only in an opaque-origin iframe. User code is sent after load, never interpolated into HTML.
-function sandboxRuntime() {
+function sandboxRuntime(locateError: typeof userCodeLocation) {
   const config = JSON.parse(document.getElementById('ran-config')!.textContent!) as {
     token: string
+    locale: Locale
   }
   const gsap = (window as unknown as { gsap: typeof import('gsap').gsap }).gsap
   const ScrollTrigger = (
@@ -21,6 +23,7 @@ function sandboxRuntime() {
   gsap.registerPlugin(ScrollTrigger, MotionPathPlugin)
   let reduced = false
   let started = false
+  let failed = false
   let clicks = 0
   let focused = false
   let transportPaused = false
@@ -41,6 +44,7 @@ function sandboxRuntime() {
   const post = (type: string, payload: Record<string, unknown> = {}) =>
     parent.postMessage({ token: config.token, type, ...payload }, '*')
   const report = () => {
+    if (failed) return
     top = [...new Set([...top, ...gsap.globalTimeline.getChildren(false, true, true)])]
     const firstStart =
       timelines.length || !records.length ? 0 : Math.min(...records.map(r => r.tween.startTime()))
@@ -213,23 +217,28 @@ function sandboxRuntime() {
     transportPaused = true
     manualProgress = 1
   }
-  window.addEventListener('error', event =>
-    post('error', { message: String(event.message).slice(0, 400) }),
-  )
-  window.addEventListener('unhandledrejection', event =>
-    post('error', { message: String(event.reason?.message ?? event.reason).slice(0, 400) }),
-  )
+  const sendError = (error: unknown) => {
+    failed = true
+    const detail = error as { message?: unknown; name?: unknown; stack?: unknown } | null
+    post('error', {
+      message: String(
+        detail?.message ? `${detail.name ?? 'Error'}: ${detail.message}` : error,
+      ).slice(0, 400),
+      ...locateError(String(detail?.stack ?? '')),
+    })
+  }
+  window.addEventListener('error', event => sendError(event.error ?? event.message))
+  window.addEventListener('unhandledrejection', event => sendError(event.reason))
   document.addEventListener(
-    'pointerdown',
+    'click',
     event => {
-      if (event.isTrusted) post('activate')
-    },
-    true,
-  )
-  document.addEventListener(
-    'keydown',
-    event => {
-      if (event.isTrusted && (event.key === 'Enter' || event.key === ' ')) post('activate')
+      if (!event.isTrusted || !(event.target instanceof Element)) return
+      // Demo controls keep their own meaning; only the background and transport button play/pause.
+      if (
+        event.target.closest('.canvas-transport') ||
+        !event.target.closest('button, a, input, select, textarea, [tabindex]')
+      )
+        post('activate')
     },
     true,
   )
@@ -267,11 +276,12 @@ function sandboxRuntime() {
       started = true
       reduced = Boolean(message.reduced)
       try {
-        new Function('gsap', 'ScrollTrigger', 'MotionPathPlugin', '"use strict";\n' + message.code)(
-          gsap,
-          ScrollTrigger,
-          MotionPathPlugin,
-        )
+        new Function(
+          'gsap',
+          'ScrollTrigger',
+          'MotionPathPlugin',
+          '"use strict";\n' + message.code + '\n//# sourceURL=ranmotion-user-code.js',
+        )(gsap, ScrollTrigger, MotionPathPlugin)
         ScrollTrigger.refresh()
         top = gsap.globalTimeline.getChildren(false, true, true)
         if (reduced) freeze()
@@ -288,14 +298,29 @@ function sandboxRuntime() {
             progress: Math.max(0, Math.min(1, progress)),
             paused: trigger ? transportPaused : top.every(t => t.paused() || !t.isActive()),
           })
+          const transport = document.querySelector('.canvas-transport')
+          if (transport) {
+            const paused = top.every(t => t.paused() || !t.isActive())
+            transport.textContent =
+              config.locale === 'id'
+                ? reduced
+                  ? 'Lihat hasil'
+                  : paused
+                    ? progress >= 0.999
+                      ? 'Ulangi'
+                      : 'Putar'
+                    : 'Jeda'
+                : reduced
+                  ? 'Show result'
+                  : paused
+                    ? progress >= 0.999
+                      ? 'Replay'
+                      : 'Play'
+                    : 'Pause'
+          }
         }, 90)
       } catch (error) {
-        post('error', {
-          message:
-            error instanceof Error
-              ? `${error.name}: ${error.message}`.slice(0, 400)
-              : 'Unable to run this code.',
-        })
+        sendError(error)
       }
     }
     if (message.type === 'pause') {
@@ -345,5 +370,5 @@ function sandboxRuntime() {
 }
 const safeScript = (code: string) => code.replace(/<\/script/gi, '<\\/script')
 export function previewDocument(scene: Scene, locale: Locale, token: string, comparison: boolean) {
-  return `<!doctype html><html lang="${locale}"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval'; style-src 'unsafe-inline'; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'"><meta name="viewport" content="width=device-width,initial-scale=1"><style>${sceneCSS}</style></head><body>${sceneMarkup(scene, locale, comparison)}<script id="ran-config" type="application/json">${JSON.stringify({ token })}</script><script>${safeScript(gsapSource)}</script><script>${safeScript(scrollSource)}</script><script>${safeScript(pathSource)}</script><script>(${sandboxRuntime.toString()})();</script></body></html>`
+  return `<!doctype html><html lang="${locale}"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval'; style-src 'unsafe-inline'; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'"><meta name="viewport" content="width=device-width,initial-scale=1"><style>${sceneCSS}.canvas-transport{position:fixed;z-index:5;right:12px;top:10px;min-width:60px;min-height:36px;border:1px solid #3a5944;background:#071411;color:#a5ed08;padding:7px 10px;font:11px system-ui,sans-serif;border-radius:3px}</style></head><body>${sceneMarkup(scene, locale, comparison)}<button class="canvas-transport" type="button">${locale === 'id' ? 'Jalankan' : 'Run'}</button><script id="ran-config" type="application/json">${JSON.stringify({ token, locale })}</script><script>${safeScript(gsapSource)}</script><script>${safeScript(scrollSource)}</script><script>${safeScript(pathSource)}</script><script>(${sandboxRuntime.toString()})(${userCodeLocation.toString()});</script></body></html>`
 }

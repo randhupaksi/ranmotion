@@ -985,3 +985,123 @@
     max-width: 100%;
   }
 }
+
+/* Problems belong with their source, including on a narrow screen. */
+.motion-lab .code-editor {
+  container-type: inline-size;
+}
+.motion-lab .cm-code-error {
+  max-width: calc(100cqw - 90px);
+  margin: 7px 12px 12px 8px;
+  padding: 12px 14px;
+  border-left: 3px solid var(--error);
+  background: #2c1c19;
+  color: #ffd1c7;
+  font: 12px/1.75 var(--mono);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.motion-lab .cm-error-line {
+  background: #582c223f;
+  box-shadow: inset 2px 0 var(--error);
+}
+.motion-lab .cm-error-underline {
+  text-decoration: wavy underline var(--error);
+  text-underline-offset: 4px;
+}
+.motion-lab .code-editor:focus-within {
+  outline: 1px solid var(--primary);
+  outline-offset: -1px;
+}
+.motion-lab .code-editor .cm-scroller {
+  font-size: 12px;
+}
+.motion-lab .code-editor .cm-gutters {
+  color: #8b9c8e;
+}
+.motion-lab .editor-problem-link {
+  color: var(--error);
+  text-align: left;
+  font-size: 11px;
+  min-height: 32px;
+  padding: 3px 0;
+}
+.motion-lab .editor-footnote {
+  flex-wrap: wrap;
+  font-size: 10px;
+}
+.motion-lab .editor-footnote kbd {
+  font-size: 10px;
+}
+.motion-lab .preview-help {
+  min-height: 48px;
+  height: auto;
+  padding-block: 8px;
+  font-size: 11px;
+}
+.motion-lab .code-tabs .tab-buttons > button:not(.copy-button) {
+  font-size: 12px;
+}
+.motion-lab .preview-toolbar {
+  min-height: 43px;
+}
+.motion-lab .playback-controls > .icon-button {
+  min-width: 40px;
+  min-height: 40px;
+}
+.motion-lab .experiment-controls > label {
+  font-size: 12px;
+}
+.motion-lab .experiment-controls output,
+.motion-lab .experiment-controls select {
+  font-size: 11px;
+}
+.motion-lab .lab-actionbar .button {
+  min-height: 40px;
+  font-size: 11px;
+  padding-inline: 10px;
+}
+.motion-lab .run-status {
+  font-size: 11px;
+}
+.lab-limit-note {
+  font-size: 11px;
+}
+.lesson-challenge > p {
+  font-size: 13px;
+}
+.lesson-challenge .feedback,
+.lesson-challenge .feedback p,
+.lesson-challenge .challenge-hints {
+  font-size: 12px;
+  line-height: 1.85;
+}
+.editor-run {
+  color: var(--primary);
+  min-width: 34px;
+}
+@media (max-width: 620px) {
+  .motion-lab .lab-actionbar .button-row {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .motion-lab .experiment-controls > label:first-child,
+  .motion-lab .experiment-controls > label:nth-child(2) {
+    padding-bottom: 30px;
+  }
+  .motion-lab .code-tabs .tab-buttons > button:not(.copy-button) {
+    padding-inline: 8px;
+    min-width: 48px;
+    font-size: 11px;
+  }
+  .motion-lab .experiment-controls select {
+    min-width: 0;
+    max-width: 100%;
+  }
+  .motion-lab .editor-footnote kbd {
+    font-size: 9px;
+  }
+  .motion-lab .cm-code-error {
+    font-size: 11px;
+  }
+}
