@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Lint, build, and browser checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+        timeout-minutes: 8
+
+      - name: Lint
+        run: npm run lint
+        timeout-minutes: 4
+
+      - name: Type-check and build
+        run: npm run build
+        timeout-minutes: 8
+
+      - name: Install Playwright Chromium
+        run: node scripts/playwright.mjs install --with-deps chromium
+        timeout-minutes: 10
+
+      - name: Run browser tests
+        id: browser-tests
+        run: npm run test:e2e
+        timeout-minutes: 12
+
+      - name: Upload browser failure diagnostics
+        if: ${{ failure() && steps.browser-tests.outcome == 'failure' }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: playwright-failure-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            test-results/
+            .artifacts/
+          if-no-files-found: ignore
+          retention-days: 7
