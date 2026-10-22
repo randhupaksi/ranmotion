@@ -17,8 +17,8 @@ The npm configuration includes a peer-resolution workaround for npm 11.1.0. Revi
 
 ## Learning experience
 
-- **19 bilingual lessons in 7 sections:** preparation; transforms and basic tweens; easing, delay, and repeat; timelines, overlap, labels, and stagger; interface interaction; ScrollTrigger, scrub, and pin; and a small final project.
-- Each lesson provides an objective, mental model, explanation, guided experiment, common mistake, challenge with progressive hints, and a recap.
+- **40 bilingual lessons in 9 sections:** preparation; transforms and basic tweens; easing, delay, and repeat; timelines, overlap, labels, and stagger; interface interaction; ScrollTrigger, scrub, and pin; SVG attributes and strokes; MotionPath; responsive setup and cleanup; and two small projects.
+- Each lesson provides an objective, mental model, readable explanation, prediction question with feedback, code walkthrough, chapter glossary, recommended prerequisites, guided experiment checklist, quick code variation, common mistake, challenge with progressive hints, and recap.
 - A JavaScript editor runs real GSAP code against the exact HTML and CSS shown in its read-only tabs.
 - Duration, distance, easing, scrub, and pin controls update the corresponding code constants. Run explicitly to apply changes.
 - Playback supports pause, replay, reset, and manual progress inspection. Timeline tracks reflect actual tween start times, durations, overlap, and labels.
@@ -48,7 +48,7 @@ RanMotion has its own “motion fieldnotes” visual language: electric lime ins
 
 ## Preview execution and privacy
 
-Editor code runs in an iframe with `sandbox="allow-scripts"`, an opaque origin, and a restrictive Content Security Policy. The frame cannot access the application's DOM or browser storage. GSAP and ScrollTrigger are bundled locally into the preview; the preview does not fetch executable code from a CDN. Messages are checked against the specific iframe window, a per-frame token, and a Zod report schema.
+Editor code runs in an iframe with `sandbox="allow-scripts"`, an opaque origin, and a restrictive Content Security Policy. The frame cannot access the application's DOM or browser storage. GSAP, ScrollTrigger, and MotionPathPlugin are bundled locally into the preview; the preview does not fetch executable code from a CDN. Messages are checked against the specific iframe window, a per-frame token, and a Zod report schema.
 
 The exercise editor is deliberately focused on short GSAP experiments. It supports tweens, timelines, and event handlers, validates syntax before execution, and rejects loop statements, imports, and exports. It is not a general-purpose JavaScript execution service or a hardened environment for adversarial code. The 12,000-character source limit and 150-animation report limit keep educational examples bounded.
 
@@ -75,6 +75,7 @@ The heavy editor and sandbox runtime load only when a learning or playground rou
 
 ```sh
 npm run typecheck
+npm test
 npm run build
 npm run preview
 npm run test:e2e:install
@@ -91,12 +92,12 @@ The Playwright wrapper uses the ignored workspace-local `.playwright-browsers` d
 
 ## CI/CD
 
-GitHub Actions runs the quality workflow in [`.github/workflows/ci.yml`](.github/workflows/ci.yml) for pull requests targeting `main`, pushes to `main`, and manual dispatch. It installs the lockfile dependencies with `npm ci`, runs Oxlint, type-checks and builds the production site, installs Chromium with its Linux dependencies, and runs the Playwright browser suite. The workflow uses read-only repository permission, cancels superseded runs, and retains browser diagnostics for seven days when E2E fails. It requires no GitHub secrets and does not deploy the site.
+GitHub Actions runs the quality workflow in [`.github/workflows/ci.yml`](.github/workflows/ci.yml) for pull requests targeting `main`, pushes to `main`, and manual dispatch. It installs the lockfile dependencies with `npm ci`, runs Oxlint and curriculum integrity tests, type-checks and builds the production site, installs Chromium with its Linux dependencies, and runs the Playwright browser suite. The workflow uses read-only repository permission, cancels superseded runs, and retains browser diagnostics for seven days when E2E fails. It requires no GitHub secrets and does not deploy the site.
 
 For continuous deployment, connect `randhupaksi/ranmotion` to a Vercel project through Vercel Git Integration and set `main` as the production branch. Vercel can then create preview deployments for pull requests and deploy production from the configured production branch. This provider connection and branch setting live in the Vercel dashboard; repository files cannot create them. To ensure production promotion waits for CI, enable Vercel Deployment Checks or require the CI status before merging to `main`. See [Vercel Git deployments](https://vercel.com/docs/git) and [Vercel Deployment Checks](https://vercel.com/docs/deployment-checks).
 
 ## References and third-party code
 
-Lesson explanations and examples are original to RanMotion. API behavior follows the [GSAP documentation](https://gsap.com/docs/v3/), [timeline documentation](https://gsap.com/docs/v3/GSAP/Timeline/), and [ScrollTrigger documentation](https://gsap.com/docs/v3/Plugins/ScrollTrigger/). The editor follows [CodeMirror's basic setup](https://codemirror.net/examples/basic/).
+Lesson explanations and examples are original to RanMotion. API behavior follows the [GSAP documentation](https://gsap.com/docs/v3/), [timeline documentation](https://gsap.com/docs/v3/GSAP/Timeline/), [ScrollTrigger documentation](https://gsap.com/docs/v3/Plugins/ScrollTrigger/), [MotionPath documentation](https://gsap.com/docs/v3/Plugins/MotionPathPlugin/), and [matchMedia documentation](https://gsap.com/docs/v3/GSAP/gsap.matchMedia()/). The editor follows [CodeMirror's basic setup](https://codemirror.net/examples/basic/).
 
-GSAP's bundled copyright and license notices are preserved in the iframe source. GSAP is subject to its [standard license](https://gsap.com/standard-license); it should not be described as MIT-licensed. Dependencies retain their own licenses. Advanced MotionPath, Flip, and SVG-specific curricula are future additions beyond the implemented foundation and final project.
+GSAP's bundled copyright and license notices are preserved in the iframe source. GSAP is subject to its [standard license](https://gsap.com/standard-license); it should not be described as MIT-licensed. Dependencies retain their own licenses. MotionPath and introductory SVG lessons are included. Flip, DrawSVGPlugin, and framework-specific integration remain beyond the current curriculum; the SVG stroke exercise uses native stroke properties.

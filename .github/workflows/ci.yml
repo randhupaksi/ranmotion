@@ -18,7 +18,7 @@ jobs:
   quality:
     name: Lint, build, and browser checks
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 50
 
     steps:
       - name: Check out repository
@@ -44,6 +44,10 @@ jobs:
       - name: Type-check and build
         run: npm run build
         timeout-minutes: 8
+
+      - name: Check curriculum integrity
+        run: npm test
+        timeout-minutes: 4
 
       - name: Install Playwright Chromium
         run: node scripts/playwright.mjs install --with-deps chromium
