@@ -17,16 +17,19 @@ The npm configuration includes a peer-resolution workaround for npm 11.1.0. Revi
 
 ## Learning experience
 
-- **40 bilingual lessons in 9 sections:** preparation; transforms and basic tweens; easing, delay, and repeat; timelines, overlap, labels, and stagger; interface interaction; ScrollTrigger, scrub, and pin; SVG attributes and strokes; MotionPath; responsive setup and cleanup; and two small projects.
-- Each lesson provides an objective, mental model, readable explanation, prediction question with feedback, code walkthrough, chapter glossary, recommended prerequisites, guided experiment checklist, quick code variation, common mistake, challenge with progressive hints, and recap.
+- **42 bilingual lessons in 9 sections:** two visual introductions without coding, followed by 40 guided practices covering transforms and basic tweens; easing, delay, and repeat; timelines, overlap, labels, and stagger; interface interaction; ScrollTrigger, scrub, and pin; SVG attributes and strokes; MotionPath; responsive setup and cleanup; and two small projects.
+- Start at `/learn/gsap-foundations`, then plan an animation at `/learn/animation-blueprint` using playback, progress, distance, duration, and easing controls. Both introductions include a comprehension question and can be completed without opening an editor.
+- Practice lessons provide an objective, mental model, explanation, prediction with feedback, code walkthrough, chapter glossary, prerequisites, experiment checklist, code variation, common mistake, challenge with progressive hints, and recap.
 - A JavaScript editor runs real GSAP code against the exact HTML and CSS shown in its read-only tabs.
+- Syntax and runtime errors appear directly under the relevant code line, with a highlight, a plain-language explanation where available, and focus on the editor. Errors without a reliable source location appear after the code. Editing clears stale diagnostics; Reset restores a working example.
 - Duration, distance, easing, scrub, and pin controls update the corresponding code constants. Run explicitly to apply changes.
 - Playback supports pause, replay, reset, and manual progress inspection. Timeline tracks reflect actual tween start times, durations, overlap, and labels.
 - Scroll examples use an independent scroller. A progress slider provides a touch and keyboard alternative to nested scrolling.
 - Challenges check values from executed GSAP animations, not just strings in the editor. Interface challenges also require trying the preview interaction.
 - Learning progress, challenge completion, language, motion preference, and per-example code drafts persist in the same browser. Lesson and playground views share a draft for the same example.
-- Lessons can also be marked complete independently of the demo. The progress page recommends the next unfinished lesson.
-- Search (`Ctrl/Cmd + K`), a quick reference, desktop navigation, and mobile bottom navigation connect the experience.
+- Lessons can also be marked complete independently of the demo. Home, learning, and progress views resume a valid unfinished last lesson, then recommend the first unfinished lesson. Existing saved lesson IDs are preserved.
+- Search (`Ctrl/Cmd + K`) focuses its input; Enter opens the first match, Tab reaches other matches, and Escape closes it. Page navigation resets scroll and focus after content loads; anchor links wait for their actual destination. Changing a playground example retains local context.
+- The decorative ticker has a pause toggle. Motion preferences, keyboard playback, readable editor text, and larger interaction targets support different ways of learning.
 
 ## Routes
 
@@ -84,7 +87,7 @@ npm run test:e2e:install
 npm run test:e2e
 ```
 
-The Playwright wrapper uses the ignored workspace-local `.playwright-browsers` directory. It reuses an existing RanMotion server on port 4173 or starts and closes its own direct Vite child process, avoiding Windows process-tree teardown problems. To test production output, run a built preview on port 4173 before starting the suite. E2E coverage includes every initial example and challenge solution, progress and draft persistence, language switching, broken-code recovery, parent-storage isolation, actual timeline and scroll controls, reduced motion, search, and horizontal overflow at 1440, 768, 390, and 320 pixels. Screenshot artifacts are written to ignored `.artifacts/`.
+The Playwright wrapper uses the ignored workspace-local `.playwright-browsers` directory. It reuses an existing RanMotion server on port 4173 or starts and closes its own direct Vite child process, avoiding Windows process-tree teardown problems. To test production output, run a built preview on port 4173 before starting the suite. E2E coverage includes both visual introductions, every practice example and challenge solution, progress and draft persistence, language switching, inline diagnostics, parent-storage isolation, timeline and scroll controls, reduced motion, search focus, route/anchor positioning, and horizontal overflow at 1440, 768, 390, and 320 pixels. Axe scans nine representative routes at desktop/mobile sizes plus dialog and error states. Results include incomplete findings for manual review; automated scans do not establish full accessibility conformance. Screenshot artifacts are written to ignored `.artifacts/`. See [the UX and accessibility audit](docs/quality-audit.md) for findings and verification scope.
 
 `npm run format` formats the project with Prettier; `npm run format:check` checks formatting without changing files. `npm run lint` runs Oxlint. `npm test` runs Vitest; browser behavior is covered by the E2E suite.
 

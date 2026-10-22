@@ -55,7 +55,7 @@ jobs:
 
       - name: Install Playwright Chromium
         run: node scripts/playwright.mjs install --with-deps chromium
-        timeout-minutes: 10
+        timeout-minutes: 20
 
       - name: Run browser tests
         id: browser-tests
