@@ -1,0 +1,68 @@
+.lesson-coach { margin: 28px 0 34px; border-block: 1px solid var(--border-bright); background: var(--surface); min-width: 0; }
+.coach-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 15px; padding: 22px 20px 17px; }
+.coach-header .eyebrow { display: flex; align-items: center; gap: 8px; color: var(--primary); }
+.coach-header h2 { margin-top: 10px; font-size: clamp(20px, 2.2vw, 28px); line-height: 1.2; letter-spacing: -.04em; }
+.coach-level { flex-shrink: 0; color: var(--subtle); font: 9px var(--mono); padding-top: 4px; }
+.coach-prerequisites { display: flex; gap: 8px 12px; flex-wrap: wrap; align-items: center; padding: 0 20px 18px; font-size: 10px; color: var(--muted); }
+.coach-prerequisites a { display: inline-flex; align-items: center; gap: 5px; color: var(--primary); text-underline-offset: 4px; }
+.coach-prerequisites a:hover { text-decoration: underline; }
+.coach-tabs { display: flex; border-block: 1px solid var(--border); }
+.coach-tabs button { flex: 1; min-height: 44px; padding: 10px 8px; border-bottom: 2px solid transparent; color: var(--muted); font-size: 11px; }
+.coach-tabs button[aria-selected=true] { border-color: var(--primary); color: var(--primary); background: #142217; }
+.coach-panel { padding: 20px; }
+.coach-panel[hidden] { display: none; }
+.coach-intro { color: var(--muted); font-size: 12px; line-height: 1.8; margin-bottom: 18px; max-width: 64ch; }
+.prediction-options { border: 0; padding: 0; min-width: 0; }
+.prediction-options legend { margin-bottom: 15px; padding: 0; color: var(--ink); font-size: 16px; line-height: 1.5; font-weight: 550; }
+.prediction-options label { position: relative; display: flex; align-items: center; gap: 12px; min-height: 49px; padding: 11px 12px; border-top: 1px solid var(--border); cursor: pointer; color: var(--muted); font-size: 12px; line-height: 1.6; }
+.prediction-options label:last-child { border-bottom: 1px solid var(--border); }
+.prediction-options label.is-chosen { background: #17271b; color: var(--ink); }
+.prediction-options input { flex-shrink: 0; accent-color: var(--primary); }
+.prediction-letter { font: 10px var(--mono); color: var(--primary); }
+.prediction-feedback { margin-top: 17px; padding: 16px; border-left: 2px solid var(--accent); background: #241e17; }
+.prediction-feedback.is-correct { border-color: var(--primary); background: #132219; }
+.prediction-feedback strong { font-size: 12px; color: var(--ink); }
+.prediction-feedback p { margin: 8px 0 12px; color: var(--muted); font-size: 12px; line-height: 1.85; }
+.prediction-feedback .text-button { display: inline-flex; align-items: center; gap: 7px; font-size: 10px; }
+.walkthrough-picks { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; }
+.walkthrough-picks button { display: flex; min-width: 0; align-items: center; gap: 9px; padding: 9px 11px; border: 1px solid var(--border); font-size: 10px; color: var(--muted); text-align: left; }
+.walkthrough-picks button span { color: var(--subtle); font: 9px var(--mono); }
+.walkthrough-picks button code { overflow-wrap: anywhere; }
+.walkthrough-picks button[aria-pressed=true] { border-color: var(--primary); color: var(--primary); }
+.coach-code { margin: 0; padding: 12px 0; background: #07110e; border: 1px solid var(--border); max-height: 300px; overflow: auto; font: 11px/1.8 var(--mono); tab-size: 2; }
+.coach-code-line { display: flex; gap: 15px; padding-inline: 13px; min-width: max-content; color: var(--muted); }
+.coach-code-line i { flex: 0 0 20px; font-style: normal; color: var(--subtle); text-align: right; user-select: none; }
+.coach-code-line.is-highlighted { background: #1b3020; color: var(--primary); box-shadow: inset 2px 0 var(--primary); }
+.walkthrough-note { display: grid; grid-template-columns: auto minmax(0,1fr) auto; gap: 13px; align-items: start; padding-top: 16px; }
+.walkthrough-note p { color: var(--ink); font-size: 12px; line-height: 1.85; }
+.walkthrough-note > div { display: flex; gap: 3px; }
+.walkthrough-note .icon-button { min-width: 30px; min-height: 30px; }
+.mini-glossary details { border-top: 1px solid var(--border); padding-block: 13px; }
+.mini-glossary details:last-child { border-bottom: 1px solid var(--border); }
+.mini-glossary summary { cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 15px; font-size: 13px; color: var(--primary); }
+.mini-glossary summary::marker { content: ''; }
+.mini-glossary details[open] summary > span { transform: rotate(45deg); }
+.mini-glossary p { max-width: 65ch; margin-top: 10px; color: var(--muted); font-size: 12px; line-height: 1.85; }
+.guided-step-status { display: flex; align-items: center; gap: 12px; margin: 15px 0; color: var(--muted); font: 10px var(--mono); }
+.guided-step-status progress { width: 90px; height: 3px; }
+.guided-step-status button { margin-left: auto; font-size: 10px; }
+.experiment-guide .guided-steps { display: block; }
+.experiment-guide .guided-steps li { display: block; padding: 0; border-bottom: 1px solid var(--border); }
+.guided-steps label { display: flex; gap: 13px; align-items: flex-start; padding: 14px 0; cursor: pointer; }
+.guided-steps input { margin-top: 5px; flex-shrink: 0; accent-color: var(--primary); }
+.experiment-guide .guided-steps .guided-check { flex: 0 0 22px; color: var(--primary); font: 10px/1.9 var(--mono); }
+.experiment-guide .guided-steps label > span:last-child { color: var(--muted); font-family: inherit; font-size: 13px; line-height: 1.85; }
+.guided-steps .is-tried { background: #112017; }
+.experiment-guide > .quiet-note { margin-top: 13px; }
+.lesson-explanation p + p { margin-top: 13px; }
+@media(max-width:600px) {
+  .coach-header { padding: 18px 14px 14px; }
+  .coach-level { font-size: 8px; }
+  .coach-panel { padding: 16px 14px; }
+  .coach-prerequisites { padding-inline: 14px; }
+  .coach-tabs button { font-size: 10px; }
+  .walkthrough-note { grid-template-columns: minmax(0,1fr) auto; }
+  .walkthrough-note .eyebrow { grid-column: 1/-1; }
+  .coach-code { font-size: 10px; }
+  .experiment-guide .guided-steps label > span:last-child { font-size: 12px; }
+}
