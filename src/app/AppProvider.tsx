@@ -90,7 +90,15 @@ export function AppProvider({ children }: { children: ReactNode }) {
     (id: string) => setProgress(p => (p.lastLesson === id ? p : { ...p, lastLesson: id })),
     [],
   )
-  const resetProgress = useCallback(() => setProgress(empty), [])
+  const resetProgress = useCallback(() => {
+    setProgress(empty)
+    try {
+      localStorage.removeItem(PROGRESS_KEY)
+      setStorageAvailable(true)
+    } catch {
+      setStorageAvailable(false)
+    }
+  }, [])
   const setLocale = useCallback((locale: Locale) => setSettings(s => ({ ...s, locale })), [])
   const toggleMotion = useCallback(
     () => setSettings(s => ({ ...s, motion: !(s.motion ?? systemMotion) })),

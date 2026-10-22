@@ -1,4 +1,5 @@
 import { Suspense, useEffect, useRef, useState } from 'react'
+import * as Select from '@radix-ui/react-select'
 import {
   ArrowRight,
   BookOpen,
@@ -10,13 +11,17 @@ import {
   Search,
   Settings2,
   ShieldCheck,
+  Pause,
+  Play,
   Target,
+  ChevronDown,
 } from 'lucide-react'
-import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
+import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { useApp } from '../app/AppProvider'
 import { lessons, modules } from '../data/curriculum'
 import Brand from './Brand'
 import Dialog from './Dialog'
+import RouteExperience from './RouteExperience'
 
 const navigation = [
   { href: '/', id: 'Beranda', en: 'Home', icon: House },
@@ -25,37 +30,49 @@ const navigation = [
   { href: '/challenges', id: 'Tantangan', en: 'Challenges', icon: Target },
   { href: '/progress', id: 'Progres', en: 'Progress', icon: ChartNoAxesColumnIncreasing },
 ]
+const tickerMessages = [
+  'LEARN BY MOVING',
+  'GSAP / EXPERIMENT / REPEAT',
+  'TWEEN / TIMELINE / SCROLLTRIGGER',
+  'ONE IDEA, MANY MOTIONS',
+  'CODE / PREVIEW / PLAY',
+  'MAKE THE INVISIBLE VISIBLE',
+  'MOTION HAS A LOGIC',
+  'START SMALL / BUILD YOUR EYE',
+  'TARGET / PROPERTY / EASING',
+  'DESIGN THE MOMENT',
+]
 export default function SiteLayout() {
   const app = useApp()
   const { c, text, locale, setLocale, storageAvailable, reducedMotion, toggleMotion } = app
-  const { pathname, hash } = useLocation()
+  const navigate = useNavigate()
   const [searchOpen, setSearchOpen] = useState(false)
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [query, setQuery] = useState('')
   const [confirm, setConfirm] = useState(false)
-  const mainRef = useRef<HTMLElement>(null)
+  const [resetComplete, setResetComplete] = useState(false)
+  const resetTrigger = useRef<HTMLButtonElement>(null)
+  const resetCancel = useRef<HTMLButtonElement>(null)
+  const wasConfirming = useRef(false)
+  const [tickerPaused, setTickerPaused] = useState(false)
+  useEffect(() => {
+    if (settingsOpen) {
+      if (confirm) resetCancel.current?.focus()
+      else if (wasConfirming.current) resetTrigger.current?.focus()
+    }
+    wasConfirming.current = confirm
+  }, [confirm, settingsOpen])
   useEffect(() => {
     const shortcut = (event: KeyboardEvent) => {
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
         event.preventDefault()
+        setSettingsOpen(false)
         setSearchOpen(open => !open)
       }
     }
     window.addEventListener('keydown', shortcut)
     return () => window.removeEventListener('keydown', shortcut)
   }, [])
-  useEffect(() => {
-    if (!hash) {
-      window.scrollTo({ top: 0, behavior: 'instant' })
-      mainRef.current?.focus({ preventScroll: true })
-    } else {
-      const timer = window.setTimeout(
-        () => document.getElementById(hash.slice(1))?.scrollIntoView(),
-        120,
-      )
-      return () => clearTimeout(timer)
-    }
-  }, [pathname, hash])
   const matching = lessons
     .filter(l =>
       `${text(l.title)} ${l.title.en} ${l.concept} ${text(l.description)}`
@@ -65,6 +82,7 @@ export default function SiteLayout() {
     .slice(0, 8)
   return (
     <>
+      <RouteExperience />
       <a href="#main-content" className="skip-link">
         {c('Lewati ke konten', 'Skip to content')}
       </a>
@@ -81,7 +99,7 @@ export default function SiteLayout() {
           <nav className="desktop-nav" aria-label={c('Navigasi utama', 'Main navigation')}>
             {navigation.map(item => (
               <NavLink key={item.href} to={item.href} end={item.href === '/'}>
-                {c(item.id, item.en)}
+                <span>{c(item.id, item.en)}</span>
               </NavLink>
             ))}
           </nav>
@@ -89,7 +107,7 @@ export default function SiteLayout() {
             <button
               className="search-trigger"
               onClick={() => setSearchOpen(true)}
-              aria-label={c('Cari pelajaran (Ctrl K)', 'Search lessons (Ctrl K)')}
+              aria-label={c('Cari pelajaran · Ctrl K / ⌘ K', 'Search lessons · Ctrl K / ⌘ K')}
             >
               <Search size={16} />
               <kbd>⌘ K</kbd>
@@ -97,10 +115,13 @@ export default function SiteLayout() {
             <button
               className="locale-button"
               onClick={() => setLocale(locale === 'id' ? 'en' : 'id')}
-              aria-label={locale === 'id' ? 'Switch to English' : 'Ganti ke bahasa Indonesia'}
+              aria-label={
+                locale === 'id' ? 'EN · Switch to English' : 'ID · Ganti ke bahasa Indonesia'
+              }
+              title={locale === 'id' ? 'Switch to English' : 'Ganti ke bahasa Indonesia'}
             >
               <Languages size={15} />
-              {locale.toUpperCase()}
+              {locale === 'id' ? 'EN' : 'ID'}
             </button>
             <button
               className="icon-button settings-trigger"
@@ -115,15 +136,36 @@ export default function SiteLayout() {
           </div>
         </div>
       </header>
-      <div className="motion-ticker" aria-hidden="true">
-        <div className="ticker-track">
-          {Array.from({ length: 4 }, (_, i) => (
-            <span key={i}>
-              LEARN BY MOVING <b>✳</b> GSAP / EXPERIMENT / REPEAT <b>↗</b> MAKE THE INVISIBLE
-              VISIBLE <b>✳</b>
-            </span>
+      <div className="motion-ticker">
+        <div
+          className="ticker-track"
+          aria-hidden="true"
+          style={{ animationPlayState: tickerPaused ? 'paused' : 'running' }}
+        >
+          {[0, 1].map(copy => (
+            <div className="ticker-group" key={copy}>
+              {tickerMessages.map((message, index) => (
+                <span className="ticker-item" key={message}>
+                  {message} <b>{index % 3 === 1 ? '↗' : '✳'}</b>
+                </span>
+              ))}
+            </div>
           ))}
         </div>
+        {!reducedMotion && (
+          <button
+            className="ticker-toggle"
+            onClick={() => setTickerPaused(paused => !paused)}
+            aria-pressed={tickerPaused}
+            aria-label={
+              tickerPaused
+                ? c('Lanjutkan teks berjalan', 'Resume the scrolling text')
+                : c('Jeda teks berjalan', 'Pause the scrolling text')
+            }
+          >
+            {tickerPaused ? <Play size={12} /> : <Pause size={12} />}
+          </button>
+        )}
       </div>
       {!storageAvailable && (
         <div className="storage-notice" role="status">
@@ -133,10 +175,10 @@ export default function SiteLayout() {
           )}
         </div>
       )}
-      <main id="main-content" tabIndex={-1} ref={mainRef}>
+      <main id="main-content" tabIndex={-1}>
         <Suspense
           fallback={
-            <div className="route-loading" role="status">
+            <div className="route-loading" data-route-loading role="status">
               {c('Menyiapkan ruang belajarmu…', 'Getting your learning space ready…')}
             </div>
           }
@@ -206,14 +248,27 @@ export default function SiteLayout() {
           <Search size={18} />
           <input
             autoFocus
+            data-dialog-autofocus
             value={query}
             onChange={event => setQuery(event.target.value)}
             placeholder={c('Cari tween, easing, scroll…', 'Search tween, easing, scroll…')}
             aria-label={c('Cari materi', 'Search lessons')}
+            onKeyDown={event => {
+              if (event.key === 'Enter' && !event.nativeEvent.isComposing && matching[0]) {
+                event.preventDefault()
+                setSearchOpen(false)
+                navigate(`/learn/${matching[0].id}`)
+              }
+            }}
           />
         </label>
-        <p className="eyebrow search-label">
+        <p className="eyebrow search-label" role="status">
           {query ? c('HASIL PENCARIAN', 'SEARCH RESULTS') : c('MULAI DARI SINI', 'START EXPLORING')}
+          <span className="sr-only">
+            {' '}
+            · {matching.length} {c('hasil teratas', 'top results')}
+            {query ? ` · ${query}` : ''}
+          </span>
         </p>
         <div className="search-results">
           {matching.length ? (
@@ -242,8 +297,8 @@ export default function SiteLayout() {
         </div>
         <p className="quiet-note">
           {c(
-            'Gunakan Tab untuk memilih hasil. Esc untuk menutup.',
-            'Use Tab to choose a result. Esc to close.',
+            'Enter membuka hasil pertama. Tab memilih hasil lain. Esc untuk menutup.',
+            'Enter opens the first result. Tab chooses another. Esc closes search.',
           )}
         </p>
       </Dialog>
@@ -282,15 +337,38 @@ export default function SiteLayout() {
               )}
             </p>
           </div>
-          <select
-            className="compact-select"
-            value={locale}
-            onChange={e => setLocale(e.target.value as 'id' | 'en')}
-            aria-label={c('Bahasa materi', 'Learning language')}
-          >
-            <option value="id">Indonesia</option>
-            <option value="en">English</option>
-          </select>
+          <Select.Root value={locale} onValueChange={value => setLocale(value as 'id' | 'en')}>
+            <Select.Trigger
+              className="compact-select"
+              aria-label={c('Bahasa materi', 'Learning language')}
+            >
+              <Select.Value />
+              <Select.Icon aria-hidden="true">
+                <ChevronDown size={15} />
+              </Select.Icon>
+            </Select.Trigger>
+            <Select.Content
+              className="settings-select-content"
+              position="popper"
+              align="end"
+              sideOffset={6}
+            >
+              <Select.Viewport>
+                <Select.Item className="settings-select-item" value="id">
+                  <Select.ItemText>Indonesia</Select.ItemText>
+                  <Select.ItemIndicator className="settings-select-indicator">
+                    <Check size={14} />
+                  </Select.ItemIndicator>
+                </Select.Item>
+                <Select.Item className="settings-select-item" value="en">
+                  <Select.ItemText>English</Select.ItemText>
+                  <Select.ItemIndicator className="settings-select-indicator">
+                    <Check size={14} />
+                  </Select.ItemIndicator>
+                </Select.Item>
+              </Select.Viewport>
+            </Select.Content>
+          </Select.Root>
         </div>
         <div className="settings-progress">
           <ShieldCheck size={20} />
@@ -309,8 +387,8 @@ export default function SiteLayout() {
             <>
               <p>
                 {c(
-                  'Hapus status pelajaran dan tantangan? Draf kode tetap tersimpan.',
-                  'Clear lesson and challenge completion? Code drafts will be kept.',
+                  'Hapus progres pelajaran, tantangan, dan pelajaran terakhir dari penyimpanan browser ini? Draf kode dan pengaturan tetap tersimpan.',
+                  'Clear lesson and challenge progress and the last lesson from this browser? Code drafts and settings will be kept.',
                 )}
               </p>
               <div className="button-row">
@@ -319,19 +397,39 @@ export default function SiteLayout() {
                   onClick={() => {
                     app.resetProgress()
                     setConfirm(false)
+                    setResetComplete(true)
                   }}
                 >
-                  {c('Ya, hapus progres', 'Yes, clear progress')}
+                  {c('Hapus progres lokal', 'Clear local progress')}
                 </button>
-                <button className="button secondary" onClick={() => setConfirm(false)}>
+                <button
+                  ref={resetCancel}
+                  className="button secondary"
+                  onClick={() => setConfirm(false)}
+                >
                   {c('Batal', 'Cancel')}
                 </button>
               </div>
             </>
           ) : (
-            <button className="text-button muted" onClick={() => setConfirm(true)}>
-              {c('Mulai ulang progres belajar', 'Reset learning progress')}
+            <button
+              ref={resetTrigger}
+              className="text-button muted"
+              onClick={() => {
+                setResetComplete(false)
+                setConfirm(true)
+              }}
+            >
+              {c('Reset progres belajar', 'Reset learning progress')}
             </button>
+          )}
+          {resetComplete && (
+            <p className="reset-success" role="status">
+              {c(
+                'Progres belajar lokal sudah direset. Draf kode dan pengaturan tetap tersimpan.',
+                'Local learning progress has been reset. Code drafts and settings are still saved.',
+              )}
+            </p>
           )}
         </div>
         <p className="quiet-note">

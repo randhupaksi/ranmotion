@@ -21,7 +21,10 @@ export default function Dialog({
   useEffect(() => {
     const dialog = ref.current
     if (!dialog) return
-    if (open && !dialog.open) dialog.showModal()
+    if (open && !dialog.open) {
+      dialog.showModal()
+      dialog.querySelector<HTMLElement>('[data-dialog-autofocus]')?.focus()
+    }
     if (!open && dialog.open) dialog.close()
   }, [open])
   return (

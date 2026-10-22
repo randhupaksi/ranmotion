@@ -35,6 +35,11 @@ export default function HomeDemo() {
       setPlaying(false)
       return
     }
+    if (tween.current && tween.current.progress() < 1 && progress > 0 && !reducedMotion) {
+      tween.current.resume()
+      setPlaying(true)
+      return
+    }
     tween.current?.kill()
     tween.current = gsap.fromTo(
       box.current,
@@ -143,7 +148,11 @@ export default function HomeDemo() {
             ? c('Jeda', 'Pause')
             : reducedMotion
               ? c('Lihat hasil', 'Show result')
-              : c('Jalankan demo', 'Run the demo')}
+              : progress > 0 && progress < 100
+                ? c('Lanjutkan demo', 'Resume the demo')
+                : progress === 100
+                  ? c('Ulangi demo', 'Replay the demo')
+                  : c('Jalankan demo', 'Run the demo')}
         </button>
         <button className="icon-button" onClick={reset} aria-label={c('Reset demo', 'Reset demo')}>
           <RotateCcw size={15} />

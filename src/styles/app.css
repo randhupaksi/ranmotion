@@ -14,7 +14,7 @@
   --raised-bright: #1a382c;
   --ink: #f3f2e9;
   --muted: #a4b0a4;
-  --subtle: #75887a;
+  --subtle: #8b9c8e;
   --border: #263c30;
   --border-bright: #3a5944;
   --primary: #a5ed08;
@@ -513,10 +513,13 @@ progress::-moz-progress-bar {
 .desktop-nav > a.active {
   color: var(--primary);
 }
-.desktop-nav > a.active::after {
+.desktop-nav > a > span {
+  position: relative;
+}
+.desktop-nav > a.active > span::after {
   position: absolute;
   right: 0;
-  bottom: -1px;
+  bottom: -7px;
   left: 0;
   height: 2px;
   background: var(--primary);
@@ -579,23 +582,29 @@ progress::-moz-progress-bar {
 .ticker-track {
   display: flex;
   width: max-content;
-  min-width: 200%;
   height: 100%;
   align-items: center;
   animation: ticker-drift 36s linear infinite;
 }
-.ticker-track > span {
+.ticker-group {
   display: flex;
-  min-width: 25%;
+  min-width: 100vw;
+  flex: 0 0 auto;
   height: 100%;
   align-items: center;
   justify-content: space-around;
-  gap: 30px;
+  gap: clamp(22px, 3vw, 48px);
+  padding-inline: clamp(18px, 2vw, 36px);
+}
+.ticker-item {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(18px, 2vw, 32px);
   font: 8px/1 var(--mono);
   letter-spacing: 0.18em;
   white-space: nowrap;
 }
-.ticker-track b {
+.ticker-item b {
   color: var(--primary);
   font-size: 12px;
   font-weight: 500;
@@ -822,7 +831,62 @@ progress::-moz-progress-bar {
   background: var(--primary);
 }
 .compact-select {
+  display: inline-flex;
+  min-width: 110px;
+  min-height: 40px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 11px;
+  border: 1px solid var(--border-bright);
+  border-radius: 3px;
+  background: var(--night-soft);
+  color: var(--ink);
   font-size: 10px;
+}
+.compact-select:hover,
+.compact-select[data-state='open'] {
+  border-color: var(--primary);
+}
+.compact-select:focus-visible,
+.settings-select-item:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+.settings-select-content {
+  z-index: 1000;
+  min-width: var(--radix-select-trigger-width);
+  overflow: hidden;
+  border: 1px solid var(--border-bright);
+  border-radius: 3px;
+  background: var(--surface);
+  box-shadow: 0 14px 36px #0009;
+  color: var(--ink);
+}
+.settings-select-item {
+  position: relative;
+  display: flex;
+  min-height: 40px;
+  align-items: center;
+  padding: 9px 34px 9px 11px;
+  color: var(--muted);
+  font-size: 11px;
+  outline: none;
+  user-select: none;
+}
+.settings-select-item[data-highlighted] {
+  background: var(--raised);
+  color: var(--ink);
+}
+.settings-select-item[data-state='checked'] {
+  color: var(--primary);
+}
+.settings-select-indicator {
+  position: absolute;
+  right: 11px;
+  display: inline-flex;
+  align-items: center;
+  color: var(--primary);
 }
 .settings-progress {
   display: flex;
@@ -841,6 +905,11 @@ progress::-moz-progress-bar {
   margin-bottom: 15px;
   color: var(--muted);
   font-size: 12px;
+}
+.reset-success {
+  margin-top: 12px;
+  color: var(--primary);
+  font-size: 11px;
 }
 
 /* Home: asymmetric instrument panel + editorial course map. */
@@ -1878,10 +1947,17 @@ progress::-moz-progress-bar {
   line-height: 1.8;
 }
 .lesson-section {
-  max-width: 780px;
+  max-width: none;
   padding: 27px 0 30px;
   border-top: 1px solid var(--border);
   scroll-margin-top: 112px;
+}
+.lesson-section > p:not(.eyebrow, .mental-model),
+.lesson-explanation,
+.lesson-recap ul,
+.experiment-guide .guided-steps,
+.concept-api {
+  max-width: 70ch;
 }
 .lesson-section > .eyebrow {
   margin-bottom: 11px;
@@ -2469,9 +2545,6 @@ progress::-moz-progress-bar {
   }
 }
 @media (max-width: 950px) {
-  .ticker-track {
-    min-width: 400%;
-  }
   .page-width {
     width: min(100% - 56px, 820px);
   }
@@ -2673,7 +2746,7 @@ progress::-moz-progress-bar {
   .motion-ticker {
     height: 27px;
   }
-  .ticker-track > span {
+  .ticker-item {
     gap: 17px;
     font-size: 7px;
     letter-spacing: 0.12em;
