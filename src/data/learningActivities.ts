@@ -1,5 +1,5 @@
 import { b } from './types'
-import type { Copy, LearningActivity, Lesson } from './types'
+import type { Copy, LearningActivity, PracticeLesson } from './types'
 
 type Pair = [string, string]
 type Blueprint = Omit<LearningActivity, 'variation'> & {
@@ -33,7 +33,7 @@ function a(
 
 const activities: Record<string, Blueprint> = {
   orientation: a(
-    [],
+    ['animation-blueprint'],
     ['Apa yang terjadi kalau duration diperbesar?', 'What happens when duration increases?'],
     [
       ['Kotak lebih jauh', 'The box goes farther'],
@@ -1338,7 +1338,7 @@ const activities: Record<string, Blueprint> = {
   ),
 }
 
-export function learningActivity(lesson: Lesson): LearningActivity {
+export function learningActivity(lesson: PracticeLesson): LearningActivity {
   const blueprint = activities[lesson.id]
   if (!blueprint || !lesson.code.includes(blueprint.change[0]))
     throw new Error(`Missing learning activity or variation for ${lesson.id}`)

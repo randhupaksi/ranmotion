@@ -2,14 +2,14 @@ import { lazy, Suspense, useEffect, useMemo } from 'react'
 import { ArrowUpRight, FlaskConical, ShieldCheck } from 'lucide-react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useApp } from '../app/AppProvider'
-import { getLesson, getModuleLessons, modules } from '../data/curriculum'
+import { getPracticeLesson, getModuleLessons, modules } from '../data/curriculum'
 import ErrorBoundary from '../components/ErrorBoundary'
 import { learningActivity } from '../data/learningActivities'
 const MotionLab = lazy(() => import('../features/lab/MotionLab'))
 export default function PlaygroundPage() {
   const { c, text } = useApp()
   const [params, setParams] = useSearchParams()
-  const source = getLesson(params.get('example') ?? 'to') ?? getLesson('to')!
+  const source = getPracticeLesson(params.get('example') ?? 'to') ?? getPracticeLesson('to')!
   const lesson = useMemo(() => ({ ...source, activity: learningActivity(source) }), [source])
   useEffect(() => {
     document.title = `${c('Playground animasi', 'Animation playground')} — RanMotion`
@@ -46,11 +46,13 @@ export default function PlaygroundPage() {
         >
           {modules.map(m => (
             <optgroup key={m.number} label={text(m.title)}>
-              {getModuleLessons(m.number).map(l => (
-                <option key={l.id} value={l.id}>
-                  {text(l.title)} · {l.concept}
-                </option>
-              ))}
+              {getModuleLessons(m.number)
+                .filter(l => l.format !== 'concept')
+                .map(l => (
+                  <option key={l.id} value={l.id}>
+                    {text(l.title)} · {l.concept}
+                  </option>
+                ))}
             </optgroup>
           ))}
         </select>

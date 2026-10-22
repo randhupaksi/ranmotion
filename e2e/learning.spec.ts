@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test'
-import { lessons } from '../src/data/curriculum'
+import { getPracticeLesson, practiceLessons } from '../src/data/curriculum'
 
 test('a new learner can complete a challenge, persist progress, and switch language in place', async ({
   page,
@@ -13,10 +13,28 @@ test('a new learner can complete a challenge, persist progress, and switch langu
   await page.reload()
   expect(requests.some(url => /MotionLab|CodeEditor|codemirror/.test(url))).toBe(false)
   await page.getByRole('link', { name: 'Masuk ke pelajaran pertama', exact: true }).click()
+  await expect(page).toHaveURL(/learn\/gsap-foundations/)
+  await expect(page.locator('.cm-content')).toHaveCount(0)
+  await page
+    .getByRole('radio', { name: 'Mengatur perubahan posisi kotak selama suatu waktu', exact: true })
+    .check()
+  await expect(page.getByText('Ya, kamu memahami idenya.', { exact: true })).toBeVisible()
+  await page.getByRole('button', { name: 'Tandai selesai', exact: true }).click()
+  await page.locator('.lesson-pagination').getByRole('link').last().click()
+  await expect(page).toHaveURL(/learn\/animation-blueprint/)
+  await page.getByRole('slider', { name: /Waktu tempuh/ }).fill('2')
+  await page
+    .getByRole('radio', {
+      name: 'Kotak memerlukan waktu lebih lama untuk tiba di tujuan yang sama',
+      exact: true,
+    })
+    .check()
+  await page.getByRole('button', { name: 'Tandai selesai', exact: true }).click()
+  await page.locator('.lesson-pagination').getByRole('link').last().click()
   await expect(page).toHaveURL(/learn\/orientation/)
   await page.getByRole('button', { name: 'Periksa tantangan', exact: true }).click()
   await expect(page.getByText('Jalankan kode terbarumu dahulu.', { exact: true })).toBeVisible()
-  await page.locator('.cm-content').fill(lessons[0].solution)
+  await page.locator('.cm-content').fill(getPracticeLesson('orientation')!.solution)
   await page.getByRole('button', { name: 'Jalankan kode', exact: true }).click()
   await expect(page.getByText('Kode berhasil dijalankan', { exact: true })).toBeVisible()
   await page.getByRole('slider', { name: 'Progres animasi', exact: true }).fill('100')
@@ -35,7 +53,7 @@ test('a new learner can complete a challenge, persist progress, and switch langu
   await page.reload()
   await expect(page.getByRole('button', { name: 'Pelajaran selesai', exact: true })).toBeDisabled()
   await expect(page.locator('.cm-content')).toContainText('240')
-  await page.getByRole('button', { name: 'Switch to English', exact: true }).click()
+  await page.getByRole('button', { name: /Switch to English/ }).click()
   await expect(page.locator('html')).toHaveAttribute('lang', 'en')
   await expect(page).toHaveURL(/learn\/orientation/)
   await expect(
@@ -44,7 +62,7 @@ test('a new learner can complete a challenge, persist progress, and switch langu
   expect(errors).toEqual([])
 })
 
-for (const lesson of lessons) {
+for (const lesson of practiceLessons) {
   test(`real GSAP preview and challenge: ${lesson.id}`, async ({ page }) => {
     await page.goto(`/learn/${lesson.id}`)
     await page.getByRole('button', { name: 'Jalankan kode', exact: true }).click()
@@ -150,12 +168,14 @@ test('reduced motion displays a static result and search is keyboard accessible'
 })
 
 test('desktop and mobile pages remain within the viewport', async ({ page }) => {
-  test.setTimeout(60000)
+  test.setTimeout(90000)
   for (const width of [1440, 768, 390, 320]) {
     await page.setViewportSize({ width, height: 900 })
     for (const path of [
       '/',
       '/learn',
+      '/learn/gsap-foundations',
+      '/learn/animation-blueprint',
       '/learn/to',
       '/playground?example=pin',
       '/challenges',
@@ -280,7 +300,7 @@ test('a beginner can predict, inspect code, open a glossary, and compare a varia
   await expect(page.getByText('1/3 langkah dicoba', { exact: true })).toBeVisible()
   await page
     .locator('.cm-content')
-    .fill(lessons[0].code.replace('duration = 1.2', 'duration = 1.8'))
+    .fill(getPracticeLesson('orientation')!.code.replace('duration = 1.2', 'duration = 1.8'))
   await page.getByRole('button', { name: 'Coba variasi', exact: true }).click()
   await expect(page.locator('.cm-content')).toContainText('duration = 2.4')
   await page.getByRole('button', { name: 'Kembali ke kode saya', exact: true }).click()
@@ -290,7 +310,7 @@ test('a beginner can predict, inspect code, open a glossary, and compare a varia
   await expect(page.getByText('Kode berhasil dijalankan', { exact: true })).toBeVisible()
   await page.getByRole('button', { name: 'Contoh awal', exact: true }).click()
   await expect(page.locator('.cm-content')).toContainText('duration = 1.2')
-  await page.getByRole('button', { name: 'Switch to English', exact: true }).click()
+  await page.getByRole('button', { name: /Switch to English/ }).click()
   await expect(page.getByRole('tab', { name: 'Mini glossary', exact: true })).toHaveAttribute(
     'aria-selected',
     'true',
@@ -338,7 +358,7 @@ test('responsive animation uses the preview viewport and honors the system motio
     .toBe(25)
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await page.goto('/learn/reduced-motion')
-  const lesson = lessons.find(item => item.id === 'reduced-motion')!
+  const lesson = getPracticeLesson('reduced-motion')!
   await page.locator('.cm-content').fill(lesson.solution)
   await page.getByRole('button', { name: 'Jalankan kode', exact: true }).click()
   await expect(page.getByText('Kode berhasil dijalankan', { exact: true })).toBeVisible()

@@ -1,15 +1,15 @@
 import { b } from './types'
-import type { Lesson } from './types'
+import type { PracticeLesson } from './types'
 import { expandedExamples, expandedSolutions } from './expandedExamples'
 
-type Input = Omit<Lesson, 'code' | 'solution' | 'activity'>
-const lesson = (input: Input): Lesson => ({
+type Input = Omit<PracticeLesson, 'code' | 'solution' | 'activity'>
+const lesson = (input: Input): PracticeLesson => ({
   ...input,
   code: expandedExamples[input.id],
   solution: expandedSolutions[input.id],
 })
 
-export const expandedLessons: Lesson[] = [
+export const expandedLessons: PracticeLesson[] = [
   lesson({
     id: 'coordinates',
     module: 0,

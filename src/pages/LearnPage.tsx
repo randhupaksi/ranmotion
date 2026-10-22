@@ -15,7 +15,7 @@ export default function LearnPage() {
   const [filter, setFilter] = useState('all')
   const [query, setQuery] = useState('')
   const { hash } = useLocation()
-  const next = nextRecommended(completed)
+  const next = nextRecommended(completed, lastLesson)
   const done = lessons.filter(l => completed.includes(l.id)).length
   useEffect(() => {
     document.title = `${c('Jalur belajar', 'Learning path')} — RanMotion`
@@ -77,8 +77,8 @@ export default function LearnPage() {
         </summary>
         <p>
           {c(
-            'Kenali elemen HTML, selector class CSS (.box), dan dasar JavaScript seperti const, objek, dan fungsi. Pelajaran awal memberi pengingat singkat. RanMotion berfokus pada animasi, jadi kamu tidak perlu menguasai semua JavaScript untuk memulai.',
-            'Know HTML elements, CSS class selectors (.box), and JavaScript basics such as const, objects, and functions. The first lessons provide reminders. RanMotion focuses on animation; you do not need to master all of JavaScript to begin.',
+            'Dua studi visual pertama tidak membutuhkan coding. Setelah itu, dasar HTML, selector class CSS (.box), serta JavaScript seperti const, objek, dan fungsi akan membantu saat memakai editor. Pengingat konsep tersedia di setiap pelajaran; tidak perlu menguasai semuanya sebelum mulai.',
+            'The first two visual studies need no coding. After that, basic HTML, CSS class selectors (.box), and JavaScript such as const, objects, and functions help with the editor. Lessons include concept reminders; you do not need to master everything before starting.',
           )}
         </p>
       </details>
@@ -86,6 +86,7 @@ export default function LearnPage() {
       <div className="curriculum-toolbar">
         <div
           className="filter-tabs"
+          role="group"
           aria-label={c('Filter status pelajaran', 'Filter lesson status')}
         >
           {[
@@ -114,6 +115,16 @@ export default function LearnPage() {
         </label>
       </div>
       <div className="curriculum">
+        <p className="curriculum-result-count" role="status">
+          {
+            lessons.filter(
+              l =>
+                (filter === 'all' || completed.includes(l.id) === (filter === 'completed')) &&
+                `${text(l.title)} ${l.concept}`.toLowerCase().includes(query.toLowerCase()),
+            ).length
+          }{' '}
+          {c('pelajaran ditampilkan', 'lessons shown')}
+        </p>
         {modules.map(m => {
           const all = getModuleLessons(m.number)
           const filtered = all.filter(

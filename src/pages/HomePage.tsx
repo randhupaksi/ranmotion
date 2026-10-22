@@ -6,8 +6,9 @@ import { lessons, modules, nextRecommended } from '../data/curriculum'
 const HomeDemo = lazy(() => import('../components/HomeDemo'))
 
 export default function HomePage() {
-  const { c, text, completed } = useApp()
-  const next = nextRecommended(completed)
+  const { c, text, completed, lastLesson, reducedMotion } = useApp()
+  const next = nextRecommended(completed, lastLesson)
+  const allDone = lessons.every(lesson => completed.includes(lesson.id))
   useEffect(() => {
     document.title = c('RanMotion — Pahami animasi.', 'RanMotion — Understand animation.')
   }, [c])
@@ -44,15 +45,17 @@ export default function HomePage() {
           </h1>
           <p className="hero-lead">
             {c(
-              'RanMotion mengubah GSAP dari baris kode menjadi sesuatu yang bisa kamu lihat, utak-atik, dan pahami. Mulai dari animasi sederhana. Bangun intuisi yang bisa kamu bawa ke mana saja.',
-              'RanMotion turns GSAP from lines of code into something you can see, tweak, and understand. Start with a simple animation. Build intuition you can take anywhere.',
+              'RanMotion adalah ruang belajar animasi web dengan GSAP, library animasi JavaScript. Mulai dari ide dan contoh visual, lalu coba kode selangkah demi selangkah. Bangun intuisi dengan melihat, mengubah, dan membandingkan.',
+              'RanMotion is an interactive space to learn web animation with GSAP, a JavaScript animation library. Start with ideas and visual examples, then explore code one step at a time. Build intuition by watching, changing, and comparing.',
             )}
           </p>
           <div className="hero-actions">
-            <Link className="button primary" to={`/learn/${next.id}`}>
-              {completed.length
-                ? c('Lanjutkan perjalanan', 'Continue your journey')
-                : c('Masuk ke pelajaran pertama', 'Enter the first lesson')}
+            <Link className="button primary" to={allDone ? '/playground' : `/learn/${next.id}`}>
+              {allDone
+                ? c('Buat eksperimen baru', 'Make a new experiment')
+                : completed.length || lastLesson
+                  ? c('Lanjutkan perjalanan', 'Continue your journey')
+                  : c('Masuk ke pelajaran pertama', 'Enter the first lesson')}
               <ArrowUpRight size={16} />
             </Link>
             <Link className="button ghost" to="/playground">
@@ -60,6 +63,22 @@ export default function HomePage() {
               <ArrowRight size={15} />
             </Link>
           </div>
+          <p className="hero-next-note">
+            {allDone ? (
+              c(
+                'Seluruh jalur selesai. Saatnya mencoba idemu sendiri.',
+                'You finished the path. Time to try your own idea.',
+              )
+            ) : (
+              <>
+                {c('Berikutnya: ', 'Up next: ')}
+                {text(next.title)} · {next.minutes} {c('menit', 'min')}
+                {next.format === 'concept'
+                  ? c(' · tanpa menulis kode', ' · no coding required')
+                  : ''}
+              </>
+            )}
+          </p>
           <p className="hero-footnote">
             <Check size={13} />
             {c(
@@ -94,10 +113,15 @@ export default function HomePage() {
           </Suspense>
           <p className="hero-lab-note">
             <MousePointer2 size={12} />
-            {c(
-              'Animasi ini berjalan langsung. Kamu memegang kendalinya.',
-              'This animation is running live. You are in control.',
-            )}
+            {reducedMotion
+              ? c(
+                  'Mode kurangi animasi aktif. Tekan Lihat hasil untuk memeriksa keadaan akhirnya.',
+                  'Reduced motion is on. Press Show result to inspect the final state.',
+                )
+              : c(
+                  'Tekan Jalankan demo, lalu ubah durasi untuk merasakan bedanya.',
+                  'Press Run the demo, then change the duration to feel the difference.',
+                )}
           </p>
         </div>
         <a className="hero-scroll" href="#learning-path">
@@ -145,8 +169,8 @@ export default function HomePage() {
           <div>
             <p>
               {c(
-                'Mulai dengan cara GSAP memilih elemen. Lanjutkan ke waktu, urutan, interaksi, dan scroll. Di ujungnya, semua konsep bekerja bersama dalam satu proyek.',
-                'Start with how GSAP finds elements. Continue through timing, sequencing, interaction, and scroll. At the end, every idea works together in one project.',
+                'Kenali GSAP lewat dua studi visual tanpa coding. Setelah itu, coba editor, atur waktu, rangkai urutan, lalu hubungkan animasi dengan interaksi dan scroll. Di ujungnya, satukan idemu dalam proyek.',
+                'Meet GSAP through two visual studies with no coding. Then try the editor, shape timing, arrange sequences, and connect animation to interaction and scroll. Finally, bring your ideas together in a project.',
               )}
             </p>
             <Link className="text-link" to="/learn">
@@ -251,8 +275,8 @@ export default function HomePage() {
           <h2>{c('Punya rasa ingin tahu? Sudah cukup.', 'Curiosity is a good enough start.')}</h2>
           <p>
             {c(
-              'Sedikit HTML, selector CSS, dan JavaScript dasar akan membantu. Kami mengingatkan konsep yang dibutuhkan sambil berjalan.',
-              'A little HTML, CSS selectors, and basic JavaScript will help. We will revisit concepts when you need them.',
+              'Dua pelajaran pertama bisa dicoba tanpa menulis kode. Saat masuk ke editor, sedikit HTML, selector CSS, dan JavaScript dasar akan membantu. Pengingat konsep tersedia di sepanjang jalur.',
+              'Try the first two lessons without writing code. When you reach the editor, a little HTML, CSS selectors, and basic JavaScript will help. Concept reminders are available along the way.',
             )}
           </p>
           <div className="prerequisite-tags">
@@ -261,7 +285,7 @@ export default function HomePage() {
             <span>JavaScript</span>
           </div>
         </div>
-        <Link className="button primary" to="/learn/orientation">
+        <Link className="button primary" to="/learn/gsap-foundations">
           {c('Belajar animasi', 'Start learning')}
           <ArrowUpRight size={17} />
         </Link>

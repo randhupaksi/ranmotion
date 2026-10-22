@@ -18,6 +18,7 @@ import NotFoundPage from './NotFoundPage'
 import LessonCoach, { GuidedSteps } from '../components/LessonCoach'
 import { learningActivity } from '../data/learningActivities'
 const MotionLab = lazy(() => import('../features/lab/MotionLab'))
+const ConceptStudy = lazy(() => import('../components/ConceptStudy'))
 
 function LessonSidebar({ lesson }: { lesson: Lesson }) {
   const { c, text, completed } = useApp()
@@ -98,6 +99,7 @@ function LessonContent({ lesson }: { lesson: Lesson }) {
   const previous = lessons[index - 1]
   const next = lessons[index + 1]
   const done = completed.includes(lesson.id)
+  const conceptual = lesson.format === 'concept'
   const explanation = text(lesson.explanation)
     .split(/(?<=[.!?])\s+(?=[A-Z])/u)
     .reduce<string[]>((parts, sentence, index) => {
@@ -136,10 +138,24 @@ function LessonContent({ lesson }: { lesson: Lesson }) {
         </div>
         <h1>{text(lesson.title)}</h1>
         <p className="page-lead">{text(lesson.description)}</p>
+        <p className="lesson-format-note">
+          {conceptual
+            ? c('STUDI VISUAL · TANPA MENULIS KODE', 'VISUAL STUDY · NO CODING REQUIRED')
+            : c(
+                'PRAKTIK TERARAH · CONTOH KODE SUDAH DISEDIAKAN',
+                'GUIDED PRACTICE · STARTER CODE INCLUDED',
+              )}
+        </p>
         <nav className="lesson-section-nav" aria-label={c('Bagian pelajaran', 'Lesson sections')}>
           <a href="#understand">{c('Pahami', 'Understand')}</a>
-          <a href="#experiment">{c('Eksperimen', 'Experiment')}</a>
-          <a href="#challenge">{c('Tantangan', 'Challenge')}</a>
+          <a href="#experiment">
+            {conceptual
+              ? c('Amati animasinya', 'Explore the animation')
+              : c('Eksperimen', 'Experiment')}
+          </a>
+          <a href="#challenge">
+            {conceptual ? c('Cek pemahaman', 'Check understanding') : c('Tantangan', 'Challenge')}
+          </a>
           <a href="#recap">{c('Rangkuman', 'Recap')}</a>
         </nav>
       </header>
@@ -164,37 +180,51 @@ function LessonContent({ lesson }: { lesson: Lesson }) {
           <code>{lesson.concept}</code>
         </div>
       </section>
-      <LessonCoach lesson={lesson} />
-      <section className="lesson-section experiment-guide">
-        <p className="eyebrow">
-          {c('02 / AMATI SEBAB DAN AKIBAT', '02 / CONNECT CAUSE AND EFFECT')}
-        </p>
-        <h2>{c('Coba satu perubahan setiap kali', 'Try one change at a time')}</h2>
-        <GuidedSteps steps={lesson.steps} />
-      </section>
-      <div className="practice-heading">
-        <div>
-          <p className="eyebrow">{c('03 / COBA DALAM KODE', '03 / TRY IT IN CODE')}</p>
-          <h2>{c('Giliranmu menganimasikan idenya.', 'Your turn to animate the idea.')}</h2>
-        </div>
-        <Link className="text-link" to={`/playground?example=${lesson.id}`}>
-          {c('Buka di playground', 'Open in playground')}
-          <ArrowUpRight size={14} />
-        </Link>
-      </div>
-      <ErrorBoundary>
+      {conceptual ? (
         <Suspense
           fallback={
             <div className="lab-skeleton" role="status">
-              <span>
-                {c('Menyiapkan editor dan preview…', 'Getting the editor and preview ready…')}
-              </span>
+              {c('Menyiapkan studi visual…', 'Preparing the visual study…')}
             </div>
           }
         >
-          <MotionLab lesson={lesson} key={lesson.id} />
+          <ConceptStudy lesson={lesson} />
         </Suspense>
-      </ErrorBoundary>
+      ) : (
+        <>
+          <LessonCoach lesson={lesson} />
+          <section className="lesson-section experiment-guide">
+            <p className="eyebrow">
+              {c('02 / AMATI SEBAB DAN AKIBAT', '02 / CONNECT CAUSE AND EFFECT')}
+            </p>
+            <h2>{c('Coba satu perubahan setiap kali', 'Try one change at a time')}</h2>
+            <GuidedSteps steps={lesson.steps} />
+          </section>
+          <div className="practice-heading">
+            <div>
+              <p className="eyebrow">{c('03 / COBA DALAM KODE', '03 / TRY IT IN CODE')}</p>
+              <h2>{c('Giliranmu menganimasikan idenya.', 'Your turn to animate the idea.')}</h2>
+            </div>
+            <Link className="text-link" to={`/playground?example=${lesson.id}`}>
+              {c('Buka di playground', 'Open in playground')}
+              <ArrowUpRight size={14} />
+            </Link>
+          </div>
+          <ErrorBoundary>
+            <Suspense
+              fallback={
+                <div className="lab-skeleton" role="status">
+                  <span>
+                    {c('Menyiapkan editor dan preview…', 'Getting the editor and preview ready…')}
+                  </span>
+                </div>
+              }
+            >
+              <MotionLab lesson={lesson} key={lesson.id} />
+            </Suspense>
+          </ErrorBoundary>
+        </>
+      )}
       <section className="lesson-section common-mistake">
         <p className="eyebrow">
           {c('JIKA HASILNYA BELUM SESUAI', 'IF THE RESULT LOOKS DIFFERENT')}
@@ -203,7 +233,11 @@ function LessonContent({ lesson }: { lesson: Lesson }) {
         <p>{text(lesson.mistake)}</p>
       </section>
       <section className="lesson-section lesson-recap" id="recap">
-        <p className="eyebrow">{c('05 / BAWA IDE INI BERSAMAMU', '05 / TAKE THIS WITH YOU')}</p>
+        <p className="eyebrow">
+          {conceptual
+            ? c('04 / BAWA IDE INI BERSAMAMU', '04 / TAKE THIS WITH YOU')
+            : c('05 / BAWA IDE INI BERSAMAMU', '05 / TAKE THIS WITH YOU')}
+        </p>
         <h2>{c('Yang perlu kamu ingat', 'What to remember')}</h2>
         <ul>
           {lesson.recap.map((item, i) => (
@@ -223,7 +257,7 @@ function LessonContent({ lesson }: { lesson: Lesson }) {
                   )
                 : c('Sudah paham inti idenya?', 'Got the idea?')}
             </strong>
-            <p>
+            <p role="status">
               {done
                 ? storageAvailable
                   ? c(
@@ -301,7 +335,12 @@ export default function LessonPage() {
   const { lessonId } = useParams()
   const source = getLesson(lessonId)
   const lesson = useMemo(
-    () => (source ? { ...source, activity: learningActivity(source) } : undefined),
+    () =>
+      source
+        ? source.format === 'concept'
+          ? source
+          : { ...source, activity: learningActivity(source) }
+        : undefined,
     [source],
   )
   if (!lesson) return <NotFoundPage />

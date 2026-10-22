@@ -21,7 +21,7 @@ export interface LearningActivity {
   variation: { title: Copy; observation: Copy; code: string }
   prerequisites: string[]
 }
-export interface Lesson {
+interface LessonContent {
   id: string
   module: number
   title: Copy
@@ -34,9 +34,16 @@ export interface Lesson {
   steps: Copy[]
   mistake: Copy
   recap: Copy[]
-  challenge: { title: Copy; task: Copy; hints: Copy[]; rule: string }
   scene: Scene
+}
+export interface ConceptLesson extends LessonContent {
+  format: 'concept'
+}
+export interface PracticeLesson extends LessonContent {
+  format?: 'practice'
+  challenge: { title: Copy; task: Copy; hints: Copy[]; rule: string }
   code: string
   solution: string
   activity?: LearningActivity
 }
+export type Lesson = ConceptLesson | PracticeLesson

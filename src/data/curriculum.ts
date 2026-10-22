@@ -1,7 +1,8 @@
 import { b } from './types'
-import type { Lesson } from './types'
+import type { Lesson, PracticeLesson } from './types'
 import { examples } from './examples'
 import { expandedLessons } from './expandedCurriculum'
+import { introLessons } from './introCurriculum'
 
 export const modules = [
   {
@@ -11,7 +12,7 @@ export const modules = [
       'Siapkan cara berpikir dan kenali ruang praktikmu.',
       'Build your mental model and find your way around the playground.',
     ),
-    topics: 'playground · selector',
+    topics: 'GSAP · visual study · playground · selector',
   },
   {
     number: 1,
@@ -86,12 +87,12 @@ export const modules = [
     topics: 'mini project · creative practice',
   },
 ]
-type Input = Omit<Lesson, 'code' | 'solution'> & { solution?: string }
-function lesson(input: Input): Lesson {
+type Input = Omit<PracticeLesson, 'code' | 'solution'> & { solution?: string }
+function lesson(input: Input): PracticeLesson {
   return { ...input, code: examples[input.id], solution: input.solution ?? examples[input.id] }
 }
 
-const foundationLessons: Lesson[] = [
+const foundationLessons: PracticeLesson[] = [
   lesson({
     id: 'orientation',
     module: 0,
@@ -1285,6 +1286,8 @@ const foundationLessons: Lesson[] = [
   }),
 ]
 const lessonOrder = [
+  'gsap-foundations',
+  'animation-blueprint',
   'orientation',
   'coordinates',
   'selectors',
@@ -1326,7 +1329,9 @@ const lessonOrder = [
   'project-menu',
   'project',
 ]
-const lessonMap = new Map([...foundationLessons, ...expandedLessons].map(item => [item.id, item]))
+const lessonMap = new Map<string, Lesson>(
+  [...introLessons, ...foundationLessons, ...expandedLessons].map(item => [item.id, item]),
+)
 export const lessons: Lesson[] = lessonOrder.map(id => {
   const item = lessonMap.get(id)
   if (!item) throw new Error(`Missing curriculum lesson: ${id}`)
@@ -1335,6 +1340,12 @@ export const lessons: Lesson[] = lessonOrder.map(id => {
 })
 export const getLesson = (id: string | undefined) => lessons.find(l => l.id === id)
 export const getModuleLessons = (number: number) => lessons.filter(l => l.module === number)
-export const nextRecommended = (completed: string[]) =>
-  lessons.find(l => !completed.includes(l.id)) ?? lessons[0]
+export const practiceLessons = lessons.filter((l): l is PracticeLesson => l.format !== 'concept')
+export const getPracticeLesson = (id: string) => practiceLessons.find(l => l.id === id)
+export const nextRecommended = (completed: string[], lastLesson?: string | null) => {
+  const resume = getLesson(lastLesson ?? undefined)
+  return resume && !completed.includes(resume.id)
+    ? resume
+    : (lessons.find(l => !completed.includes(l.id)) ?? lessons[0])
+}
 export const totalMinutes = lessons.reduce((sum, l) => sum + l.minutes, 0)

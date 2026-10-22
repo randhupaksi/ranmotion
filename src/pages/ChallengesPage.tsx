@@ -2,14 +2,14 @@ import { useEffect, useState } from 'react'
 import { ArrowUpRight, Check, Target } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useApp } from '../app/AppProvider'
-import { lessons, modules } from '../data/curriculum'
+import { practiceLessons, modules } from '../data/curriculum'
 export default function ChallengesPage() {
   const { c, text, challenges } = useApp()
   const [filter, setFilter] = useState('all')
   useEffect(() => {
     document.title = `${c('Tantangan', 'Challenges')} — RanMotion`
   }, [c])
-  const visible = lessons.filter(
+  const visible = practiceLessons.filter(
     l =>
       filter === 'all' ||
       (filter === 'done' ? challenges.includes(l.id) : !challenges.includes(l.id)),
@@ -34,13 +34,14 @@ export default function ChallengesPage() {
         <Target size={20} />
         <p>
           <strong>
-            {challenges.filter(id => lessons.some(l => l.id === id)).length} / {lessons.length}
+            {challenges.filter(id => practiceLessons.some(l => l.id === id)).length} /{' '}
+            {practiceLessons.length}
           </strong>{' '}
           {c('tantangan dituntaskan', 'challenges completed')}
         </p>
         <progress
-          value={challenges.filter(id => lessons.some(l => l.id === id)).length}
-          max={lessons.length}
+          value={challenges.filter(id => practiceLessons.some(l => l.id === id)).length}
+          max={practiceLessons.length}
           aria-label={c('Progres tantangan', 'Challenge progress')}
         />
         <Link to="/learn" className="text-link">
@@ -48,6 +49,13 @@ export default function ChallengesPage() {
           <ArrowUpRight size={14} />
         </Link>
       </div>
+      <p className="challenge-start-note">
+        {c('Baru mengenal GSAP? ', 'New to GSAP? ')}
+        <Link to="/learn/gsap-foundations" className="text-link">
+          {c('Mulai dari studi visual tanpa coding', 'Start with a visual study, no coding needed')}
+          <ArrowUpRight size={14} />
+        </Link>
+      </p>
       <div className="challenge-board-head">
         <span>{c('PILIH EKSPERIMEN', 'CHOOSE AN EXPERIMENT')}</span>
         <div className="filter-tabs challenge-filters">

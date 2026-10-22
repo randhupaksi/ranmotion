@@ -5,10 +5,10 @@ import { Link } from 'react-router-dom'
 import { useApp } from '../app/AppProvider'
 import { getLesson } from '../data/curriculum'
 import { glossary } from '../data/learningActivities'
-import type { Copy, Lesson } from '../data/types'
+import type { Copy, PracticeLesson } from '../data/types'
 import './lessonCoach.css'
 
-export default function LessonCoach({ lesson }: { lesson: Lesson }) {
+export default function LessonCoach({ lesson }: { lesson: PracticeLesson }) {
   const { c, text } = useApp()
   const uid = useId()
   const [tab, setTab] = useState('predict')
@@ -172,6 +172,7 @@ export default function LessonCoach({ lesson }: { lesson: Lesson }) {
         </div>
         <pre
           className="coach-code"
+          tabIndex={0}
           aria-label={c('Contoh kode dengan baris pilihan', 'Example code with selected lines')}
         >
           <code>

@@ -6,11 +6,11 @@ export default function LearningEntryRoutes() {
   const { c } = useApp()
   const routes = [
     {
-      href: '/learn/orientation',
+      href: '/learn/gsap-foundations',
       title: c('Aku baru mulai', 'I am just starting'),
       note: c(
-        'Mulai dengan editor, koordinat, dan selector. Tiga pelajaran pendek untuk membangun pijakan.',
-        'Start with the editor, coordinates, and selectors. Three short lessons to find your footing.',
+        'Kenali GSAP dan rencanakan animasi lewat kontrol visual. Dua pelajaran pertama tanpa menulis kode, lalu kenali editor.',
+        'Meet GSAP and plan an animation with visual controls. The first two lessons need no coding, then you will meet the editor.',
       ),
     },
     {

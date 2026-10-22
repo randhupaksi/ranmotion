@@ -2,11 +2,17 @@ import { useEffect } from 'react'
 import { ArrowRight, ArrowUpRight, Check, ShieldCheck } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useApp } from '../app/AppProvider'
-import { lessons, modules, getModuleLessons, nextRecommended } from '../data/curriculum'
+import {
+  lessons,
+  practiceLessons,
+  modules,
+  getModuleLessons,
+  nextRecommended,
+} from '../data/curriculum'
 export default function ProgressPage() {
   const { c, text, completed, challenges, lastLesson, storageAvailable } = useApp()
   const done = lessons.filter(l => completed.includes(l.id))
-  const next = nextRecommended(completed)
+  const next = nextRecommended(completed, lastLesson)
   useEffect(() => {
     document.title = `${c('Progres belajarmu', 'Your progress')} — RanMotion`
   }, [c])
@@ -36,8 +42,8 @@ export default function ProgressPage() {
         </div>
         <div>
           <strong>
-            {challenges.filter(id => lessons.some(l => l.id === id)).length}
-            <span>/{lessons.length}</span>
+            {challenges.filter(id => practiceLessons.some(l => l.id === id)).length}
+            <span>/{practiceLessons.length}</span>
           </strong>
           <span>{c('tantangan dituntaskan', 'challenges completed')}</span>
         </div>
@@ -120,8 +126,8 @@ export default function ProgressPage() {
                 'Your journey is still a blank page. The first lesson takes just a few minutes.',
               )}
             </p>
-            <Link className="text-link" to="/learn/orientation">
-              {c('Kenalan dengan playground', 'Meet the playground')}
+            <Link className="text-link" to="/learn/gsap-foundations">
+              {c('Kenalan dengan GSAP tanpa coding', 'Meet GSAP without coding')}
               <ArrowRight size={14} />
             </Link>
           </div>
