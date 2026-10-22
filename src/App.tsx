@@ -14,7 +14,7 @@ const NotFoundPage = lazy(() => import('./pages/NotFoundPage'))
 export default function App() {
   return (
     <AppProvider>
-      <ErrorBoundary>
+      <ErrorBoundary fullScreen>
         <Suspense
           fallback={
             <div className="route-loading" role="status">

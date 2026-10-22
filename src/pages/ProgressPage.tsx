@@ -1,7 +1,8 @@
 import { useEffect } from 'react'
-import { ArrowRight, ArrowUpRight, Check, ShieldCheck } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, BookOpen, Check, ShieldCheck } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useApp } from '../app/AppProvider'
+import FeedbackState from '../components/FeedbackState'
 import {
   lessons,
   practiceLessons,
@@ -119,18 +120,21 @@ export default function ProgressPage() {
             ))}
           </div>
         ) : (
-          <div className="empty-state">
-            <p>
-              {c(
-                'Perjalananmu masih berupa halaman kosong. Pelajaran pertama hanya butuh beberapa menit.',
-                'Your journey is still a blank page. The first lesson takes just a few minutes.',
-              )}
-            </p>
-            <Link className="text-link" to="/learn/gsap-foundations">
-              {c('Kenalan dengan GSAP tanpa coding', 'Meet GSAP without coding')}
-              <ArrowRight size={14} />
-            </Link>
-          </div>
+          <FeedbackState
+            icon={BookOpen}
+            eyebrow={c('LANGKAH PERTAMA', 'YOUR FIRST STEP')}
+            title={c('Perjalananmu dimulai di sini.', 'Your journey starts here.')}
+            description={c(
+              'Pelajaran pertama hanya butuh beberapa menit dan tidak memerlukan coding.',
+              'The first lesson takes just a few minutes and needs no coding.',
+            )}
+            action={
+              <Link className="button primary" to="/learn/gsap-foundations">
+                {c('Kenalan dengan GSAP', 'Meet GSAP')}
+                <ArrowRight size={14} />
+              </Link>
+            }
+          />
         )}
       </section>
       <p className="privacy-note">

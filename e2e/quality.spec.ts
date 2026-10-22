@@ -46,9 +46,14 @@ test('search supports Enter, Escape restores focus, and the ticker can be paused
   await expect(page.locator('main')).toBeFocused()
   await page.getByRole('button', { name: 'Jeda teks berjalan', exact: true }).click()
   await expect(
-    page.getByRole('button', { name: 'Jeda teks berjalan', exact: true }),
+    page.getByRole('button', { name: 'Lanjutkan teks berjalan', exact: true }),
   ).toHaveAttribute('aria-pressed', 'true')
   await expect(page.locator('.ticker-track')).toHaveCSS('animation-play-state', 'paused')
+  await page.getByRole('button', { name: 'Lanjutkan teks berjalan', exact: true }).click()
+  await expect(
+    page.getByRole('button', { name: 'Jeda teks berjalan', exact: true }),
+  ).toHaveAttribute('aria-pressed', 'false')
+  await expect(page.locator('.ticker-track')).toHaveCSS('animation-play-state', 'running')
 })
 
 test('syntax and runtime diagnostics stay next to the faulty line and clear after editing', async ({
@@ -184,11 +189,11 @@ test('dialog and inline error accessibility, with representative screenshots', a
     .withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'])
     .analyze()
   expect(settings.violations.map(item => item.id)).toEqual([])
-  await page.getByRole('button', { name: 'Mulai ulang progres belajar', exact: true }).click()
+  await page.getByRole('button', { name: 'Reset progres belajar', exact: true }).click()
   await expect(page.getByRole('button', { name: 'Batal', exact: true })).toBeFocused()
   await page.keyboard.press('Enter')
   await expect(
-    page.getByRole('button', { name: 'Mulai ulang progres belajar', exact: true }),
+    page.getByRole('button', { name: 'Reset progres belajar', exact: true }),
   ).toBeFocused()
   await page.keyboard.press('Escape')
   await page.goto('/playground')

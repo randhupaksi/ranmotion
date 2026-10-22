@@ -3,6 +3,7 @@ import { ArrowUpRight, Check, Target } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useApp } from '../app/AppProvider'
 import { practiceLessons, modules } from '../data/curriculum'
+import FeedbackState from '../components/FeedbackState'
 export default function ChallengesPage() {
   const { c, text, challenges } = useApp()
   const [filter, setFilter] = useState('all')
@@ -106,12 +107,20 @@ export default function ChallengesPage() {
         ))}
       </ol>
       {!visible.length && (
-        <div className="empty-state">
-          <h2>{c('Belum ada hasil pada filter ini.', 'No challenges match this filter.')}</h2>
-          <button className="button secondary" onClick={() => setFilter('all')}>
-            {c('Lihat semua tantangan', 'See all challenges')}
-          </button>
-        </div>
+        <FeedbackState
+          icon={Target}
+          eyebrow={c('PAPAN TANTANGAN', 'CHALLENGE BOARD')}
+          title={c('Belum ada tantangan di sini.', 'No challenges here yet.')}
+          description={c(
+            'Coba tampilkan semua tantangan untuk menemukan eksperimen berikutnya.',
+            'Show all challenges to find your next experiment.',
+          )}
+          action={
+            <button className="button secondary" onClick={() => setFilter('all')}>
+              {c('Lihat semua tantangan', 'See all challenges')}
+            </button>
+          }
+        />
       )}
     </div>
   )

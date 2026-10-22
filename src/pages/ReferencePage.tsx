@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
-import { ArrowUpRight, Search } from 'lucide-react'
+import { ArrowUpRight, RotateCcw, Search, SearchX } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useApp } from '../app/AppProvider'
 import { lessons } from '../data/curriculum'
+import FeedbackState from '../components/FeedbackState'
 export default function ReferencePage() {
   const { c, text } = useApp()
   const [query, setQuery] = useState('')
@@ -54,12 +55,22 @@ export default function ReferencePage() {
       {!lessons.some(l =>
         `${l.concept} ${text(l.title)}`.toLowerCase().includes(query.toLowerCase()),
       ) && (
-        <div className="empty-state">
-          {c(
-            'Tidak ada konsep yang cocok. Coba kata lain.',
-            'No matching concepts. Try another term.',
+        <FeedbackState
+          compact
+          icon={SearchX}
+          eyebrow={c('PENCARIAN REFERENSI', 'REFERENCE SEARCH')}
+          title={c('Belum ada konsep yang cocok.', 'No matching concepts yet.')}
+          description={c(
+            'Coba kata lain atau hapus pencarian untuk melihat semua konsep.',
+            'Try another term or clear your search to see every concept.',
           )}
-        </div>
+          action={
+            <button className="button secondary" onClick={() => setQuery('')}>
+              <RotateCcw size={14} />
+              {c('Hapus pencarian', 'Clear search')}
+            </button>
+          }
+        />
       )}
       <div className="quiet-banner">
         <p>{c('Perlu detail API lebih jauh?', 'Need more API detail?')}</p>

@@ -1,5 +1,13 @@
 import { useEffect, useState } from 'react'
-import { ArrowRight, ArrowUpRight, Check, ChevronDown, Clock3, Search } from 'lucide-react'
+import {
+  ArrowRight,
+  ArrowUpRight,
+  BookOpen,
+  Check,
+  ChevronDown,
+  Clock3,
+  Search,
+} from 'lucide-react'
 import { Link, useLocation } from 'react-router-dom'
 import { useApp } from '../app/AppProvider'
 import {
@@ -10,6 +18,7 @@ import {
   totalMinutes,
 } from '../data/curriculum'
 import LearningEntryRoutes from '../components/LearningEntryRoutes'
+import FeedbackState from '../components/FeedbackState'
 export default function LearnPage() {
   const { c, text, completed, lastLesson } = useApp()
   const [filter, setFilter] = useState('all')
@@ -26,8 +35,7 @@ export default function LearnPage() {
         <div>
           <p className="eyebrow">{c('JALUR BELAJAR GSAP', 'THE GSAP LEARNING PATH')}</p>
           <h1>
-            {c('Dari diam,', 'From stillness,')}
-            <br />
+            {c('Dari diam,', 'From stillness,')}{' '}
             <em>{c('jadi bermakna.', 'to something meaningful.')}</em>
           </h1>
           <p className="page-lead">
@@ -191,26 +199,30 @@ export default function LearnPage() {
             (filter === 'all' || completed.includes(l.id) === (filter === 'completed')) &&
             `${text(l.title)} ${l.concept}`.toLowerCase().includes(query.toLowerCase()),
         ) && (
-          <div className="empty-state">
-            <h2>{c('Belum ada pelajaran di sini.', 'No lessons here yet.')}</h2>
-            <p>
-              {filter === 'completed'
+          <FeedbackState
+            icon={BookOpen}
+            eyebrow={c('JALUR BELAJAR', 'LEARNING PATH')}
+            title={c('Belum ada pelajaran di sini.', 'No lessons here yet.')}
+            description={
+              filter === 'completed'
                 ? c(
                     'Selesaikan pelajaran pertamamu, lalu lihat progresnya di sini.',
                     'Complete your first lesson to see it here.',
                   )
-                : c('Coba ubah filter atau kata pencarian.', 'Try another filter or search term.')}
-            </p>
-            <button
-              className="button secondary"
-              onClick={() => {
-                setFilter('all')
-                setQuery('')
-              }}
-            >
-              {c('Tampilkan semua', 'Show all lessons')}
-            </button>
-          </div>
+                : c('Coba ubah filter atau kata pencarian.', 'Try another filter or search term.')
+            }
+            action={
+              <button
+                className="button secondary"
+                onClick={() => {
+                  setFilter('all')
+                  setQuery('')
+                }}
+              >
+                {c('Tampilkan semua', 'Show all lessons')}
+              </button>
+            }
+          />
         )}
       </div>
       <div className="quiet-banner">

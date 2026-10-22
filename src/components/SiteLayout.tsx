@@ -18,9 +18,10 @@ import {
 } from 'lucide-react'
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { useApp } from '../app/AppProvider'
-import { lessons, modules } from '../data/curriculum'
+import { lessons, modules, nextRecommended } from '../data/curriculum'
 import Brand from './Brand'
 import Dialog from './Dialog'
+import FeedbackState from './FeedbackState'
 import RouteExperience from './RouteExperience'
 
 const navigation = [
@@ -44,7 +45,17 @@ const tickerMessages = [
 ]
 export default function SiteLayout() {
   const app = useApp()
-  const { c, text, locale, setLocale, storageAvailable, reducedMotion, toggleMotion } = app
+  const {
+    c,
+    text,
+    locale,
+    setLocale,
+    storageAvailable,
+    reducedMotion,
+    toggleMotion,
+    completed,
+    lastLesson,
+  } = app
   const navigate = useNavigate()
   const [searchOpen, setSearchOpen] = useState(false)
   const [settingsOpen, setSettingsOpen] = useState(false)
@@ -80,6 +91,12 @@ export default function SiteLayout() {
         .includes(query.toLowerCase().trim()),
     )
     .slice(0, 8)
+  const doneCount = lessons.filter(lesson => completed.includes(lesson.id)).length
+  const progressPercent = Math.round((doneCount / lessons.length) * 100)
+  const allLessonsDone = doneCount === lessons.length
+  const nextLesson = nextRecommended(completed, lastLesson)
+  const nextLessonIndex = lessons.findIndex(lesson => lesson.id === nextLesson.id)
+  const nextLessonTitle = text(nextLesson.title)
   return (
     <>
       <RouteExperience />
@@ -198,21 +215,96 @@ export default function SiteLayout() {
                 'See the animation. Understand why. Make it yours.',
               )}
             </p>
+            <span className="footer-identity__signature">
+              <span aria-hidden="true" />
+              {c('LAB ANIMASI INTERAKTIF', 'INTERACTIVE MOTION LAB')}
+            </span>
           </div>
-          <div className="footer-next">
-            <span className="eyebrow">{c('IDE BERIKUTNYA', 'THE NEXT IDEA')}</span>
-            <Link to="/playground">
-              {c('Buat animasimu sendiri.', 'Make an animation of your own.')}
-              <ArrowRight size={20} />
+          <section className="footer-next" aria-labelledby="footer-next-title">
+            <div className="footer-next__topline">
+              <p className="eyebrow">
+                {allLessonsDone
+                  ? c('JALUR TUNTAS', 'LEARNING PATH COMPLETE')
+                  : lastLesson === nextLesson.id
+                    ? c('LANJUTKAN BELAJAR', 'PICK UP WHERE YOU LEFT OFF')
+                    : c('LANGKAH BERIKUTNYA', 'YOUR NEXT STEP')}
+              </p>
+              <span className="footer-next__count">
+                {String(doneCount).padStart(2, '0')} / {lessons.length}
+              </span>
+            </div>
+            <div
+              className="footer-progress"
+              role="progressbar"
+              aria-label={c('Kemajuan belajar', 'Learning progress')}
+              aria-valuemin={0}
+              aria-valuemax={lessons.length}
+              aria-valuenow={doneCount}
+              aria-valuetext={c(
+                `${doneCount} dari ${lessons.length} pelajaran selesai`,
+                `${doneCount} of ${lessons.length} lessons complete`,
+              )}
+            >
+              <span style={{ width: `${progressPercent}%` }} />
+            </div>
+            <p className="footer-next__context">
+              {allLessonsDone
+                ? c('RUANG EKSPERIMEN / BEBAS', 'PLAYGROUND / OPEN ENDED')
+                : `${c('BAB', 'CHAPTER')} ${String(nextLesson.module + 1).padStart(2, '0')} · ${text(modules[nextLesson.module].title)} · ${nextLesson.minutes} ${c('MENIT', 'MIN')}`}
+            </p>
+            <h2 id="footer-next-title" className="footer-next__title">
+              {allLessonsDone
+                ? c('Sekarang, buat animasimu sendiri.', 'Now make an animation of your own.')
+                : lastLesson === nextLesson.id
+                  ? `${c('Lanjutkan:', 'Continue:')} ${nextLessonTitle}`
+                  : nextLessonTitle}
+            </h2>
+            <p className="footer-next__description">
+              {allLessonsDone
+                ? c(
+                    'Kamu sudah menuntaskan semua materi. Gabungkan ide-idenya di ruang eksperimen.',
+                    'You finished the full course. Bring the ideas together in the playground.',
+                  )
+                : c(
+                    'Satu langkah kecil lagi untuk memahami logika di balik animasi.',
+                    'One small step closer to understanding the logic behind motion.',
+                  )}
+            </p>
+            <Link
+              className="footer-next__action"
+              to={allLessonsDone ? '/playground' : `/learn/${nextLesson.id}`}
+            >
+              <span>
+                {allLessonsDone
+                  ? c('Buka playground', 'Open the playground')
+                  : lastLesson === nextLesson.id
+                    ? c('Lanjutkan pelajaran', 'Continue lesson')
+                    : c('Mulai pelajaran', 'Start this lesson')}
+              </span>
+              <ArrowRight size={16} />
             </Link>
-          </div>
-          <div className="footer-links">
+            <span className="footer-next__index" aria-hidden="true">
+              {String(allLessonsDone ? lessons.length : Math.max(nextLessonIndex + 1, 1)).padStart(
+                2,
+                '0',
+              )}
+            </span>
+          </section>
+          <nav className="footer-nav" aria-label={c('Jelajahi RanMotion', 'Explore RanMotion')}>
+            <h2 className="footer-group-title">{c('JELAJAHI', 'EXPLORE')}</h2>
+            <Link to="/learn">{c('Jalur belajar', 'Learning path')}</Link>
+            <Link to="/playground">{c('Ruang eksperimen', 'Playground')}</Link>
+            <Link to="/challenges">{c('Tantangan', 'Challenges')}</Link>
+            <Link to="/progress">{c('Progresku', 'My progress')}</Link>
             <Link to="/reference">{c('Referensi singkat', 'Quick reference')}</Link>
+          </nav>
+          <div className="footer-resources">
+            <h2 className="footer-group-title">{c('SUMBER', 'RESOURCES')}</h2>
             <a href="https://gsap.com/docs/v3/" target="_blank" rel="noreferrer">
-              {c('Dokumentasi GSAP', 'GSAP documentation')} ↗
+              {c('Dokumentasi GSAP', 'GSAP documentation')} <span aria-hidden="true">↗</span>
             </a>
             <a href="https://github.com/randhupaksi/ranmotion" target="_blank" rel="noreferrer">
-              GitHub ↗
+              RanMotion GitHub <span aria-hidden="true">↗</span>
             </a>
           </div>
         </div>
@@ -224,10 +316,13 @@ export default function SiteLayout() {
               'An independent learning project, not affiliated with GSAP or Webflow.',
             )}
           </span>
-          <span>
+          <Link to="/progress" className="footer-note__progress">
             <ShieldCheck size={13} />
-            {c('Progres di perangkatmu', 'Progress on your device')}
-          </span>
+            {storageAvailable
+              ? c('Progres tersimpan di perangkatmu', 'Progress saved on your device')
+              : c('Penyimpanan lokal tidak tersedia', 'Local storage unavailable')}
+            <ArrowRight size={12} aria-hidden="true" />
+          </Link>
         </p>
       </footer>
       <nav className="mobile-nav" aria-label={c('Navigasi mobile', 'Mobile navigation')}>
@@ -284,15 +379,21 @@ export default function SiteLayout() {
               </Link>
             ))
           ) : (
-            <div className="empty-state">
-              <p>{c('Belum ada materi yang cocok.', 'No matching lessons.')}</p>
-              <small>
-                {c(
-                  'Coba “easing”, “timeline”, atau kata yang lebih pendek.',
-                  'Try “easing”, “timeline”, or a shorter search.',
-                )}
-              </small>
-            </div>
+            <FeedbackState
+              compact
+              icon={Search}
+              eyebrow={c('PENCARIAN MATERI', 'LESSON SEARCH')}
+              title={c('Belum ada materi yang cocok.', 'No matching lessons.')}
+              description={c(
+                'Coba “easing”, “timeline”, atau kata yang lebih pendek.',
+                'Try “easing”, “timeline”, or a shorter search.',
+              )}
+              action={
+                <button className="button secondary" onClick={() => setQuery('')}>
+                  {c('Hapus pencarian', 'Clear search')}
+                </button>
+              }
+            />
           )}
         </div>
         <p className="quiet-note">
