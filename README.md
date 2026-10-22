@@ -1,22 +1,102 @@
 # RanMotion
 
-Fondasi proyek RanMotion. Fase ini menyiapkan stack dan route placeholder saja; konten belajar, editor, playground GSAP, dan penyimpanan progres belum diimplementasikan.
+An interactive learning space for web animation with GSAP. See the movement, change the code, understand why, and make it your own.
 
-## Menjalankan secara lokal
+RanMotion is an independent learning project in the Rancode family. It is not affiliated with GSAP or Webflow. Indonesian is the default language; every lesson and application control also has an English version.
 
-Gunakan Node.js 24 LTS (lihat `.nvmrc`) dan npm.
-Konfigurasi npm proyek mencatat workaround peer-resolution untuk npm 11.1.0; tinjau kembali saat memperbarui npm.
+## Run locally
+
+Use **Node.js 24 LTS** (see `.nvmrc`) and npm. The machine used for initial setup had Node 23.8.0; switch to Node 24 for the supported dependency runtime.
 
 ```sh
-npm install
+npm ci
 npm run dev
 ```
 
-## Perintah yang tersedia
+The npm configuration includes a peer-resolution workaround for npm 11.1.0. Review `.npmrc` when upgrading npm. Installation is locked in `package-lock.json`.
 
-- `npm run typecheck` — pemeriksaan TypeScript
-- `npm run lint` — lint dengan oxlint
-- `npm test` — menjalankan Vitest
-- `npm run test:e2e` — menjalankan Playwright
-- `npm run test:e2e:install` — memasang Chromium Playwright secara lokal
-- `npm run build` — typecheck dan build Vite
+## Learning experience
+
+- **19 bilingual lessons in 7 sections:** preparation; transforms and basic tweens; easing, delay, and repeat; timelines, overlap, labels, and stagger; interface interaction; ScrollTrigger, scrub, and pin; and a small final project.
+- Each lesson provides an objective, mental model, explanation, guided experiment, common mistake, challenge with progressive hints, and a recap.
+- A JavaScript editor runs real GSAP code against the exact HTML and CSS shown in its read-only tabs.
+- Duration, distance, easing, scrub, and pin controls update the corresponding code constants. Run explicitly to apply changes.
+- Playback supports pause, replay, reset, and manual progress inspection. Timeline tracks reflect actual tween start times, durations, overlap, and labels.
+- Scroll examples use an independent scroller. A progress slider provides a touch and keyboard alternative to nested scrolling.
+- Challenges check values from executed GSAP animations, not just strings in the editor. Interface challenges also require trying the preview interaction.
+- Learning progress, challenge completion, language, motion preference, and per-example code drafts persist in the same browser. Lesson and playground views share a draft for the same example.
+- Lessons can also be marked complete independently of the demo. The progress page recommends the next unfinished lesson.
+- Search (`Ctrl/Cmd + K`), a quick reference, desktop navigation, and mobile bottom navigation connect the experience.
+
+## Routes
+
+| Route | Purpose |
+| --- | --- |
+| `/` | Introduction, working animation demo, prerequisites, and learning path overview |
+| `/learn` | Complete curriculum, completion filters, and lesson search |
+| `/learn/:lessonId` | A complete lesson and its interactive challenge |
+| `/playground?example=to` | Open practice with an example selector |
+| `/challenges` | All challenges, filtered by completion |
+| `/progress` | Saved progress and next recommended lesson |
+| `/reference` | Searchable concept reminders and links back to lessons |
+
+All lessons are available without locking earlier stages. The suggested order helps beginners build on what they have learned.
+
+## Visual direction
+
+RanMotion has its own “motion fieldnotes” visual language: electric lime inspired by the energy of GSAP, deep green-black surfaces, and restrained apricot markers. Editorial type, numbered studies, coordinate grids, and open ruled lists make the experience feel like an animation workshop rather than a generic course dashboard. The same design system adapts across lessons, challenges, progress, and the live editor.
+
+## Preview execution and privacy
+
+Editor code runs in an iframe with `sandbox="allow-scripts"`, an opaque origin, and a restrictive Content Security Policy. The frame cannot access the application's DOM or browser storage. GSAP and ScrollTrigger are bundled locally into the preview; the preview does not fetch executable code from a CDN. Messages are checked against the specific iframe window, a per-frame token, and a Zod report schema.
+
+The exercise editor is deliberately focused on short GSAP experiments. It supports tweens, timelines, and event handlers, validates syntax before execution, and rejects loop statements, imports, and exports. It is not a general-purpose JavaScript execution service or a hardened environment for adversarial code. The 12,000-character source limit and 150-animation report limit keep educational examples bounded.
+
+No account, backend, analytics, or code-upload service is configured. Browser storage failures fall back to in-memory progress with a visible notice. Draft writes also handle storage failures. Clearing site data removes locally saved progress and drafts; different browsers and devices have separate data.
+
+Reduced motion follows the device preference on first use and can be overridden in learning settings. It shows static results with manual inspection rather than automatic playback.
+
+## Project structure
+
+```text
+src/
+  app/                 Locale, motion preference, and validated local progress
+  components/          Shared layout, search/settings dialogs, home demo, boundaries
+  data/                Original bilingual curriculum, example code, and content types
+  features/lab/        CodeMirror, isolated GSAP runtime, challenge checks, lab styling
+  pages/               Route-level learning, practice, and progress experiences
+  styles/              Shared visual tokens and responsive application styles
+e2e/                   Chromium tests for learning and preview behavior
+```
+
+The heavy editor and sandbox runtime load only when a learning or playground route needs them. The home page does not import CodeMirror.
+
+## Commands and verification
+
+```sh
+npm run typecheck
+npm run build
+npm run preview
+npm run test:e2e:install
+npm run test:e2e
+```
+
+The Playwright wrapper uses the ignored workspace-local `.playwright-browsers` directory. It reuses an existing RanMotion server on port 4173 or starts and closes its own direct Vite child process, avoiding Windows process-tree teardown problems. To test production output, run a built preview on port 4173 before starting the suite. E2E coverage includes every initial example and challenge solution, progress and draft persistence, language switching, broken-code recovery, parent-storage isolation, actual timeline and scroll controls, reduced motion, search, and horizontal overflow at 1440, 768, 390, and 320 pixels. Screenshot artifacts are written to ignored `.artifacts/`.
+
+`npm run lint` is available for Oxlint. `npm test` runs Vitest; browser behavior is covered by the E2E suite.
+
+## Static hosting
+
+`npm run build` produces `dist/`. A host must fall back to `index.html` for client routes. `public/_redirects` supports hosts with Netlify-style redirect files; `vercel.json` declares Vite, `npm ci`, `npm run build`, the `dist/` output, and the SPA fallback for Vercel.
+
+## CI/CD
+
+GitHub Actions runs the quality workflow in [`.github/workflows/ci.yml`](.github/workflows/ci.yml) for pull requests targeting `main`, pushes to `main`, and manual dispatch. It installs the lockfile dependencies with `npm ci`, runs Oxlint, type-checks and builds the production site, installs Chromium with its Linux dependencies, and runs the Playwright browser suite. The workflow uses read-only repository permission, cancels superseded runs, and retains browser diagnostics for seven days when E2E fails. It requires no GitHub secrets and does not deploy the site.
+
+For continuous deployment, connect `randhupaksi/ranmotion` to a Vercel project through Vercel Git Integration and set `main` as the production branch. Vercel can then create preview deployments for pull requests and deploy production from the configured production branch. This provider connection and branch setting live in the Vercel dashboard; repository files cannot create them. To ensure production promotion waits for CI, enable Vercel Deployment Checks or require the CI status before merging to `main`. See [Vercel Git deployments](https://vercel.com/docs/git) and [Vercel Deployment Checks](https://vercel.com/docs/deployment-checks).
+
+## References and third-party code
+
+Lesson explanations and examples are original to RanMotion. API behavior follows the [GSAP documentation](https://gsap.com/docs/v3/), [timeline documentation](https://gsap.com/docs/v3/GSAP/Timeline/), and [ScrollTrigger documentation](https://gsap.com/docs/v3/Plugins/ScrollTrigger/). The editor follows [CodeMirror's basic setup](https://codemirror.net/examples/basic/).
+
+GSAP's bundled copyright and license notices are preserved in the iframe source. GSAP is subject to its [standard license](https://gsap.com/standard-license); it should not be described as MIT-licensed. Dependencies retain their own licenses. Advanced MotionPath, Flip, and SVG-specific curricula are future additions beyond the implemented foundation and final project.
