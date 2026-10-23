@@ -4,6 +4,10 @@ An interactive learning space for web animation with GSAP. See the movement, cha
 
 RanMotion is an independent learning project in the Rancode family. It is not affiliated with GSAP or Webflow. Indonesian is the default language; every lesson and application control also has an English version.
 
+## Documentation
+
+The contributor and architecture documentation is organized in [docs/INDEX.md](docs/INDEX.md). It includes the learning model, design system, preview-runtime safety boundary, testing workflow, and the historical [UX and accessibility audit](docs/quality-audit.md).
+
 ## Run locally
 
 Use **Node.js 24 LTS** (see `.nvmrc`) and npm. The machine used for initial setup had Node 23.8.0; switch to Node 24 for the supported dependency runtime.
