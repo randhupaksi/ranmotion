@@ -17,6 +17,7 @@ import ErrorBoundary from '../components/ErrorBoundary'
 import NotFoundPage from './NotFoundPage'
 import LessonCoach, { GuidedSteps } from '../components/LessonCoach'
 import { SectionLoadingSkeleton } from '../components/LoadingSkeleton'
+import SelectField from '../components/SelectField'
 import { learningActivity } from '../data/learningActivities'
 const MotionLab = lazy(() => import('../features/lab/MotionLab'))
 const ConceptStudy = lazy(() => import('../components/ConceptStudy'))
@@ -47,18 +48,18 @@ function LessonSidebar({ lesson }: { lesson: Lesson }) {
       </div>
       <label className="mobile-lesson-picker">
         {c('Pindah pelajaran', 'Jump to a lesson')}
-        <select value={lesson.id} onChange={e => navigate(`/learn/${e.target.value}`)}>
-          {modules.map(m => (
-            <optgroup key={m.number} label={`${m.number + 1}. ${text(m.title)}`}>
-              {getModuleLessons(m.number).map(l => (
-                <option key={l.id} value={l.id}>
-                  {completed.includes(l.id) ? '✓ ' : ''}
-                  {text(l.title)}
-                </option>
-              ))}
-            </optgroup>
-          ))}
-        </select>
+        <SelectField
+          label={c('Pindah pelajaran', 'Jump to a lesson')}
+          value={lesson.id}
+          onValueChange={id => navigate(`/learn/${id}`)}
+          groups={modules.map(m => ({
+            label: `${m.number + 1}. ${text(m.title)}`,
+            options: getModuleLessons(m.number).map(l => ({
+              value: l.id,
+              label: `${completed.includes(l.id) ? '✓ ' : ''}${text(l.title)}`,
+            })),
+          }))}
+        />
       </label>
       <nav className="sidebar-modules" aria-label={c('Daftar pelajaran', 'Lesson navigation')}>
         {modules.map(m => (

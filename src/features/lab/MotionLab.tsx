@@ -13,6 +13,7 @@ import {
 } from 'lucide-react'
 import { useApp } from '../../app/AppProvider'
 import { SectionLoadingSkeleton } from '../../components/LoadingSkeleton'
+import SelectField from '../../components/SelectField'
 import type { PracticeLesson } from '../../data/types'
 import { readConstant, replaceConstant } from '../../data/examples'
 import PreviewFrame from './PreviewFrame'
@@ -637,16 +638,17 @@ export default function MotionLab({
           </label>
           <label className="ease-control" hidden={ease === undefined}>
             Easing
-            <select
+            <SelectField
+              label="Easing"
+              size="sm"
               value={ease ?? ''}
               disabled={ease === undefined}
-              onChange={e => changeCode(replaceConstant(code, 'ease', e.target.value))}
-            >
-              {ease && !supportedEases.includes(ease) && <option>{ease}</option>}
-              {supportedEases.map(value => (
-                <option key={value}>{value}</option>
-              ))}
-            </select>
+              onValueChange={value => changeCode(replaceConstant(code, 'ease', value))}
+              options={(ease && !supportedEases.includes(ease)
+                ? [ease, ...supportedEases]
+                : supportedEases
+              ).map(value => ({ value, label: value }))}
+            />
           </label>
         </div>
         {lesson.scene === 'scroll' && (

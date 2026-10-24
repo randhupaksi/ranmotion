@@ -5,6 +5,7 @@ import { useApp } from '../app/AppProvider'
 import { getPracticeLesson, getModuleLessons, modules } from '../data/curriculum'
 import ErrorBoundary from '../components/ErrorBoundary'
 import { SectionLoadingSkeleton } from '../components/LoadingSkeleton'
+import SelectField from '../components/SelectField'
 import { learningActivity } from '../data/learningActivities'
 const MotionLab = lazy(() => import('../features/lab/MotionLab'))
 export default function PlaygroundPage() {
@@ -40,23 +41,20 @@ export default function PlaygroundPage() {
         <label htmlFor="example-select">
           {c('MULAI DARI SEBUAH CONTOH', 'START WITH AN EXAMPLE')}
         </label>
-        <select
+        <SelectField
           id="example-select"
+          label={c('MULAI DARI SEBUAH CONTOH', 'START WITH AN EXAMPLE')}
           value={lesson.id}
-          onChange={e => setParams({ example: e.target.value })}
-        >
-          {modules.map(m => (
-            <optgroup key={m.number} label={text(m.title)}>
-              {getModuleLessons(m.number)
+          onValueChange={example => setParams({ example })}
+          groups={modules
+            .map(m => ({
+              label: text(m.title),
+              options: getModuleLessons(m.number)
                 .filter(l => l.format !== 'concept')
-                .map(l => (
-                  <option key={l.id} value={l.id}>
-                    {text(l.title)} · {l.concept}
-                  </option>
-                ))}
-            </optgroup>
-          ))}
-        </select>
+                .map(l => ({ value: l.id, label: `${text(l.title)} · ${l.concept}` })),
+            }))
+            .filter(group => group.options.length > 0)}
+        />
         <span className="quiet-note">
           {c('Setiap contoh punya draf sendiri.', 'Each example keeps its own draft.')}
         </span>

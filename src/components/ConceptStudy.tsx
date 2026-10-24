@@ -5,6 +5,7 @@ import { useApp } from '../app/AppProvider'
 import { introStudies } from '../data/introCurriculum'
 import type { ConceptLesson } from '../data/types'
 import { BrandMark } from './Brand'
+import SelectField from './SelectField'
 import './conceptStudy.css'
 
 export default function ConceptStudy({ lesson }: { lesson: ConceptLesson }) {
@@ -185,10 +186,15 @@ export default function ConceptStudy({ lesson }: { lesson: ConceptLesson }) {
             </label>
             <label>
               {c('Karakter kecepatan', 'Speed pattern')}
-              <select value={ease} onChange={event => setEase(event.target.value)}>
-                <option value="none">{c('Konstan', 'Constant')}</option>
-                <option value="power2.out">{c('Melambat di akhir', 'Slow down at the end')}</option>
-              </select>
+              <SelectField
+                label={c('Karakter kecepatan', 'Speed pattern')}
+                value={ease}
+                onValueChange={setEase}
+                options={[
+                  { value: 'none', label: c('Konstan', 'Constant') },
+                  { value: 'power2.out', label: c('Melambat di akhir', 'Slow down at the end') },
+                ]}
+              />
             </label>
           </div>
         )}

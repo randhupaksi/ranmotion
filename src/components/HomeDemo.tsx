@@ -3,6 +3,7 @@ import { Pause, Play, RotateCcw } from 'lucide-react'
 import gsap from 'gsap'
 import { useApp } from '../app/AppProvider'
 import { BrandMark } from './Brand'
+import SelectField from './SelectField'
 export default function HomeDemo() {
   const { c, reducedMotion } = useApp()
   const box = useRef<HTMLDivElement>(null)
@@ -114,31 +115,36 @@ export default function HomeDemo() {
       <div className="demo-settings">
         <label>
           duration{' '}
-          <select
-            value={duration}
-            onChange={e => {
-              setDuration(Number(e.target.value))
+          <SelectField
+            label="duration"
+            size="sm"
+            value={String(duration)}
+            onValueChange={value => {
+              setDuration(Number(value))
               reset()
             }}
-          >
-            <option value="0.7">0.7s</option>
-            <option value="1.2">1.2s</option>
-            <option value="2">2.0s</option>
-          </select>
+            options={[
+              { value: '0.7', label: '0.7s' },
+              { value: '1.2', label: '1.2s' },
+              { value: '2', label: '2.0s' },
+            ]}
+          />
         </label>
         <label>
           ease{' '}
-          <select
+          <SelectField
+            label="ease"
+            size="sm"
             value={ease}
-            onChange={e => {
-              setEase(e.target.value)
+            onValueChange={value => {
+              setEase(value)
               reset()
             }}
-          >
-            <option>power2.out</option>
-            <option>none</option>
-            <option>back.out(1.7)</option>
-          </select>
+            options={['power2.out', 'none', 'back.out(1.7)'].map(value => ({
+              value,
+              label: value,
+            }))}
+          />
         </label>
       </div>
       <div className="demo-controls">

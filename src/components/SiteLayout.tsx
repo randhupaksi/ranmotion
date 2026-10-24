@@ -1,5 +1,4 @@
 import { Suspense, useEffect, useRef, useState } from 'react'
-import * as Select from '@radix-ui/react-select'
 import {
   ArrowRight,
   BookOpen,
@@ -14,7 +13,6 @@ import {
   Pause,
   Play,
   Target,
-  ChevronDown,
 } from 'lucide-react'
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { useApp } from '../app/AppProvider'
@@ -24,6 +22,7 @@ import { RouteSkeleton } from './LoadingSkeleton'
 import Dialog from './Dialog'
 import FeedbackState from './FeedbackState'
 import RouteExperience from './RouteExperience'
+import SelectField from './SelectField'
 
 const navigation = [
   { href: '/', id: 'Beranda', en: 'Home', icon: House },
@@ -421,38 +420,16 @@ export default function SiteLayout() {
               )}
             </p>
           </div>
-          <Select.Root value={locale} onValueChange={value => setLocale(value as 'id' | 'en')}>
-            <Select.Trigger
-              className="compact-select"
-              aria-label={c('Bahasa materi', 'Learning language')}
-            >
-              <Select.Value />
-              <Select.Icon aria-hidden="true">
-                <ChevronDown size={15} />
-              </Select.Icon>
-            </Select.Trigger>
-            <Select.Content
-              className="settings-select-content"
-              position="popper"
-              align="end"
-              sideOffset={6}
-            >
-              <Select.Viewport>
-                <Select.Item className="settings-select-item" value="id">
-                  <Select.ItemText>Indonesia</Select.ItemText>
-                  <Select.ItemIndicator className="settings-select-indicator">
-                    <Check size={14} />
-                  </Select.ItemIndicator>
-                </Select.Item>
-                <Select.Item className="settings-select-item" value="en">
-                  <Select.ItemText>English</Select.ItemText>
-                  <Select.ItemIndicator className="settings-select-indicator">
-                    <Check size={14} />
-                  </Select.ItemIndicator>
-                </Select.Item>
-              </Select.Viewport>
-            </Select.Content>
-          </Select.Root>
+          <SelectField
+            value={locale}
+            onValueChange={value => setLocale(value as 'id' | 'en')}
+            label={c('Bahasa materi', 'Learning language')}
+            align="end"
+            options={[
+              { value: 'id', label: 'Indonesia' },
+              { value: 'en', label: 'English' },
+            ]}
+          />
         </div>
         <div className="settings-progress">
           <ShieldCheck size={20} />
