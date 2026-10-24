@@ -254,19 +254,38 @@ function ChallengesSkeleton() {
   return (
     <>
       <PageHeader />
-      <div className="rm-skeleton__challenge-overview">
-        <Line width="21px" size="heading" />
-        <Line width="104px" size="title" />
-        <Line width="100%" size="small" />
-        <Line width="132px" size="control" />
+      <div className="rm-skeleton__challenge-spotlight">
+        <div>
+          <Line width="21px" size="heading" />
+          <Line width="104px" size="title" />
+          <Line width="100%" size="small" />
+        </div>
+        <div>
+          <Line width="170px" size="eyebrow" />
+          <Line width="min(360px, 70%)" size="heading" />
+          <Line width="82%" size="copy" />
+          <Line width="150px" size="eyebrow" />
+        </div>
       </div>
-      <Toolbar />
+      <div className="rm-skeleton__challenge-toolbar">
+        <Line width="118px" size="eyebrow" />
+        <div className="rm-skeleton__challenge-controls">
+          <Line width="240px" size="control" />
+          <Line width="220px" size="control" />
+          <Line width="230px" size="control" />
+        </div>
+      </div>
+      <div className="rm-skeleton__challenge-group-head">
+        <Line width="62px" size="eyebrow" />
+        <Line width="min(220px, 50%)" size="heading" />
+        <Line width="110px" size="small" />
+      </div>
       <div className="rm-skeleton__challenge-list">
         {Array.from({ length: 3 }, (_, index) => (
           <div key={index}>
             <div className="rm-skeleton__challenge-meta">
-              <Line width="34px" size="eyebrow" />
-              <Line width="110px" size="eyebrow" />
+              <Line width="24px" size="heading" />
+              <Line width="86px" size="eyebrow" />
             </div>
             <div>
               <Line width={`${52 + index * 9}%`} size="heading" />
@@ -327,12 +346,46 @@ function ReferenceSkeleton() {
   )
 }
 
+function ChallengeSkeleton() {
+  return (
+    <>
+      <div className="rm-skeleton__lesson-crumbs">
+        <Line width="64px" size="eyebrow" />
+        <Line width="170px" size="eyebrow" />
+      </div>
+      <div className="rm-skeleton__challenge-header">
+        <Line width="128px" size="eyebrow" />
+        <Line width="min(560px, 78vw)" size="title" />
+        <Lines count={2} />
+        <Line width="190px" size="copy" />
+      </div>
+      <div className="rm-skeleton__objective">
+        <Line width="20px" size="heading" />
+        <div>
+          <Line width="min(280px, 70%)" size="heading" />
+          <Line width="84%" size="copy" />
+        </div>
+      </div>
+      <div className="rm-skeleton__challenge-check">
+        <Line width="112px" size="eyebrow" />
+        <Line width="74%" size="copy" />
+        <div className="rm-skeleton__actions">
+          <Line width="150px" size="control" />
+          <Line width="140px" size="control" />
+        </div>
+      </div>
+      <Workspace />
+    </>
+  )
+}
+
 function routeVariant(pathname: string) {
   if (pathname === '/') return 'home'
   if (pathname === '/learn') return 'learn'
   if (pathname.startsWith('/learn/')) return 'lesson'
   if (pathname === '/playground') return 'playground'
   if (pathname === '/challenges') return 'challenges'
+  if (pathname.startsWith('/challenges/')) return 'challenge'
   if (pathname === '/progress') return 'progress'
   if (pathname === '/reference') return 'reference'
   return 'default'
@@ -350,6 +403,8 @@ function RouteSkeletonContent({ variant }: { variant: string }) {
       return <PlaygroundSkeleton />
     case 'challenges':
       return <ChallengesSkeleton />
+    case 'challenge':
+      return <ChallengeSkeleton />
     case 'progress':
       return <ProgressSkeleton />
     case 'reference':

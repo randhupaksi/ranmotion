@@ -193,7 +193,6 @@ label:has(input[type='radio']) {
 .search-results > a:hover > svg,
 .progress-modules > a:hover > svg,
 .completed-links > a:hover svg,
-.challenge-card:hover .challenge-card-meta > svg,
 .entry-routes-list > a:hover > svg {
   color: var(--primary);
 }

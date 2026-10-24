@@ -454,19 +454,65 @@
   margin: 30px 0 18px;
 }
 
-.rm-skeleton__challenge-overview {
+.rm-skeleton__challenge-spotlight {
   display: grid;
-  grid-template-columns: 22px 115px minmax(100px, 1fr) auto;
-  align-items: center;
-  gap: 15px;
-  min-height: 76px;
-  margin-bottom: 24px;
-  padding: 15px;
+  grid-template-columns: minmax(220px, 0.7fr) minmax(0, 1.3fr);
+  min-height: 150px;
+  margin-bottom: 26px;
   border: 1px solid var(--border);
 }
 
-.rm-skeleton__challenge-overview .rm-skeleton__line:nth-child(3) {
-  min-height: 4px;
+.rm-skeleton__challenge-spotlight > div {
+  display: grid;
+  align-content: center;
+  gap: 12px;
+  padding: 22px;
+}
+
+.rm-skeleton__challenge-spotlight > div:last-child {
+  border-left: 2px solid var(--rm-skeleton-edge);
+}
+
+.rm-skeleton__challenge-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  margin-bottom: 26px;
+}
+
+.rm-skeleton__challenge-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.rm-skeleton__challenge-group-head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) 110px;
+  align-items: center;
+  gap: 14px;
+  padding: 0 12px 12px;
+}
+
+.rm-skeleton--challenge .rm-skeleton__content {
+  gap: 20px;
+}
+
+.rm-skeleton__challenge-header {
+  display: grid;
+  gap: 14px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--border);
+}
+
+.rm-skeleton__challenge-check {
+  display: grid;
+  gap: 12px;
+  padding: 18px 20px;
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--rm-skeleton-edge);
 }
 
 .rm-skeleton__challenge-list {
@@ -725,16 +771,36 @@
     min-height: 165px;
   }
 
-  .rm-skeleton__challenge-overview {
-    grid-template-columns: 20px minmax(0, 1fr);
+  .rm-skeleton__challenge-spotlight {
+    grid-template-columns: minmax(0, 1fr);
   }
 
-  .rm-skeleton__challenge-overview .rm-skeleton__line:nth-child(3) {
+  .rm-skeleton__challenge-spotlight > div {
+    padding: 16px;
+  }
+
+  .rm-skeleton__challenge-spotlight > div:last-child {
+    border-top: 1px solid var(--border);
+    border-left: 0;
+  }
+
+  .rm-skeleton__challenge-toolbar,
+  .rm-skeleton__challenge-controls {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .rm-skeleton__challenge-controls .rm-skeleton__line {
+    width: 100% !important;
+  }
+
+  .rm-skeleton__challenge-group-head {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .rm-skeleton__challenge-group-head .rm-skeleton__line:last-child {
     grid-column: 1 / -1;
-  }
-
-  .rm-skeleton__challenge-overview .rm-skeleton__line:last-child {
-    display: none;
+    width: 100% !important;
   }
 
   .rm-skeleton__challenge-list > div {

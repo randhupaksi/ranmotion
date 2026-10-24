@@ -261,15 +261,29 @@
   .entry-routes-list > a:first-child {
     padding-left: 12px;
   }
-  .challenge-detail h2 {
+  .challenge-detail h3 {
     font-size: 19px;
   }
   .challenge-detail > p {
     font-size: 14px;
     line-height: 1.75;
   }
-  .challenge-card-meta > .eyebrow {
+  .challenge-status {
     font-size: 10px;
+  }
+  .challenge-lesson-ref,
+  .challenge-result-count,
+  .challenge-result-count .text-link {
+    font-size: 12px;
+  }
+  .challenge-spotlight__task,
+  .challenge-spotlight__progress > p {
+    font-size: 13px;
+  }
+  .challenge-spotlight__cta,
+  .challenge-group-count,
+  .challenge-group-number {
+    font-size: 11px;
   }
   .challenge-card-footer {
     justify-items: start;
