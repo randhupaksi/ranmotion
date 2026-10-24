@@ -4,6 +4,7 @@ import { Link, useSearchParams } from 'react-router-dom'
 import { useApp } from '../app/AppProvider'
 import { getPracticeLesson, getModuleLessons, modules } from '../data/curriculum'
 import ErrorBoundary from '../components/ErrorBoundary'
+import { SectionLoadingSkeleton } from '../components/LoadingSkeleton'
 import { learningActivity } from '../data/learningActivities'
 const MotionLab = lazy(() => import('../features/lab/MotionLab'))
 export default function PlaygroundPage() {
@@ -12,7 +13,7 @@ export default function PlaygroundPage() {
   const source = getPracticeLesson(params.get('example') ?? 'to') ?? getPracticeLesson('to')!
   const lesson = useMemo(() => ({ ...source, activity: learningActivity(source) }), [source])
   useEffect(() => {
-    document.title = `${c('Playground animasi', 'Animation playground')} — RanMotion`
+    document.title = `${c('Playground animasi', 'Animation playground')} - RanMotion`
   }, [c])
   return (
     <div className="page-width playground-page">
@@ -22,7 +23,7 @@ export default function PlaygroundPage() {
             <FlaskConical size={13} />
             {c('RUANG UNTUK MENCOBA', 'A LITTLE ROOM TO EXPERIMENT')}
           </p>
-          <h1>{c('Ikuti rasa ingin tahumu.', 'Follow your curiosity.')}</h1>
+          <h1>{c('Ikuti rasa ingin tahumu', 'Follow your curiosity')}</h1>
           <p>
             {c(
               'Pilih contoh, ubah kodenya, lihat apa yang terjadi. Tidak perlu takut salah.',
@@ -63,9 +64,10 @@ export default function PlaygroundPage() {
       <ErrorBoundary>
         <Suspense
           fallback={
-            <div className="lab-skeleton" role="status">
-              {c('Menyiapkan ruang praktik…', 'Getting your playground ready…')}
-            </div>
+            <SectionLoadingSkeleton
+              variant="lab"
+              label={c('Menyiapkan ruang praktik', 'Getting your playground ready')}
+            />
           }
         >
           <MotionLab lesson={lesson} challenge={false} namespace="playground" key={lesson.id} />

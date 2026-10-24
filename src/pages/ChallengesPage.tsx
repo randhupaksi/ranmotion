@@ -8,7 +8,7 @@ export default function ChallengesPage() {
   const { c, text, challenges } = useApp()
   const [filter, setFilter] = useState('all')
   useEffect(() => {
-    document.title = `${c('Tantangan', 'Challenges')} — RanMotion`
+    document.title = `${c('Tantangan', 'Challenges')} - RanMotion`
   }, [c])
   const visible = practiceLessons.filter(
     l =>
@@ -20,9 +20,9 @@ export default function ChallengesPage() {
       <header className="page-header">
         <p className="eyebrow">{c('BELAJAR DENGAN MEMBUAT', 'LEARN BY MAKING')}</p>
         <h1>
-          {c('Uji idenya.', 'Test the idea.')}
+          {c('Uji idenya', 'Test the idea')}
           <br />
-          <em>{c('Lihat animasinya.', 'See what moves.')}</em>
+          <em>{c('Lihat animasinya', 'See what moves')}</em>
         </h1>
         <p className="page-lead">
           {c(
@@ -110,7 +110,7 @@ export default function ChallengesPage() {
         <FeedbackState
           icon={Target}
           eyebrow={c('PAPAN TANTANGAN', 'CHALLENGE BOARD')}
-          title={c('Belum ada tantangan di sini.', 'No challenges here yet.')}
+          title={c('Belum ada tantangan di sini', 'No challenges here yet')}
           description={c(
             'Coba tampilkan semua tantangan untuk menemukan eksperimen berikutnya.',
             'Show all challenges to find your next experiment.',

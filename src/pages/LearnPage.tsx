@@ -25,9 +25,12 @@ export default function LearnPage() {
   const [query, setQuery] = useState('')
   const { hash } = useLocation()
   const next = nextRecommended(completed, lastLesson)
+  // Open by curriculum order, not by visit history, so a stray last-visited lesson cannot
+  // keep a late module expanded on every visit.
+  const firstUnfinished = lessons.find(l => !completed.includes(l.id)) ?? lessons[0]
   const done = lessons.filter(l => completed.includes(l.id)).length
   useEffect(() => {
-    document.title = `${c('Jalur belajar', 'Learning path')} — RanMotion`
+    document.title = `${c('Jalur belajar', 'Learning path')} - RanMotion`
   }, [c])
   return (
     <div className="page-width learning-page">
@@ -36,7 +39,7 @@ export default function LearnPage() {
           <p className="eyebrow">{c('JALUR BELAJAR GSAP', 'THE GSAP LEARNING PATH')}</p>
           <h1>
             {c('Dari diam,', 'From stillness,')}{' '}
-            <em>{c('jadi bermakna.', 'to something meaningful.')}</em>
+            <em>{c('jadi bermakna', 'to something meaningful')}</em>
           </h1>
           <p className="page-lead">
             {c(
@@ -150,7 +153,7 @@ export default function LearnPage() {
               open={
                 Boolean(query) ||
                 filter !== 'all' ||
-                m.number === next.module ||
+                m.number === firstUnfinished.module ||
                 hash === `#module-${m.number}`
               }
             >
@@ -202,7 +205,7 @@ export default function LearnPage() {
           <FeedbackState
             icon={BookOpen}
             eyebrow={c('JALUR BELAJAR', 'LEARNING PATH')}
-            title={c('Belum ada pelajaran di sini.', 'No lessons here yet.')}
+            title={c('Belum ada pelajaran di sini', 'No lessons here yet')}
             description={
               filter === 'completed'
                 ? c(

@@ -15,7 +15,7 @@ export default function ProgressPage() {
   const done = lessons.filter(l => completed.includes(l.id))
   const next = nextRecommended(completed, lastLesson)
   useEffect(() => {
-    document.title = `${c('Progres belajarmu', 'Your progress')} — RanMotion`
+    document.title = `${c('Progres belajarmu', 'Your progress')} - RanMotion`
   }, [c])
   return (
     <div className="page-width standard-page">
@@ -24,7 +24,7 @@ export default function ProgressPage() {
         <h1>
           {c('Setiap langkah,', 'Every step,')}
           <br />
-          <em>{c('tetap berarti.', 'counts for something.')}</em>
+          <em>{c('tetap berarti', 'counts for something')}</em>
         </h1>
         <p className="page-lead">
           {c(
@@ -65,7 +65,7 @@ export default function ProgressPage() {
           </p>
           <h2>
             {done.length === lessons.length
-              ? c('Kamu sudah membangun fondasinya.', 'You have built your foundation.')
+              ? c('Kamu sudah membangun fondasinya', 'You have built your foundation')
               : text(next.title)}
           </h2>
           <p>
@@ -123,7 +123,7 @@ export default function ProgressPage() {
           <FeedbackState
             icon={BookOpen}
             eyebrow={c('LANGKAH PERTAMA', 'YOUR FIRST STEP')}
-            title={c('Perjalananmu dimulai di sini.', 'Your journey starts here.')}
+            title={c('Perjalananmu dimulai di sini', 'Your journey starts here')}
             description={c(
               'Pelajaran pertama hanya butuh beberapa menit dan tidak memerlukan coding.',
               'The first lesson takes just a few minutes and needs no coding.',

@@ -8,7 +8,7 @@ export default function ReferencePage() {
   const { c, text } = useApp()
   const [query, setQuery] = useState('')
   useEffect(() => {
-    document.title = `${c('Referensi singkat', 'Quick reference')} — RanMotion`
+    document.title = `${c('Referensi singkat', 'Quick reference')} - RanMotion`
   }, [c])
   return (
     <div className="page-width standard-page reference-page">
@@ -17,7 +17,7 @@ export default function ReferencePage() {
         <h1>
           {c('Ide penting,', 'Key ideas,')}
           <br />
-          <em>{c('dalam satu tempat.', 'in one place.')}</em>
+          <em>{c('dalam satu tempat', 'in one place')}</em>
         </h1>
         <p className="page-lead">
           {c(
@@ -59,7 +59,7 @@ export default function ReferencePage() {
           compact
           icon={SearchX}
           eyebrow={c('PENCARIAN REFERENSI', 'REFERENCE SEARCH')}
-          title={c('Belum ada konsep yang cocok.', 'No matching concepts yet.')}
+          title={c('Belum ada konsep yang cocok', 'No matching concepts yet')}
           description={c(
             'Coba kata lain atau hapus pencarian untuk melihat semua konsep.',
             'Try another term or clear your search to see every concept.',

@@ -11,7 +11,7 @@ export default function NotFoundPage() {
       eyebrow="404 / OFF THE TIMELINE"
       headingLevel="h1"
       className="page-width not-found"
-      title={c('Sepertinya kita keluar jalur.', 'Looks like we left the timeline.')}
+      title={c('Sepertinya kita keluar jalur', 'Looks like we left the timeline')}
       description={c(
         'Halaman ini tidak ditemukan. Kamu bisa kembali ke jalur belajar.',
         'This page could not be found. Head back to the learning path.',
