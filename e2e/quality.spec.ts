@@ -1,5 +1,20 @@
 import { test, expect } from '@playwright/test'
+import type { Page } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
+
+// Replace the whole editor document and confirm CodeMirror holds exactly this text before the
+// test runs it. A bare fill() can race the lazy editor and leave stale lines on a slow runner.
+async function setEditorCode(page: Page, code: string) {
+  const content = page.locator('.cm-content')
+  // The editor is lazy-loaded behind a route skeleton, so allow far more than the 5s default.
+  await expect(content).toBeVisible({ timeout: 30_000 })
+  await expect(page.locator('.cm-line').first()).not.toBeEmpty({ timeout: 30_000 })
+  await content.click()
+  await page.keyboard.press('ControlOrMeta+a')
+  await page.keyboard.press('Backspace')
+  await page.keyboard.insertText(code)
+  await expect.poll(() => page.locator('.cm-line').allTextContents()).toEqual(code.split('\n'))
+}
 
 test('navigation resets the page and focuses the real lazy-loaded destination', async ({
   page,
@@ -31,15 +46,16 @@ test('search supports Enter, Escape restores focus, and the ticker can be paused
   page,
 }) => {
   await page.goto('/')
-  const trigger = page.getByRole('button', { name: 'Cari pelajaran · Ctrl K / ⌘ K', exact: true })
+  const trigger = page.getByRole('button', { name: 'Cari pelajaran ⌘ K, atau Ctrl K', exact: true })
   await trigger.click()
-  await expect(page.getByRole('textbox', { name: 'Cari materi', exact: true })).toBeFocused()
+  await expect(page.getByRole('dialog').getByRole('button', { name: 'Tutup' })).toBeFocused()
+  await expect(page.getByRole('textbox', { name: 'Cari materi', exact: true })).not.toBeFocused()
   await page.keyboard.press('Escape')
   await expect(trigger).toBeFocused()
   await page.getByRole('button', { name: 'Pengaturan belajar', exact: true }).click()
   await page.keyboard.press('ControlOrMeta+k')
   await expect(page.getByRole('dialog')).toHaveCount(1)
-  await expect(page.getByRole('textbox', { name: 'Cari materi', exact: true })).toBeFocused()
+  await expect(page.getByRole('dialog').getByRole('button', { name: 'Tutup' })).toBeFocused()
   await page.getByRole('textbox', { name: 'Cari materi', exact: true }).fill('Kenalan dengan GSAP')
   await page.keyboard.press('Enter')
   await expect(page).toHaveURL(/learn\/gsap-foundations/)
@@ -60,15 +76,13 @@ test('syntax and runtime diagnostics stay next to the faulty line and clear afte
   page,
 }) => {
   await page.goto('/playground?example=to')
-  await page.locator('.cm-content').fill('const distance = 120;\ngsap.to(".box", { x: );')
+  await setEditorCode(page, 'const distance = 120;\ngsap.to(".box", { x: );')
   await page.getByRole('button', { name: 'Jalankan kode', exact: true }).click()
   await expect(page.locator('.cm-code-error')).toContainText('Baris 2')
   await expect(page.locator('.cm-content')).toBeFocused()
   await expect(page.locator('.cm-content')).toHaveAttribute('aria-invalid', 'true')
   await expect(page.locator('.lab-error')).toHaveCount(0)
-  await page
-    .locator('.cm-content')
-    .fill('const distance = 120;\n\ngsap.to(".box", { x: missingDistance });')
+  await setEditorCode(page, 'const distance = 120;\n\ngsap.to(".box", { x: missingDistance });')
   await expect(page.getByRole('alert')).toHaveCount(0)
   await page.getByRole('button', { name: 'Jalankan kode', exact: true }).click()
   await expect(page.locator('.cm-code-error')).toContainText('Baris 3')
@@ -178,7 +192,7 @@ test('dialog and inline error accessibility, with representative screenshots', a
   await page.goto('/learn/gsap-foundations')
   await expect(page.locator('.concept-study')).toBeVisible()
   await page.screenshot({ path: '.artifacts/foundations-desktop.png', fullPage: true })
-  await page.getByRole('button', { name: 'Cari pelajaran · Ctrl K / ⌘ K', exact: true }).click()
+  await page.getByRole('button', { name: 'Cari pelajaran ⌘ K, atau Ctrl K', exact: true }).click()
   const dialog = await new AxeBuilder({ page })
     .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
     .analyze()

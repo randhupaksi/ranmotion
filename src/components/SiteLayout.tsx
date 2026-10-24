@@ -20,6 +20,7 @@ import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { useApp } from '../app/AppProvider'
 import { lessons, modules, nextRecommended } from '../data/curriculum'
 import Brand from './Brand'
+import { RouteSkeleton } from './LoadingSkeleton'
 import Dialog from './Dialog'
 import FeedbackState from './FeedbackState'
 import RouteExperience from './RouteExperience'
@@ -110,7 +111,7 @@ export default function SiteLayout() {
               <Brand />
             </Link>
             <span className="brand-caption">
-              MOTION FIELDNOTES <i>№ 01—{String(modules.length).padStart(2, '0')}</i>
+              MOTION FIELDNOTES <i>№ 01-{String(modules.length).padStart(2, '0')}</i>
             </span>
           </div>
           <nav className="desktop-nav" aria-label={c('Navigasi utama', 'Main navigation')}>
@@ -124,9 +125,12 @@ export default function SiteLayout() {
             <button
               className="search-trigger"
               onClick={() => setSearchOpen(true)}
-              aria-label={c('Cari pelajaran · Ctrl K / ⌘ K', 'Search lessons · Ctrl K / ⌘ K')}
+              aria-label={c('Cari pelajaran ⌘ K, atau Ctrl K', 'Search lessons ⌘ K, or Ctrl K')}
             >
               <Search size={16} />
+              <span className="search-placeholder" aria-hidden="true">
+                {c('Cari pelajaran', 'Search lessons')}
+              </span>
               <kbd>⌘ K</kbd>
             </button>
             <button
@@ -193,13 +197,7 @@ export default function SiteLayout() {
         </div>
       )}
       <main id="main-content" tabIndex={-1}>
-        <Suspense
-          fallback={
-            <div className="route-loading" data-route-loading role="status">
-              {c('Menyiapkan ruang belajarmu…', 'Getting your learning space ready…')}
-            </div>
-          }
-        >
+        <Suspense fallback={<RouteSkeleton />}>
           <Outlet />
         </Suspense>
       </main>
@@ -254,7 +252,7 @@ export default function SiteLayout() {
             </p>
             <h2 id="footer-next-title" className="footer-next__title">
               {allLessonsDone
-                ? c('Sekarang, buat animasimu sendiri.', 'Now make an animation of your own.')
+                ? c('Sekarang, buat animasimu sendiri', 'Now make an animation of your own')
                 : lastLesson === nextLesson.id
                   ? `${c('Lanjutkan:', 'Continue:')} ${nextLessonTitle}`
                   : nextLessonTitle}
@@ -309,20 +307,7 @@ export default function SiteLayout() {
           </div>
         </div>
         <p className="footer-note">
-          <span>
-            RanMotion by Rancode ·{' '}
-            {c(
-              'Proyek belajar independen, tidak berafiliasi dengan GSAP atau Webflow.',
-              'An independent learning project, not affiliated with GSAP or Webflow.',
-            )}
-          </span>
-          <Link to="/progress" className="footer-note__progress">
-            <ShieldCheck size={13} />
-            {storageAvailable
-              ? c('Progres tersimpan di perangkatmu', 'Progress saved on your device')
-              : c('Penyimpanan lokal tidak tersedia', 'Local storage unavailable')}
-            <ArrowRight size={12} aria-hidden="true" />
-          </Link>
+          © {new Date().getFullYear()} RanMotion by Randhu. All rights reserved.
         </p>
       </footer>
       <nav className="mobile-nav" aria-label={c('Navigasi mobile', 'Mobile navigation')}>
@@ -342,8 +327,6 @@ export default function SiteLayout() {
         <label className="search-field">
           <Search size={18} />
           <input
-            autoFocus
-            data-dialog-autofocus
             value={query}
             onChange={event => setQuery(event.target.value)}
             placeholder={c('Cari tween, easing, scroll…', 'Search tween, easing, scroll…')}
@@ -383,7 +366,7 @@ export default function SiteLayout() {
               compact
               icon={Search}
               eyebrow={c('PENCARIAN MATERI', 'LESSON SEARCH')}
-              title={c('Belum ada materi yang cocok.', 'No matching lessons.')}
+              title={c('Belum ada materi yang cocok', 'No matching lessons')}
               description={c(
                 'Coba “easing”, “timeline”, atau kata yang lebih pendek.',
                 'Try “easing”, “timeline”, or a shorter search.',

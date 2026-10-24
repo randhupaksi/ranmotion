@@ -32,7 +32,7 @@ The npm configuration includes a peer-resolution workaround for npm 11.1.0. Revi
 - Challenges check values from executed GSAP animations, not just strings in the editor. Interface challenges also require trying the preview interaction.
 - Learning progress, challenge completion, language, motion preference, and per-example code drafts persist in the same browser. Lesson and playground views share a draft for the same example.
 - Lessons can also be marked complete independently of the demo. Home, learning, and progress views resume a valid unfinished last lesson, then recommend the first unfinished lesson. Existing saved lesson IDs are preserved.
-- Search (`Ctrl/Cmd + K`) focuses its input; Enter opens the first match, Tab reaches other matches, and Escape closes it. Page navigation resets scroll and focus after content loads; anchor links wait for their actual destination. Changing a playground example retains local context.
+- Search (`Ctrl/Cmd + K`) opens without activating its input, so focus starts on the close button and a tap or Tab reaches the field; Enter opens the first match, Tab reaches other matches, and Escape closes it. Page navigation resets scroll and focus after content loads; anchor links wait for their actual destination. Changing a playground example retains local context.
 - The decorative ticker has a pause toggle. Motion preferences, keyboard playback, readable editor text, and larger interaction targets support different ways of learning.
 
 ## Routes
