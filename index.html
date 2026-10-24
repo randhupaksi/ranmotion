@@ -9,15 +9,173 @@
       content="Belajar animasi GSAP lewat 40 eksperimen interaktif. Coba animasinya, ubah kodenya, dan pahami cara kerjanya."
     />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta property="og:title" content="RanMotion — Pahami animasi." />
+    <meta property="og:title" content="RanMotion - Pahami animasi." />
     <meta
       property="og:description"
       content="Coba animasinya. Ubah kodenya. Pahami GSAP lewat eksperimen langsung."
     />
     <meta property="og:type" content="website" />
-    <title>RanMotion — Pahami animasi.</title>
+    <title>RanMotion - Pahami animasi.</title>
+    <style>
+      /* Self-contained reset: the loader paints before the app stylesheet arrives, so it must not
+         depend on (or shift when) global element rules such as `p { margin: 0 }` are applied. */
+      :where(.boot-loader, .boot-loader *, .boot-loader *::before, .boot-loader *::after) {
+        box-sizing: border-box;
+      }
+      :where(.boot-loader p) {
+        margin: 0;
+      }
+      .boot-loader {
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+        background: #071411;
+        color: #f3f2e9;
+        opacity: 1;
+        transition: opacity 240ms ease;
+      }
+      .boot-loader.is-ready {
+        pointer-events: none;
+        opacity: 0;
+      }
+      .boot-loader__content {
+        width: min(100%, 480px);
+        text-align: center;
+      }
+      .boot-loader__stage {
+        position: relative;
+        height: 72px;
+        margin-bottom: 26px;
+        overflow: hidden;
+        border: 1px solid #263c30;
+        background-color: #091914;
+        background-image: radial-gradient(#3a5944 1px, transparent 1px);
+        background-size: 18px 18px;
+      }
+      .boot-loader__stage::before {
+        position: absolute;
+        top: 50%;
+        right: 12%;
+        left: 12%;
+        height: 1px;
+        background: #3a5944;
+        content: '';
+      }
+      .boot-loader__target,
+      .boot-loader__mark {
+        position: absolute;
+        top: 13px;
+        width: 44px;
+        height: 44px;
+      }
+      .boot-loader__target {
+        left: 70%;
+        border: 1px dashed #a5ed08;
+        opacity: 0.6;
+      }
+      .boot-loader__mark {
+        left: 12%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+        border: 1px solid #a5ed08;
+        border-radius: 3px;
+        background: #a5ed08;
+        animation: boot-loader-travel 2s cubic-bezier(0.5, 0, 0.25, 1) forwards;
+      }
+      .boot-loader__mark i {
+        width: 5px;
+        height: 12px;
+        background: #071411;
+        transform: skew(-17deg);
+      }
+      .boot-loader__mark i:nth-child(2) {
+        height: 22px;
+      }
+      .boot-loader__mark i:nth-child(3) {
+        height: 17px;
+      }
+      .boot-loader__kicker {
+        color: #a5ed08;
+        font: 9px/1.5 monospace;
+        letter-spacing: 0.14em;
+      }
+      .boot-loader__title {
+        margin-top: 8px;
+        font:
+          550 24px/1.2 system-ui,
+          sans-serif;
+        letter-spacing: -0.045em;
+      }
+      .boot-loader__description {
+        margin-top: 8px;
+        color: #a4b0a4;
+        font:
+          13px/1.7 system-ui,
+          sans-serif;
+      }
+      .boot-loader__progress {
+        height: 4px;
+        margin-top: 22px;
+        overflow: hidden;
+        background: #132a22;
+      }
+      .boot-loader__progress::before {
+        display: block;
+        width: 32%;
+        height: 100%;
+        background: #a5ed08;
+        content: '';
+        animation: boot-loader-progress 1.65s ease-in-out infinite alternate;
+      }
+      @keyframes boot-loader-travel {
+        to {
+          left: 70%;
+        }
+      }
+      @keyframes boot-loader-progress {
+        from {
+          transform: translateX(-110%);
+        }
+        to {
+          transform: translateX(320%);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .boot-loader,
+        .boot-loader__mark,
+        .boot-loader__progress::before {
+          animation: none;
+          transition: none;
+        }
+        .boot-loader__progress::before {
+          transform: translateX(90%);
+        }
+      }
+    </style>
   </head>
   <body>
+    <div class="boot-loader" id="initial-loader" role="status" aria-live="polite">
+      <div class="boot-loader__content">
+        <div class="boot-loader__stage" aria-hidden="true">
+          <span class="boot-loader__target"></span>
+          <span class="boot-loader__mark"><i></i><i></i><i></i></span>
+        </div>
+        <p class="boot-loader__kicker">RANMOTION / MOTION STUDY</p>
+        <p class="boot-loader__title">Menyiapkan ruang animasi</p>
+        <p class="boot-loader__description">Menyusun frame pertamamu</p>
+        <div class="boot-loader__progress" aria-hidden="true"></div>
+      </div>
+    </div>
+    <script>
+      document
+        .getElementById('initial-loader')
+        ?.setAttribute('data-started-at', String(performance.now()))
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
