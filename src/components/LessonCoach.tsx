@@ -48,7 +48,7 @@ export default function LessonCoach({ lesson }: { lesson: PracticeLesson }) {
             <Sparkles size={13} />
             {c('PAHAMI SATU HAL DAHULU', 'ONE IDEA AT A TIME')}
           </span>
-          <h2>{c('Pelan-pelan, sampai masuk akal.', 'Take your time until it clicks.')}</h2>
+          <h2>{c('Pelan-pelan, sampai masuk akal', 'Take your time until it clicks')}</h2>
         </div>
         <span className="coach-level">
           {lesson.module <= 2

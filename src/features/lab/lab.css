@@ -84,7 +84,7 @@
   color: var(--ink);
 }
 .code-tabs .tab-buttons > button.active {
-  color: var(--primary);
+  color: var(--ink);
 }
 .code-tabs .tab-buttons > button.active::after {
   position: absolute;
@@ -326,7 +326,7 @@
 .scroll-mode-controls > button.active {
   border-color: #5b7c37;
   background: #24371b;
-  color: var(--primary);
+  color: var(--ink);
 }
 .scroll-mode-controls > label {
   display: flex;
@@ -950,7 +950,8 @@
 }
 .lab-variation-actions button[aria-pressed='true'] {
   border-color: var(--primary);
-  color: var(--primary);
+  background: var(--interaction-wash-strong);
+  color: var(--ink);
 }
 .challenge-observation {
   margin-top: 14px;

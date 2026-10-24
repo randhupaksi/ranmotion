@@ -241,8 +241,11 @@
   }
   .challenge-card {
     grid-template-columns: minmax(0, 1fr);
-    padding-block: 22px;
+    padding: 22px 12px;
     gap: 12px;
+  }
+  .entry-routes-list > a:first-child {
+    padding-left: 12px;
   }
   .challenge-detail h2 {
     font-size: 19px;

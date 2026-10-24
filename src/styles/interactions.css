@@ -77,12 +77,11 @@ label:has(input[type='radio']) {
     .curriculum-module > summary,
     .sidebar-modules details > summary,
     .mini-glossary summary,
-    .prereq-disclosure summary,
     .solution-disclosure summary,
     .challenge-observation summary
   ):hover {
     background: var(--interaction-wash);
-    color: var(--primary);
+    color: var(--ink);
   }
 
   :is(
@@ -93,12 +92,10 @@ label:has(input[type='radio']) {
     .search-results > a
   ):hover {
     background: var(--interaction-wash);
-    box-shadow: inset 2px 0 var(--primary);
   }
 
   :is(.home-module, .challenge-card, .entry-routes-list > a):hover {
     background: var(--interaction-wash);
-    box-shadow: inset 2px 0 var(--primary);
   }
 
   :is(.prediction-options label, .concept-choices label):hover {
@@ -132,7 +129,7 @@ label:has(input[type='radio']) {
 
 :is(.coach-tabs button[aria-selected='true'], .code-tabs .tab-buttons > button.active) {
   background: var(--interaction-wash);
-  color: var(--primary);
+  color: var(--ink);
 }
 
 :is(
@@ -141,7 +138,7 @@ label:has(input[type='radio']) {
 ) {
   border-color: var(--primary);
   background: var(--interaction-wash-strong);
-  color: var(--primary);
+  color: var(--ink);
 }
 
 .ticker-toggle[aria-pressed='true'] {
@@ -151,16 +148,55 @@ label:has(input[type='radio']) {
 
 :is(
   .curriculum-module[open] > summary,
-  .prereq-disclosure[open] > summary,
   .mini-glossary details[open] > summary,
   .solution-disclosure[open] > summary,
   .challenge-observation[open] > summary
 ) {
-  color: var(--primary);
+  color: var(--ink);
 }
 
 .curriculum-module[open] > summary {
   background: var(--interaction-wash);
+}
+
+.prereq-disclosure[open] > summary {
+  color: var(--ink);
+}
+
+@media (hover: hover) {
+  .prereq-disclosure summary:hover {
+    color: var(--ink);
+  }
+}
+
+.curriculum-module > summary:hover .module-number,
+.curriculum-module > summary:hover > svg,
+.curriculum-module[open] > summary .module-number,
+.curriculum-module[open] > summary > svg,
+.prereq-disclosure[open] > summary > svg,
+.prereq-disclosure summary:hover > svg,
+.mini-glossary summary:hover > span,
+.solution-disclosure summary:hover > svg,
+.challenge-observation summary:hover > svg {
+  color: var(--primary);
+}
+
+.lesson-list a:hover,
+.sidebar-modules li a:hover,
+.progress-modules > a:hover > strong,
+.completed-links > a:hover,
+.search-results > a:hover,
+.entry-routes-list > a:hover h2 {
+  color: var(--ink);
+}
+
+.lesson-list a:hover > svg,
+.search-results > a:hover > svg,
+.progress-modules > a:hover > svg,
+.completed-links > a:hover svg,
+.challenge-card:hover .challenge-card-meta > svg,
+.entry-routes-list > a:hover > svg {
+  color: var(--primary);
 }
 
 .prediction-options label.is-chosen,
@@ -182,6 +218,7 @@ label:has(input[type='radio']) {
 
 .settings-select-item[data-state='checked'] {
   background: var(--interaction-wash);
+  color: var(--ink);
 }
 
 :is(
@@ -192,5 +229,4 @@ label:has(input[type='radio']) {
   .progress-modules > a
 ):active {
   background: var(--interaction-press);
-  box-shadow: inset 3px 0 var(--primary);
 }

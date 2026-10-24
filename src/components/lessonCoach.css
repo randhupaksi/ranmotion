@@ -62,7 +62,7 @@
 }
 .coach-tabs button[aria-selected='true'] {
   border-color: var(--primary);
-  color: var(--primary);
+  color: var(--ink);
   background: #142217;
 }
 .coach-panel {
@@ -171,7 +171,8 @@
 }
 .walkthrough-picks button[aria-pressed='true'] {
   border-color: var(--primary);
-  color: var(--primary);
+  background: var(--interaction-wash-strong);
+  color: var(--ink);
 }
 .coach-code {
   margin: 0;

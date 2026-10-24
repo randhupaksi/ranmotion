@@ -211,7 +211,7 @@ export default function ConceptStudy({ lesson }: { lesson: ConceptLesson }) {
       </section>
       <section className="concept-check lesson-section" id="challenge">
         <p className="eyebrow">{c('03 / CEK PEMAHAMAN', '03 / CHECK YOUR UNDERSTANDING')}</p>
-        <h2>{c('Ceritakan kembali idenya.', 'Put the idea into your own words.')}</h2>
+        <h2>{c('Ceritakan kembali idenya', 'Put the idea into your own words')}</h2>
         <p>
           {c(
             'Pilih jawaban, lalu baca penjelasannya. Kamu bebas mencoba lagi.',
