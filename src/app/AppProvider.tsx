@@ -31,7 +31,10 @@ interface AppState extends Progress {
   reducedMotion: boolean
   toggleMotion: () => void
   storageAvailable: boolean
-  completeLesson: (id: string, challenge?: boolean) => void
+  /** Lesson completion is only ever set by the learner's own lesson action. */
+  completeLesson: (id: string) => void
+  /** Challenge completion is tracked separately and never marks the lesson complete. */
+  completeChallenge: (id: string) => void
   visitLesson: (id: string) => void
   resetProgress: () => void
 }
@@ -78,12 +81,15 @@ export function AppProvider({ children }: { children: ReactNode }) {
     return () => window.removeEventListener('storage', sync)
   }, [])
   const completeLesson = useCallback(
-    (id: string, challenge = false) =>
-      setProgress(p => ({
-        ...p,
-        completed: p.completed.includes(id) ? p.completed : [...p.completed, id],
-        challenges: challenge && !p.challenges.includes(id) ? [...p.challenges, id] : p.challenges,
-      })),
+    (id: string) =>
+      setProgress(p => (p.completed.includes(id) ? p : { ...p, completed: [...p.completed, id] })),
+    [],
+  )
+  const completeChallenge = useCallback(
+    (id: string) =>
+      setProgress(p =>
+        p.challenges.includes(id) ? p : { ...p, challenges: [...p.challenges, id] },
+      ),
     [],
   )
   const visitLesson = useCallback(
@@ -120,6 +126,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       toggleMotion,
       storageAvailable,
       completeLesson,
+      completeChallenge,
       visitLesson,
       resetProgress,
     }),
@@ -133,6 +140,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       toggleMotion,
       storageAvailable,
       completeLesson,
+      completeChallenge,
       visitLesson,
       resetProgress,
     ],

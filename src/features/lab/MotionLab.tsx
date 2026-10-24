@@ -1,21 +1,13 @@
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react'
-import type { KeyboardEvent } from 'react'
-import {
-  Check,
-  CheckCircle2,
-  Copy,
-  Lightbulb,
-  Pause,
-  Play,
-  RotateCcw,
-  Square,
-  Terminal,
-} from 'lucide-react'
+import type { KeyboardEvent, ReactNode } from 'react'
+import { Check, Copy, Pause, Play, RotateCcw, Square, Terminal } from 'lucide-react'
 import { useApp } from '../../app/AppProvider'
 import { SectionLoadingSkeleton } from '../../components/LoadingSkeleton'
 import SelectField from '../../components/SelectField'
 import type { PracticeLesson } from '../../data/types'
 import { readConstant, replaceConstant } from '../../data/examples'
+import ChallengePanel from './ChallengePanel'
+import type { ChallengeFeedback } from './ChallengePanel'
 import PreviewFrame from './PreviewFrame'
 import type { PreviewControls } from './PreviewFrame'
 import { checkChallenge } from './model'
@@ -39,14 +31,17 @@ function readDraft(key: string, initial: string) {
 
 export default function MotionLab({
   lesson,
-  challenge = true,
+  mode = 'lesson',
   namespace = 'lesson',
+  passAction,
 }: {
   lesson: PracticeLesson
-  challenge?: boolean
+  /** lesson: challenge closes the lesson; challenge: standalone page; playground: no challenge. */
+  mode?: 'lesson' | 'challenge' | 'playground'
   namespace?: string
+  passAction?: ReactNode
 }) {
-  const { c, text, locale, reducedMotion, completeLesson, challenges } = useApp()
+  const { c, text, locale, reducedMotion, completeChallenge } = useApp()
   const draftKey = `ranmotion.draft.${lesson.id}.v1`
   const comparisonKey = `${draftKey}.before-variation`
   const [code, setCode] = useState(() => readDraft(draftKey, lesson.code))
@@ -70,7 +65,7 @@ export default function MotionLab({
   const [draftSaved, setDraftSaved] = useState(true)
   const [copyStatus, setCopyStatus] = useState('')
   const [hints, setHints] = useState(0)
-  const [feedback, setFeedback] = useState<'pass' | 'retry' | 'run' | null>(null)
+  const [feedback, setFeedback] = useState<ChallengeFeedback>(null)
   const preview = useRef<PreviewControls>(null)
   const timeout = useRef<ReturnType<typeof setTimeout> | null>(null)
   const clearRunTimeout = useCallback(() => {
@@ -99,11 +94,11 @@ export default function MotionLab({
   }, [code, draftKey])
   useEffect(() => () => clearRunTimeout(), [clearRunTimeout])
   useEffect(() => {
-    if (challenge && location.hash === '#challenge') {
+    if (mode === 'lesson' && location.hash === '#challenge') {
       const id = requestAnimationFrame(() => document.getElementById('challenge')?.scrollIntoView())
       return () => cancelAnimationFrame(id)
     }
-  }, [challenge])
+  }, [mode])
   useEffect(() => {
     if (copyStatus) {
       const timer = setTimeout(() => setCopyStatus(''), 2000)
@@ -273,7 +268,7 @@ export default function MotionLab({
     }
     if (checkChallenge(lesson.challenge.rule, report)) {
       setFeedback('pass')
-      completeLesson(lesson.id, true)
+      completeChallenge(lesson.id)
     } else setFeedback('retry')
   }
   const copyCode = async () => {
@@ -326,13 +321,32 @@ export default function MotionLab({
       document.getElementById(`tab-${namespace}-${next}`)?.focus()
     }
   }
+  const challengePanel =
+    mode === 'playground' ? null : (
+      <ChallengePanel
+        lesson={lesson}
+        mode={mode}
+        hints={hints}
+        feedback={feedback}
+        onCheck={check}
+        onRevealHint={() => setHints(n => Math.min(n + 1, lesson.challenge.hints.length))}
+        onUseSolution={() => {
+          changeCode(lesson.solution)
+          focusEditor()
+        }}
+        passAction={passAction}
+      />
+    )
   return (
     <>
+      {mode === 'challenge' && challengePanel}
       <div className="motion-lab" id="experiment">
         <div className="lab-heading">
           <span>
             <Terminal size={15} />
-            {c('RUANG EKSPERIMEN', 'YOUR MOTION LAB')}
+            {mode === 'challenge'
+              ? c('LEMBAR KERJA TANTANGAN', 'CHALLENGE WORKSPACE')
+              : c('RUANG EKSPERIMEN', 'YOUR MOTION LAB')}
           </span>
           <span className="lab-draft-status">
             {draftSaved
@@ -340,7 +354,7 @@ export default function MotionLab({
               : c('Draf hanya untuk sesi ini', 'Draft for this session only')}
           </span>
         </div>
-        {lesson.activity && (
+        {lesson.activity && mode !== 'challenge' && (
           <div className="lab-variations">
             <div>
               <strong>
@@ -791,102 +805,7 @@ export default function MotionLab({
           'GSAP, ScrollTrigger, and MotionPathPlugin are ready to use. The exercise editor supports tweens, timelines, and events; imports and loops are not supported. Controls only edit constants that still exist in your code.',
         )}
       </p>
-      {challenge && (
-        <section className="lesson-challenge" id="challenge">
-          <div className="challenge-label">
-            <span className="eyebrow">
-              {c('04 / TERAPKAN PEMAHAMANMU', '04 / PUT IT INTO PRACTICE')}
-            </span>
-            {challenges.includes(lesson.id) && (
-              <span className="completion-badge">
-                <Check size={12} />
-                {c('Sudah dituntaskan', 'Completed before')}
-              </span>
-            )}
-          </div>
-          <h2>{text(lesson.challenge.title)}</h2>
-          <p>{text(lesson.challenge.task)}</p>
-          <div className="button-row">
-            <button className="button primary small" onClick={check}>
-              <CheckCircle2 size={14} />
-              {c('Periksa tantangan', 'Check challenge')}
-            </button>
-            <button
-              className="button secondary small"
-              disabled={hints >= lesson.challenge.hints.length}
-              onClick={() => setHints(n => Math.min(n + 1, lesson.challenge.hints.length))}
-            >
-              <Lightbulb size={14} />
-              {hints === lesson.challenge.hints.length
-                ? c('Semua petunjuk dibuka', 'All hints revealed')
-                : c('Beri aku petunjuk', 'Give me a hint')}
-            </button>
-          </div>
-          {hints > 0 && (
-            <ol className="challenge-hints">
-              {lesson.challenge.hints.slice(0, hints).map((hint, i) => (
-                <li key={i}>{text(hint)}</li>
-              ))}
-            </ol>
-          )}
-          {feedback && (
-            <div
-              className={`feedback ${feedback === 'pass' ? 'success' : 'neutral'}`}
-              role="status"
-            >
-              <strong>
-                {feedback === 'pass'
-                  ? c(
-                      'Berhasil. Kamu sudah menerapkan idenya!',
-                      'You did it. You have put the idea into practice!',
-                    )
-                  : feedback === 'run'
-                    ? c('Jalankan kode terbarumu dahulu.', 'Run your latest code first.')
-                    : c(
-                        'Belum sesuai. Coba satu perubahan lagi.',
-                        'Not quite yet. Try one more change.',
-                      )}
-              </strong>
-              <p>
-                {feedback === 'pass'
-                  ? c(
-                      'Pelajaran dan tantangan ini ditandai selesai. Coba jelaskan apa yang berubah sebelum melanjutkan.',
-                      'This lesson and challenge are marked complete. Try explaining what changed before moving on.',
-                    )
-                  : feedback === 'run'
-                    ? c(
-                        'Ubah kode, tekan Jalankan kode, lalu periksa tantangan.',
-                        'Edit your code, press Run code, then check the challenge.',
-                      )
-                    : text(lesson.challenge.hints[0])}
-              </p>
-            </div>
-          )}
-          {hints === lesson.challenge.hints.length && (
-            <details className="solution-disclosure">
-              <summary>{c('Lihat satu contoh jawaban', 'See one possible solution')}</summary>
-              <p>
-                {c(
-                  'Bandingkan dengan kodemu. Pahami perubahan sebelum mencoba lagi.',
-                  'Compare it with your code. Understand the change before trying again.',
-                )}
-              </p>
-              <pre tabIndex={0} aria-label={c('Contoh jawaban kode', 'Example solution code')}>
-                <code>{lesson.solution}</code>
-              </pre>
-              <button
-                className="button secondary small"
-                onClick={() => {
-                  changeCode(lesson.solution)
-                  focusEditor()
-                }}
-              >
-                {c('Gunakan contoh ini di editor', 'Use this example in the editor')}
-              </button>
-            </details>
-          )}
-        </section>
-      )}
+      {mode === 'lesson' && challengePanel}
     </>
   )
 }

@@ -527,6 +527,17 @@
 .lesson-challenge > .button-row {
   margin-top: 17px;
 }
+/* Standalone challenge page: the check panel leads the workspace instead of closing a lesson. */
+.lesson-challenge--standalone {
+  margin: 0 0 22px;
+  padding: 18px 20px 20px;
+  border: 1px solid var(--border-bright);
+  border-left: 2px solid var(--primary);
+  background: var(--surface);
+}
+.lesson-challenge--standalone > .button-row {
+  margin-top: 14px;
+}
 .challenge-hints {
   display: grid;
   gap: 8px;
@@ -561,6 +572,12 @@
 .feedback.neutral {
   border-color: var(--warm);
   color: var(--warm);
+}
+.feedback-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
 }
 .solution-disclosure {
   margin-top: 18px;

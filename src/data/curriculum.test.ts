@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest'
-import { lessons, practiceLessons, modules, nextRecommended } from './curriculum'
+import {
+  challengeNumber,
+  lessons,
+  modules,
+  nextChallenge,
+  nextRecommended,
+  practiceLessons,
+} from './curriculum'
 import { introStudies } from './introCurriculum'
 import { learningActivity } from './learningActivities'
 
@@ -60,6 +67,14 @@ describe('curriculum integrity for a returning or new learner', () => {
     expect(nextRecommended(oldIds, 'motion-path').id).toBe('motion-path')
     expect(nextRecommended(oldIds, 'to').id).toBe('gsap-foundations')
     expect(nextRecommended([], 'removed-lesson').id).toBe('gsap-foundations')
+  })
+  it('numbers challenges in curriculum order and recommends the first unfinished one', () => {
+    expect(challengeNumber('orientation')).toBe(1)
+    expect(challengeNumber(practiceLessons[39].id)).toBe(40)
+    expect(challengeNumber('gsap-foundations')).toBe(0)
+    expect(nextChallenge([])?.id).toBe('orientation')
+    expect(nextChallenge(['orientation'])?.id).toBe(practiceLessons[1].id)
+    expect(nextChallenge(practiceLessons.map(lesson => lesson.id))).toBeNull()
   })
   it('starts with two visual studies and keeps coding challenges out of the concept introduction', () => {
     expect(lessons.slice(0, 2).every(lesson => lesson.format === 'concept')).toBe(true)

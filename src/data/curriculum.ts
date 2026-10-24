@@ -1348,4 +1348,9 @@ export const nextRecommended = (completed: string[], lastLesson?: string | null)
     ? resume
     : (lessons.find(l => !completed.includes(l.id)) ?? lessons[0])
 }
+/** The first challenge not yet completed, in curriculum order, or null when all are done. */
+export const nextChallenge = (challenges: string[]) =>
+  practiceLessons.find(l => !challenges.includes(l.id)) ?? null
+/** Stable 1-based challenge number that does not change with filters. */
+export const challengeNumber = (id: string) => practiceLessons.findIndex(l => l.id === id) + 1
 export const totalMinutes = lessons.reduce((sum, l) => sum + l.minutes, 0)

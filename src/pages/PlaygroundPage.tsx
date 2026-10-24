@@ -68,7 +68,7 @@ export default function PlaygroundPage() {
             />
           }
         >
-          <MotionLab lesson={lesson} challenge={false} namespace="playground" key={lesson.id} />
+          <MotionLab lesson={lesson} mode="playground" namespace="playground" key={lesson.id} />
         </Suspense>
       </ErrorBoundary>
       <div className="playground-bottom">
@@ -79,7 +79,7 @@ export default function PlaygroundPage() {
             'Your code runs in this browser and is not sent to a server.',
           )}
         </p>
-        <Link className="text-link" to={`/learn/${lesson.id}#challenge`}>
+        <Link className="text-link" to={`/challenges/${lesson.id}`}>
           {c('Siap mencoba tantangannya?', 'Ready for the challenge?')}
           <ArrowUpRight size={14} />
         </Link>
