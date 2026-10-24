@@ -21,7 +21,8 @@ The result should feel practical, direct, and slightly experimental. Avoid ornam
 - **Lesson studies:** show sequence, goal, concept, example, feedback, and recap in an order a beginner can scan.
 - **Lab panels:** distinguish source, preview, playback controls, timeline feedback, challenge, and diagnostics through layout and labels, not color alone.
 - **Search and settings dialogs:** expose clear focus, an obvious close path, and restored focus after dismissal.
-- **Progress and challenge states:** communicate what is complete, what is next, and how to continue without implying that a learner is locked out.
+- **Progress and challenge states:** communicate what is complete, what is next, and how to continue without implying that a learner is locked out. Challenges link to their lesson as a soft suggestion, never as a gate.
+- **Challenge board and page:** group challenges by module with a stable number, keep search and filters in the URL so returning restores the view, and lead the challenge page with the task and check panel above the editor.
 - **Dropdowns:** use `SelectField` (`src/components/SelectField.tsx`, built on Radix Select) instead of a native `<select>`. Use `size="sm"` when the trigger itself is compact, such as the inline demo and lab controls, so the option list stays proportionate. The list renders in place rather than in a portal so it also works inside modal dialogs. Give every dropdown an `aria-label`, since the Radix trigger is a button.
 - **Error feedback:** keep it near the relevant editor line when a reliable source position exists. Pair technical details with plain-language recovery guidance.
 

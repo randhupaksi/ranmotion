@@ -35,7 +35,8 @@ Browser
 | `/learn`                 | Curriculum browse, filtering, and lesson search                           |
 | `/learn/:lessonId`       | One concept or practice lesson and its learning activity                  |
 | `/playground?example=to` | Editable practice environment with example selection                      |
-| `/challenges`            | Challenge browse and completion state                                     |
+| `/challenges`            | Challenge board, filters kept in the URL, and completion state            |
+| `/challenges/:lessonId`  | Standalone challenge that records challenge progress only                 |
 | `/progress`              | Saved progress and next recommended lesson                                |
 | `/reference`             | Searchable concept reminders linked back to lessons                       |
 

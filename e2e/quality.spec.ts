@@ -151,6 +151,7 @@ for (const width of [1440, 390]) {
     '/learn/to',
     '/playground',
     '/challenges',
+    '/challenges/to',
     '/progress',
     '/reference',
   ]) {
@@ -159,7 +160,7 @@ for (const width of [1440, 390]) {
       await page.emulateMedia({ reducedMotion: 'reduce' })
       await page.goto(path)
       await expect(page.locator('h1')).toBeVisible()
-      if (path === '/learn/to' || path === '/playground')
+      if (path === '/learn/to' || path === '/playground' || path === '/challenges/to')
         await expect(page.locator('.cm-content')).toBeVisible()
       if (path.includes('foundations') || path.includes('blueprint'))
         await expect(page.locator('.concept-study')).toBeVisible()
@@ -188,6 +189,8 @@ for (const width of [1440, 390]) {
 }
 
 test('dialog and inline error accessibility, with representative screenshots', async ({ page }) => {
+  // Four route loads, three axe scans, and full-page screenshots add up to more than the default.
+  test.setTimeout(90_000)
   await page.setViewportSize({ width: 1440, height: 1000 })
   await page.goto('/learn/gsap-foundations')
   await expect(page.locator('.concept-study')).toBeVisible()

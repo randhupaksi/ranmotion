@@ -51,11 +51,15 @@ The application saves the following only in the active browser:
 | Locale and motion preference | Preserves the learner’s interface settings                          |
 | Per-example drafts           | Lets a learner continue a code experiment from lesson or playground |
 
+Lesson and challenge progress are separate contracts. Passing a challenge, on its own page or inside a lesson, adds only to completed challenges. It never adds the lesson to completed lessons and never changes the last lesson. A lesson becomes complete only through the learner's lesson action; after a pass inside a lesson, the challenge panel offers that action as a button. This keeps a learner who jumps ahead to a later challenge from appearing to have finished lessons they have not studied.
+
 Progress and settings are validated when read. Existing valid IDs are retained. Storage errors must fall back to in-memory state; drafts use the same resilient approach. Clearing browser site data removes this local state, and it does not sync across devices.
 
 ## Recommendation rules
 
 The application uses a valid unfinished last lesson when possible. Otherwise it recommends the first unfinished lesson. If the curriculum is complete, the experience guides the learner into the playground. Keep this rule aligned across home, learning, and progress views.
+
+Challenges have their own recommendation: the first unfinished challenge in curriculum order, shown on the challenge board. Challenge pages do not record a last lesson, so practising challenges cannot move the lesson recommendation.
 
 ## Adding a practice example
 

@@ -30,8 +30,10 @@ The npm configuration includes a peer-resolution workaround for npm 11.1.0. Revi
 - Playback supports pause, replay, reset, and manual progress inspection. Timeline tracks reflect actual tween start times, durations, overlap, and labels.
 - Scroll examples use an independent scroller. A progress slider provides a touch and keyboard alternative to nested scrolling.
 - Challenges check values from executed GSAP animations, not just strings in the editor. Interface challenges also require trying the preview interaction.
+- The challenge board groups all 40 challenges by module with live search, module and status filters kept in the URL, and a spotlight on the next unfinished challenge. Each challenge has its own page with the task above the editor, progressive hints, a soft link to the related lesson, and a next-challenge path.
+- Lesson progress and challenge progress are separate. Passing a challenge records only the challenge; it never marks the lesson complete or changes the resume recommendation. Inside a lesson, a pass offers a one-click "mark the lesson complete" action instead of doing it automatically.
 - Learning progress, challenge completion, language, motion preference, and per-example code drafts persist in the same browser. Lesson and playground views share a draft for the same example.
-- Lessons can also be marked complete independently of the demo. Home, learning, and progress views resume a valid unfinished last lesson, then recommend the first unfinished lesson. Existing saved lesson IDs are preserved.
+- Lessons are marked complete only through their own action, independently of the demo. Home, learning, and progress views resume a valid unfinished last lesson, then recommend the first unfinished lesson. Existing saved lesson IDs are preserved.
 - Search (`Ctrl/Cmd + K`) opens without activating its input, so focus starts on the close button and a tap or Tab reaches the field; Enter opens the first match, Tab reaches other matches, and Escape closes it. Page navigation resets scroll and focus after content loads; anchor links wait for their actual destination. Changing a playground example retains local context.
 - The decorative ticker has a pause toggle. Motion preferences, keyboard playback, readable editor text, and larger interaction targets support different ways of learning.
 
@@ -43,7 +45,8 @@ The npm configuration includes a peer-resolution workaround for npm 11.1.0. Revi
 | `/learn`                 | Complete curriculum, completion filters, and lesson search                      |
 | `/learn/:lessonId`       | A complete lesson and its interactive challenge                                 |
 | `/playground?example=to` | Open practice with an example selector                                          |
-| `/challenges`            | All challenges, filtered by completion                                          |
+| `/challenges`            | Challenge board: module groups, search, module and status filters               |
+| `/challenges/:lessonId`  | One challenge on its own track, without changing lesson progress                |
 | `/progress`              | Saved progress and next recommended lesson                                      |
 | `/reference`             | Searchable concept reminders and links back to lessons                          |
 
