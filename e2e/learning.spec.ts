@@ -50,6 +50,9 @@ test('a new learner can complete a challenge, persist progress, and switch langu
   await expect(
     page.getByText('Berhasil. Kamu sudah menerapkan idenya!', { exact: true }),
   ).toBeVisible()
+  // Passing the challenge does not complete the lesson; the learner confirms that separately.
+  await expect(page.getByRole('button', { name: 'Tandai selesai', exact: true })).toBeEnabled()
+  await page.getByRole('button', { name: 'Tandai pelajaran selesai', exact: true }).click()
   await page.reload()
   await expect(page.getByRole('button', { name: 'Pelajaran selesai', exact: true })).toBeDisabled()
   await expect(page.locator('.cm-content')).toContainText('240')
@@ -60,6 +63,50 @@ test('a new learner can complete a challenge, persist progress, and switch langu
     page.getByRole('heading', { name: 'One box, many possibilities', exact: true }),
   ).toBeVisible()
   expect(errors).toEqual([])
+})
+
+test('a challenge on its own page keeps lesson progress and the resume point untouched', async ({
+  page,
+}) => {
+  await page.goto('/challenges?status=todo')
+  await expect(page.getByRole('button', { name: 'Belum dicoba', exact: true })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  )
+  await page.goto('/challenges')
+  await page.getByRole('searchbox', { name: 'Cari tantangan', exact: true }).fill('scroll')
+  await expect(page).toHaveURL(/q=scroll/)
+  await page.locator('a.challenge-card[href="/challenges/scrub"]').click()
+  await expect(page).toHaveURL(/challenges\/scrub$/)
+  await expect(page.locator('.desktop-nav a[aria-current="page"]')).toHaveText(/Tantangan/)
+  await expect(page.locator('.challenge-page-prereq')).toBeVisible()
+  await page.locator('.cm-content').fill(getPracticeLesson('scrub')!.solution)
+  await page.getByRole('button', { name: 'Jalankan kode', exact: true }).click()
+  await expect(page.getByText('Kode berhasil dijalankan', { exact: true })).toBeVisible()
+  await expect(async () => {
+    await page.getByRole('button', { name: 'Periksa tantangan', exact: true }).click()
+    await expect(
+      page.getByText('Berhasil. Kamu sudah menerapkan idenya!', { exact: true }),
+    ).toBeVisible({ timeout: 200 })
+  }).toPass({ timeout: 4000 })
+  await expect(
+    page.locator('.feedback').getByRole('link', { name: 'Tantangan berikutnya' }),
+  ).toBeVisible()
+  expect(
+    await page.evaluate(() => JSON.parse(localStorage.getItem('ranmotion.progress.v1') ?? 'null')),
+  ).toEqual({ completed: [], challenges: ['scrub'], lastLesson: null })
+  await page.goBack()
+  await expect(page).toHaveURL(/challenges\?q=scroll/)
+  await expect(page.locator('a.challenge-card[href="/challenges/scrub"]')).toHaveClass(/is-done/)
+  await page.goto('/')
+  await expect(page.locator('.hero-actions .primary')).toHaveAttribute(
+    'href',
+    '/learn/gsap-foundations',
+  )
+  await page.goto('/challenges/gsap-foundations')
+  await expect(
+    page.getByRole('heading', { name: 'Tantangan ini tidak ditemukan', exact: true }),
+  ).toBeVisible()
 })
 
 for (const lesson of practiceLessons) {
@@ -181,12 +228,13 @@ test('desktop and mobile pages remain within the viewport', async ({ page }) => 
       '/learn/to',
       '/playground?example=pin',
       '/challenges',
+      '/challenges/to',
       '/progress',
       '/reference',
     ]) {
       await page.goto(path)
       await expect(page.locator('h1')).toBeVisible()
-      if (path.includes('playground') || path === '/learn/to')
+      if (path.includes('playground') || path === '/learn/to' || path === '/challenges/to')
         await expect(page.locator('.motion-lab')).toBeVisible()
       const overflow = await page.evaluate(
         () => document.documentElement.scrollWidth - window.innerWidth,
