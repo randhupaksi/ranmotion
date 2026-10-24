@@ -12,6 +12,7 @@ import {
   Terminal,
 } from 'lucide-react'
 import { useApp } from '../../app/AppProvider'
+import { SectionLoadingSkeleton } from '../../components/LoadingSkeleton'
 import type { PracticeLesson } from '../../data/types'
 import { readConstant, replaceConstant } from '../../data/examples'
 import PreviewFrame from './PreviewFrame'
@@ -435,9 +436,10 @@ export default function MotionLab({
               <div hidden={tab !== 'js'} className="editor-js">
                 <Suspense
                   fallback={
-                    <div className="code-loading" role="status">
-                      {c('Memuat editor…', 'Loading the editor…')}
-                    </div>
+                    <SectionLoadingSkeleton
+                      variant="editor"
+                      label={c('Memuat editor', 'Loading the editor')}
+                    />
                   }
                 >
                   <CodeEditor
@@ -618,7 +620,7 @@ export default function MotionLab({
               disabled={duration === undefined}
               onChange={e => changeCode(replaceConstant(code, 'duration', Number(e.target.value)))}
             />
-            <output>{duration ?? '—'}s</output>
+            <output>{duration ?? '-'}s</output>
           </label>
           <label hidden={distance === undefined}>
             {c('Jarak', 'Distance')}
@@ -631,7 +633,7 @@ export default function MotionLab({
               disabled={distance === undefined}
               onChange={e => changeCode(replaceConstant(code, 'distance', Number(e.target.value)))}
             />
-            <output>{distance ?? '—'}px</output>
+            <output>{distance ?? '-'}px</output>
           </label>
           <label className="ease-control" hidden={ease === undefined}>
             Easing

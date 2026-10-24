@@ -2,6 +2,7 @@ import { ArrowDown, ArrowRight, ArrowUpRight, Check, Code2, Eye, MousePointer2 }
 import { Link } from 'react-router-dom'
 import { lazy, Suspense, useEffect } from 'react'
 import { useApp } from '../app/AppProvider'
+import { SectionLoadingSkeleton } from '../components/LoadingSkeleton'
 import { lessons, modules, nextRecommended } from '../data/curriculum'
 const HomeDemo = lazy(() => import('../components/HomeDemo'))
 
@@ -10,7 +11,7 @@ export default function HomePage() {
   const next = nextRecommended(completed, lastLesson)
   const allDone = lessons.every(lesson => completed.includes(lesson.id))
   useEffect(() => {
-    document.title = c('RanMotion — Pahami animasi.', 'RanMotion — Understand animation.')
+    document.title = c('RanMotion - Pahami animasi.', 'RanMotion - Understand animation.')
   }, [c])
   return (
     <div className="home-page">
@@ -91,7 +92,7 @@ export default function HomePage() {
               <i className="status-dot" /> GSAP / INTERACTIVE COURSE
             </span>
             <span>
-              01—{String(modules.length).padStart(2, '0')} / {modules.length} {c('BAB', 'CHAPTERS')}
+              01-{String(modules.length).padStart(2, '0')} / {modules.length} {c('BAB', 'CHAPTERS')}
             </span>
           </div>
         </div>
@@ -104,9 +105,10 @@ export default function HomePage() {
           </div>
           <Suspense
             fallback={
-              <div className="home-demo home-demo-loading" role="status">
-                {c('Menyiapkan animasi…', 'Preparing the animation…')}
-              </div>
+              <SectionLoadingSkeleton
+                variant="demo"
+                label={c('Menyiapkan animasi', 'Preparing the animation')}
+              />
             }
           >
             <HomeDemo />
@@ -157,13 +159,13 @@ export default function HomePage() {
           <div>
             <p className="eyebrow">
               {c('JALUR BELAJAR', 'LEARNING PATH') +
-                ' / 01—' +
+                ' / 01-' +
                 String(modules.length).padStart(2, '0')}
             </p>
             <h2>
               {c('Satu animasi', 'One animation')}
               <br />
-              <em>{c('membuka banyak kemungkinan.', 'opens up possibilities.')}</em>
+              <em>{c('membuka banyak kemungkinan', 'opens up possibilities')}</em>
             </h2>
           </div>
           <div>
@@ -198,9 +200,7 @@ export default function HomePage() {
           <span className="number-label">
             {String(modules.length).padStart(2, '0')} / CAPSTONE EXPERIMENT
           </span>
-          <strong>
-            {c('Sekarang, buat sesuatu milikmu.', 'Now, make something of your own.')}
-          </strong>
+          <strong>{c('Sekarang, buat sesuatu milikmu', 'Now, make something of your own')}</strong>
           <span>
             {c('Satukan semua yang kamu pelajari', 'Bring everything you have learned together')}
             <ArrowRight size={16} />
@@ -215,9 +215,9 @@ export default function HomePage() {
               {c('METODE / LIHAT → UBAH → PAHAMI', 'METHOD / SEE → CHANGE → UNDERSTAND')}
             </p>
             <h2>
-              {c('Jangan cuma meniru animasinya.', 'Do not just copy the animation.')}
+              {c('Jangan cuma meniru animasinya', 'Do not just copy the animation')}
               <br />
-              <em>{c('Pahami cara kerjanya.', 'Understand how it works.')}</em>
+              <em>{c('Pahami cara kerjanya', 'Understand how it works')}</em>
             </h2>
           </div>
           <p>
@@ -272,7 +272,7 @@ export default function HomePage() {
       <section className="prerequisites page-width">
         <div>
           <span className="eyebrow">{c('TITIK MULAI', 'YOUR STARTING POINT')}</span>
-          <h2>{c('Punya rasa ingin tahu? Sudah cukup.', 'Curiosity is a good enough start.')}</h2>
+          <h2>{c('Punya rasa ingin tahu? Sudah cukup', 'Curiosity is a good enough start')}</h2>
           <p>
             {c(
               'Dua pelajaran pertama bisa dicoba tanpa menulis kode. Saat masuk ke editor, sedikit HTML, selector CSS, dan JavaScript dasar akan membantu. Pengingat konsep tersedia di sepanjang jalur.',

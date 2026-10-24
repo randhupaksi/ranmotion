@@ -16,6 +16,7 @@ import type { Lesson } from '../data/types'
 import ErrorBoundary from '../components/ErrorBoundary'
 import NotFoundPage from './NotFoundPage'
 import LessonCoach, { GuidedSteps } from '../components/LessonCoach'
+import { SectionLoadingSkeleton } from '../components/LoadingSkeleton'
 import { learningActivity } from '../data/learningActivities'
 const MotionLab = lazy(() => import('../features/lab/MotionLab'))
 const ConceptStudy = lazy(() => import('../components/ConceptStudy'))
@@ -111,7 +112,7 @@ function LessonContent({ lesson }: { lesson: Lesson }) {
     visitLesson(lesson.id)
   }, [lesson.id, visitLesson])
   useEffect(() => {
-    document.title = `${text(lesson.title)} — RanMotion`
+    document.title = `${text(lesson.title)} - RanMotion`
   }, [lesson.title, text])
   return (
     <article className="lesson-article">
@@ -183,9 +184,10 @@ function LessonContent({ lesson }: { lesson: Lesson }) {
       {conceptual ? (
         <Suspense
           fallback={
-            <div className="lab-skeleton" role="status">
-              {c('Menyiapkan studi visual…', 'Preparing the visual study…')}
-            </div>
+            <SectionLoadingSkeleton
+              variant="concept"
+              label={c('Menyiapkan studi visual', 'Preparing the visual study')}
+            />
           }
         >
           <ConceptStudy lesson={lesson} />
@@ -203,7 +205,7 @@ function LessonContent({ lesson }: { lesson: Lesson }) {
           <div className="practice-heading">
             <div>
               <p className="eyebrow">{c('03 / COBA DALAM KODE', '03 / TRY IT IN CODE')}</p>
-              <h2>{c('Giliranmu menganimasikan idenya.', 'Your turn to animate the idea.')}</h2>
+              <h2>{c('Giliranmu menganimasikan idenya', 'Your turn to animate the idea')}</h2>
             </div>
             <Link className="text-link" to={`/playground?example=${lesson.id}`}>
               {c('Buka di playground', 'Open in playground')}
@@ -213,11 +215,10 @@ function LessonContent({ lesson }: { lesson: Lesson }) {
           <ErrorBoundary>
             <Suspense
               fallback={
-                <div className="lab-skeleton" role="status">
-                  <span>
-                    {c('Menyiapkan editor dan preview…', 'Getting the editor and preview ready…')}
-                  </span>
-                </div>
+                <SectionLoadingSkeleton
+                  variant="lab"
+                  label={c('Menyiapkan editor dan preview', 'Getting the editor and preview ready')}
+                />
               }
             >
               <MotionLab lesson={lesson} key={lesson.id} />

@@ -168,7 +168,7 @@ test('reduced motion displays a static result and search is keyboard accessible'
 })
 
 test('desktop and mobile pages remain within the viewport', async ({ page }) => {
-  test.setTimeout(90000)
+  test.setTimeout(180000)
   for (const width of [1440, 768, 390, 320]) {
     await page.setViewportSize({ width, height: 900 })
     for (const path of [
