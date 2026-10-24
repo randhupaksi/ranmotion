@@ -8,8 +8,7 @@
 button,
 a,
 summary,
-select,
-.settings-select-item,
+.select-item,
 label:has(input[type='radio']) {
   transition:
     color 160ms ease,
@@ -20,7 +19,7 @@ label:has(input[type='radio']) {
     filter 160ms ease;
 }
 
-:is(button:not(:disabled), a, summary, .settings-select-item):active {
+:is(button:not(:disabled), a, summary, .select-item):active {
   filter: brightness(0.82);
 }
 
@@ -30,7 +29,7 @@ label:has(input[type='radio']) {
     .search-trigger,
     .locale-button,
     .ticker-toggle,
-    .compact-select,
+    .select-trigger,
     .filter-tabs > button,
     .coach-tabs button,
     .walkthrough-picks button,
@@ -47,7 +46,7 @@ label:has(input[type='radio']) {
     color: #ffd1c6;
   }
 
-  :is(.search-trigger, .compact-select, select):hover:not(:disabled) {
+  :is(.search-trigger, .select-trigger):hover:not(:disabled) {
     background-color: var(--raised);
   }
 
@@ -115,7 +114,7 @@ label:has(input[type='radio']) {
     color: var(--ink);
   }
 
-  .settings-select-item:not([data-disabled]):hover {
+  .select-item:not([data-disabled]):hover {
     background: var(--interaction-wash);
     color: var(--ink);
   }
@@ -211,12 +210,12 @@ label:has(input[type='radio']) {
   outline-offset: -2px;
 }
 
-:is(select, .compact-select):focus-visible {
+.select-trigger:focus-visible {
   border-color: var(--primary);
   box-shadow: 0 0 0 3px var(--interaction-wash-strong);
 }
 
-.settings-select-item[data-state='checked'] {
+.select-item[data-state='checked'] {
   background: var(--interaction-wash);
   color: var(--ink);
 }

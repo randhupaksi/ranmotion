@@ -115,10 +115,6 @@ function HomeSkeleton() {
   return (
     <div className="rm-skeleton__home">
       <section className="rm-skeleton__hero">
-        <div className="rm-skeleton__hero-rail">
-          <Line width="7px" size="copy" />
-          <Line width="7px" size="heading" />
-        </div>
         <div className="rm-skeleton__hero-copy">
           <Line width="205px" size="eyebrow" />
           <Line width="min(500px, 73vw)" size="title" />
@@ -128,7 +124,6 @@ function HomeSkeleton() {
           </div>
           <div className="rm-skeleton__actions">
             <Line width="214px" size="control" />
-            <Line width="178px" size="control" />
           </div>
           <Line width="185px" size="eyebrow" />
         </div>

@@ -16,29 +16,15 @@ export default function HomePage() {
   return (
     <div className="home-page">
       <section className="hero page-width">
-        <div className="hero-rail" aria-hidden="true">
-          <span>
-            FIELD STUDY
-            <br />
-            001 / GSAP
-          </span>
-          <i />
-          <span>
-            01
-            <br />
-            {String(modules.length).padStart(2, '0')}
-          </span>
-        </div>
         <div className="hero-copy">
           <p className="eyebrow">
             <span className="tiny-line" />
-            {c('BELAJAR ANIMASI DENGAN CARA MENGALAMINYA', 'LEARN ANIMATION BY EXPERIENCING IT')}
+            {c('BELAJAR ANIMASI WEBSITE', 'LEARN ANIMATION BY EXPERIENCING IT')}
           </p>
           <h1>
-            {c('Pahami', 'Understand')}
-            <br />
+            {c('Pahami', 'Understand')} <br className="hero-break" />
             <span className="hero-word">
-              <em>{c('animasi', 'animation')}</em>
+              <em>{c('Animasi', 'Animation')}</em>
               <span className="hero-period" aria-hidden="true">
                 ✳
               </span>
@@ -58,10 +44,6 @@ export default function HomePage() {
                   ? c('Lanjutkan perjalanan', 'Continue your journey')
                   : c('Masuk ke pelajaran pertama', 'Enter the first lesson')}
               <ArrowUpRight size={16} />
-            </Link>
-            <Link className="button ghost" to="/playground">
-              {c('Buka ruang eksperimen', 'Open the experiment room')}
-              <ArrowRight size={15} />
             </Link>
           </div>
           <p className="hero-next-note">

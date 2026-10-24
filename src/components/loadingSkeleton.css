@@ -189,16 +189,10 @@
 
 .rm-skeleton__hero {
   display: grid;
-  grid-template-columns: 28px minmax(0, 0.92fr) minmax(360px, 0.88fr);
+  grid-template-columns: minmax(0, 0.92fr) minmax(360px, 0.88fr);
   align-items: center;
   gap: clamp(24px, 5vw, 66px);
   min-height: 495px;
-}
-
-.rm-skeleton__hero-rail {
-  display: grid;
-  justify-items: center;
-  gap: 12px;
 }
 
 .rm-skeleton__hero-copy {
@@ -636,7 +630,7 @@
 
 @media (max-width: 900px) {
   .rm-skeleton__hero {
-    grid-template-columns: 20px minmax(0, 1fr) minmax(300px, 0.8fr);
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 0.8fr);
     gap: 24px;
   }
 
@@ -670,10 +664,6 @@
     grid-template-columns: minmax(0, 1fr);
     min-height: 0;
     gap: 31px;
-  }
-
-  .rm-skeleton__hero-rail {
-    display: none;
   }
 
   .rm-skeleton__demo-shell {

@@ -10,15 +10,25 @@
     grid-template-columns: minmax(0, 1fr);
     gap: 32px;
   }
-  .hero-rail {
-    display: none;
-  }
-  .hero-copy h1 {
-    font-size: clamp(58px, 11vw, 84px);
-  }
   .hero-copy,
   .hero-lab {
     min-width: 0;
+  }
+  /* Single-column hero: keep the heading on one line and let it scale with its column.
+     --hero-ratio is the measured heading width in em; under the 36px floor it wraps instead. */
+  .hero-copy {
+    container-type: inline-size;
+  }
+  .hero-copy h1 {
+    --hero-ratio: 6.91;
+    max-width: none;
+    font-size: clamp(36px, calc(95cqw / var(--hero-ratio)), 110px);
+  }
+  html[lang='en'] .hero-copy h1 {
+    --hero-ratio: 9.56;
+  }
+  .hero-break {
+    display: none;
   }
   .hero-lead {
     max-width: 60ch;
@@ -51,7 +61,12 @@
   .dialog-heading .icon-button {
     flex-shrink: 0;
   }
-  .settings-select-content {
+  .select-content--sm .select-item {
+    min-height: 40px;
+    padding-block: 8px;
+    font-size: 12px;
+  }
+  .select-content {
     max-height: min(var(--radix-select-content-available-height), 50dvh);
     overflow-y: auto;
   }
@@ -140,7 +155,7 @@
     min-height: 44px;
     flex-wrap: wrap;
   }
-  .demo-settings select {
+  .demo-settings .select-trigger {
     min-height: 44px;
     font-size: 13px;
   }
@@ -186,15 +201,14 @@
     min-height: 48px;
   }
   .inline-search input,
-  .search-field input,
-  select {
+  .search-field input {
     font-size: 16px;
   }
   .mobile-lesson-picker {
     font-size: 12px;
   }
-  .mobile-lesson-picker > select,
-  .playground-example-picker > select {
+  .mobile-lesson-picker > .select-trigger,
+  .playground-example-picker > .select-trigger {
     min-height: 48px;
     font-size: 16px;
   }
@@ -318,7 +332,7 @@
     font-size: 13px;
     line-height: 1.75;
   }
-  .compact-select {
+  .select-trigger {
     min-height: 44px;
     font-size: 14px;
   }
@@ -350,7 +364,7 @@
     min-width: 0;
     font-size: 14px;
   }
-  .concept-study .concept-settings select {
+  .concept-study .concept-settings .select-trigger {
     width: 100%;
     min-height: 44px;
     font-size: 16px;
@@ -431,7 +445,7 @@
   .motion-lab.motion-lab .experiment-controls output {
     font-size: 12px;
   }
-  .motion-lab.motion-lab .experiment-controls select {
+  .motion-lab.motion-lab .experiment-controls .select-trigger {
     font-size: 16px;
     min-height: 44px;
     flex: 1;
