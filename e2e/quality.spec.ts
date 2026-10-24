@@ -239,3 +239,21 @@ test('dialog and inline error accessibility, with representative screenshots', a
     style: '.site-header,.mobile-nav{visibility:hidden}',
   })
 })
+
+test('dropdowns work from the keyboard and inside the settings dialog', async ({ page }) => {
+  await page.goto('/playground')
+  const picker = page.getByRole('combobox', { name: 'MULAI DARI SEBUAH CONTOH', exact: true })
+  await picker.focus()
+  await page.keyboard.press('Enter')
+  await expect(page.getByRole('listbox')).toBeVisible()
+  await page.keyboard.press('ArrowDown')
+  await page.keyboard.press('Enter')
+  await expect(page.getByRole('listbox')).toHaveCount(0)
+  await expect(picker).toBeFocused()
+  await expect(page).not.toHaveURL(/example=to$/)
+
+  await page.getByRole('button', { name: 'Pengaturan belajar', exact: true }).click()
+  await page.getByRole('combobox', { name: 'Bahasa materi', exact: true }).click()
+  await page.getByRole('option', { name: 'English', exact: true }).click()
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en')
+})

@@ -145,7 +145,7 @@
 .concept-settings label:last-child {
   grid-column: 1/-1;
 }
-.concept-settings select {
+.concept-settings .select-trigger {
   min-height: 40px;
   max-width: 100%;
   font-size: 12px;

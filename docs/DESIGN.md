@@ -22,6 +22,7 @@ The result should feel practical, direct, and slightly experimental. Avoid ornam
 - **Lab panels:** distinguish source, preview, playback controls, timeline feedback, challenge, and diagnostics through layout and labels, not color alone.
 - **Search and settings dialogs:** expose clear focus, an obvious close path, and restored focus after dismissal.
 - **Progress and challenge states:** communicate what is complete, what is next, and how to continue without implying that a learner is locked out.
+- **Dropdowns:** use `SelectField` (`src/components/SelectField.tsx`, built on Radix Select) instead of a native `<select>`. Use `size="sm"` when the trigger itself is compact, such as the inline demo and lab controls, so the option list stays proportionate. The list renders in place rather than in a portal so it also works inside modal dialogs. Give every dropdown an `aria-label`, since the Radix trigger is a button.
 - **Error feedback:** keep it near the relevant editor line when a reliable source position exists. Pair technical details with plain-language recovery guidance.
 
 Build on components and patterns already in `src/components/` and `src/features/lab/`; a visually similar custom control is usually a maintenance cost.

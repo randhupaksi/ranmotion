@@ -293,7 +293,7 @@
   color: var(--primary);
   font: 8px var(--mono);
 }
-.experiment-controls select {
+.experiment-controls .select-trigger {
   padding: 6px 8px;
   font: 9px var(--mono);
 }
@@ -603,7 +603,7 @@
   font-size: 10px;
 }
 .playground-page .experiment-controls output,
-.playground-page .experiment-controls select {
+.playground-page .experiment-controls .select-trigger {
   font-size: 9px;
 }
 .playground-page .experiment-controls input[type='range'] {
@@ -818,8 +818,8 @@
     grid-column: 1/-1;
     flex-wrap: nowrap;
   }
-  .experiment-controls select,
-  .playground-page .experiment-controls select {
+  .experiment-controls .select-trigger,
+  .playground-page .experiment-controls .select-trigger {
     padding: 6px 7px;
     font-size: 8px;
   }
@@ -1054,7 +1054,7 @@
   font-size: 12px;
 }
 .motion-lab .experiment-controls output,
-.motion-lab .experiment-controls select {
+.motion-lab .experiment-controls .select-trigger {
   font-size: 11px;
 }
 .motion-lab .lab-actionbar .button {
@@ -1095,7 +1095,7 @@
     min-width: 48px;
     font-size: 11px;
   }
-  .motion-lab .experiment-controls select {
+  .motion-lab .experiment-controls .select-trigger {
     min-width: 0;
     max-width: 100%;
   }
