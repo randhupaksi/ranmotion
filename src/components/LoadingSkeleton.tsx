@@ -119,6 +119,7 @@ function HomeSkeleton() {
           <Line width="205px" size="eyebrow" />
           <Line width="min(500px, 73vw)" size="title" />
           <Line width="min(365px, 58vw)" size="title" />
+          <Line width="min(300px, 52vw)" size="title" />
           <div className="rm-skeleton__hero-lead">
             <Lines count={3} />
           </div>

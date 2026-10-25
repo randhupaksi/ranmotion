@@ -19,17 +19,6 @@
   .hero-copy {
     container-type: inline-size;
   }
-  .hero-copy h1 {
-    --hero-ratio: 6.91;
-    max-width: none;
-    font-size: clamp(36px, calc(95cqw / var(--hero-ratio)), 110px);
-  }
-  html[lang='en'] .hero-copy h1 {
-    --hero-ratio: 9.56;
-  }
-  .hero-break {
-    display: none;
-  }
   .hero-lead {
     max-width: 60ch;
     font-size: 14px;

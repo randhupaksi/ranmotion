@@ -19,12 +19,16 @@ export default function HomePage() {
         <div className="hero-copy">
           <p className="eyebrow">
             <span className="tiny-line" />
-            {c('BELAJAR ANIMASI WEBSITE', 'LEARN ANIMATION BY EXPERIENCING IT')}
+            {c(
+              'BELAJAR MENGENAL DAN MEMBUAT ANIMASI WEBSITE',
+              'LEARN ANIMATION BY EXPERIENCING IT',
+            )}
           </p>
           <h1>
-            {c('Pahami', 'Understand')} <br className="hero-break" />
-            <span className="hero-word">
-              <em>{c('Animasi', 'Animation')}</em>
+            <span className="hero-line">{c('Pahami', 'Understand')}</span>{' '}
+            <br className="hero-break" />
+            <span className="hero-line">
+              <em>{c('Animasi Web', 'Web Animation')}</em>
               <span className="hero-period" aria-hidden="true">
                 ✳
               </span>
