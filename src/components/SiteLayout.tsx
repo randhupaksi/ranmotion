@@ -303,6 +303,11 @@ export default function SiteLayout() {
         </div>
         <p className="footer-note">
           © {new Date().getFullYear()} RanMotion by Randhu. All rights reserved.
+          <br />
+          {c(
+            'RanMotion adalah proyek belajar independen, tidak berafiliasi dengan GSAP atau Webflow.',
+            'RanMotion is an independent learning project, not affiliated with GSAP or Webflow.',
+          )}
         </p>
       </footer>
       <nav className="mobile-nav" aria-label={c('Navigasi mobile', 'Mobile navigation')}>

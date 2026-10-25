@@ -2,6 +2,12 @@ import { test, expect } from '@playwright/test'
 import type { Page } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
 
+// The branded loader stays up for at least two seconds, then fades out. Axe reads its text through
+// the half-transparent overlay as low contrast, so accessibility scans wait until it has left.
+async function loaderGone(page: Page) {
+  await expect(page.locator('#initial-loader')).toHaveCount(0, { timeout: 15_000 })
+}
+
 // Replace the whole editor document and confirm CodeMirror holds exactly this text before the
 // test runs it. A bare fill() can race the lazy editor and leave stale lines on a slow runner.
 async function setEditorCode(page: Page, code: string) {
@@ -160,6 +166,7 @@ for (const width of [1440, 390]) {
       await page.emulateMedia({ reducedMotion: 'reduce' })
       await page.goto(path)
       await expect(page.locator('h1')).toBeVisible()
+      await loaderGone(page)
       if (path === '/learn/to' || path === '/playground' || path === '/challenges/to')
         await expect(page.locator('.cm-content')).toBeVisible()
       if (path.includes('foundations') || path.includes('blueprint'))
@@ -194,6 +201,7 @@ test('dialog and inline error accessibility, with representative screenshots', a
   await page.setViewportSize({ width: 1440, height: 1000 })
   await page.goto('/learn/gsap-foundations')
   await expect(page.locator('.concept-study')).toBeVisible()
+  await loaderGone(page)
   await page.screenshot({ path: '.artifacts/foundations-desktop.png', fullPage: true })
   await page.getByRole('button', { name: 'Cari pelajaran ⌘ K, atau Ctrl K', exact: true }).click()
   const dialog = await new AxeBuilder({ page })
@@ -214,9 +222,8 @@ test('dialog and inline error accessibility, with representative screenshots', a
   ).toBeFocused()
   await page.keyboard.press('Escape')
   await page.goto('/playground')
-  await page
-    .locator('.cm-content')
-    .fill('const distance = 120;\ngsap.to(".box", { x: unknownDistance });')
+  await loaderGone(page)
+  await setEditorCode(page, 'const distance = 120;\ngsap.to(".box", { x: unknownDistance });')
   await page.getByRole('button', { name: 'Jalankan kode', exact: true }).click()
   await expect(page.getByRole('alert')).toBeVisible()
   const error = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze()
