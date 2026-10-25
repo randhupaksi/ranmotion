@@ -41,6 +41,18 @@
         pointer-events: none;
         opacity: 0;
       }
+      /* The fixed loader cannot cover the page scrollbar. Paint it invisible while the loader is up,
+         but keep its width so the page does not shift when the loader leaves. */
+      html:has(#initial-loader:not(.is-ready)) {
+        scrollbar-color: transparent #071411;
+      }
+      html:has(#initial-loader:not(.is-ready))::-webkit-scrollbar-track {
+        background: #071411;
+      }
+      html:has(#initial-loader:not(.is-ready))::-webkit-scrollbar-thumb {
+        border-color: #071411;
+        background: #071411;
+      }
       .boot-loader__content {
         width: min(100%, 480px);
         text-align: center;
@@ -76,8 +88,19 @@
         border: 1px dashed #a5ed08;
         opacity: 0.6;
       }
-      .boot-loader__mark {
+      /* The lane is as wide as the mark's travel (58% of the stage), so translating it by 100% of its
+         own width moves the mark with a plain transform, which runs on the compositor. */
+      .boot-loader__lane {
+        position: absolute;
+        top: 13px;
         left: 12%;
+        width: 58%;
+        height: 44px;
+        animation: boot-loader-travel 2s cubic-bezier(0.5, 0, 0.25, 1) forwards;
+      }
+      .boot-loader__mark {
+        top: 0;
+        left: 0;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -85,7 +108,6 @@
         border: 1px solid #a5ed08;
         border-radius: 3px;
         background: #a5ed08;
-        animation: boot-loader-travel 2s cubic-bezier(0.5, 0, 0.25, 1) forwards;
       }
       .boot-loader__mark i {
         width: 5px;
@@ -134,7 +156,7 @@
       }
       @keyframes boot-loader-travel {
         to {
-          left: 70%;
+          transform: translateX(100%);
         }
       }
       @keyframes boot-loader-progress {
@@ -147,7 +169,7 @@
       }
       @media (prefers-reduced-motion: reduce) {
         .boot-loader,
-        .boot-loader__mark,
+        .boot-loader__lane,
         .boot-loader__progress::before {
           animation: none;
           transition: none;
@@ -163,7 +185,9 @@
       <div class="boot-loader__content">
         <div class="boot-loader__stage" aria-hidden="true">
           <span class="boot-loader__target"></span>
-          <span class="boot-loader__mark"><i></i><i></i><i></i></span>
+          <span class="boot-loader__lane"
+            ><span class="boot-loader__mark"><i></i><i></i><i></i></span
+          ></span>
         </div>
         <p class="boot-loader__kicker">RANMOTION / MOTION STUDY</p>
         <p class="boot-loader__title">Menyiapkan ruang animasi</p>

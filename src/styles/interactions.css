@@ -214,6 +214,29 @@ label:has(input[type='radio']) {
   box-shadow: 0 0 0 3px var(--interaction-wash-strong);
 }
 
+/* Search field in the search dialog: hover previews the focus color, focus adds the soft ring. */
+.search-field {
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease;
+}
+.search-field > svg {
+  transition: color 160ms ease;
+}
+.search-field:focus-within {
+  box-shadow: 0 0 0 3px var(--interaction-wash-strong);
+}
+@media (hover: hover) {
+  .search-field:hover:not(:focus-within) {
+    border-color: var(--primary);
+    background-color: var(--raised);
+  }
+  .search-field:hover > svg {
+    color: var(--primary);
+  }
+}
+
 .select-item[data-state='checked'] {
   background: var(--interaction-wash);
   color: var(--ink);

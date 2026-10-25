@@ -1,4 +1,6 @@
 :root {
+  /* No browser-default blue flash on tapped or clicked areas; focus rings use the theme instead. */
+  -webkit-tap-highlight-color: transparent;
   font-family: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
