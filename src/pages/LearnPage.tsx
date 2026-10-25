@@ -25,9 +25,6 @@ export default function LearnPage() {
   const [query, setQuery] = useState('')
   const { hash } = useLocation()
   const next = nextRecommended(completed, lastLesson)
-  // Open by curriculum order, not by visit history, so a stray last-visited lesson cannot
-  // keep a late module expanded on every visit.
-  const firstUnfinished = lessons.find(l => !completed.includes(l.id)) ?? lessons[0]
   const done = lessons.filter(l => completed.includes(l.id)).length
   useEffect(() => {
     document.title = `${c('Jalur belajar', 'Learning path')} - RanMotion`
@@ -150,12 +147,7 @@ export default function LearnPage() {
               className="curriculum-module"
               key={`${m.number}-${filter}-${query ? 'search' : 'normal'}`}
               id={`module-${m.number}`}
-              open={
-                Boolean(query) ||
-                filter !== 'all' ||
-                m.number === firstUnfinished.module ||
-                hash === `#module-${m.number}`
-              }
+              open={Boolean(query) || filter !== 'all' || hash === `#module-${m.number}`}
             >
               <summary>
                 <span className="module-number">{String(m.number + 1).padStart(2, '0')}</span>

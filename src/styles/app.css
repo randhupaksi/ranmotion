@@ -984,12 +984,19 @@ progress::-moz-progress-bar {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.select-trigger > svg,
-.select-trigger [data-radix-select-icon] {
+/* Points down when closed and turns up while open. Inline-flex so the span can rotate. */
+.select-chevron {
+  display: inline-flex;
+  flex-shrink: 0;
   color: var(--subtle);
-  transition: transform 0.16s;
+  transition:
+    transform 0.2s cubic-bezier(0.2, 0.7, 0.2, 1),
+    color 0.16s ease;
 }
-.select-trigger[data-state='open'] [data-radix-select-icon] {
+.select-trigger:hover .select-chevron {
+  color: var(--ink);
+}
+.select-trigger[data-state='open'] .select-chevron {
   color: var(--primary);
   transform: rotate(180deg);
 }
@@ -1612,6 +1619,7 @@ progress::-moz-progress-bar {
   gap: 32px;
   margin-bottom: 100px;
   padding: 36px 40px;
+  border-radius: 8px;
   background: var(--primary);
   color: var(--on-primary);
 }

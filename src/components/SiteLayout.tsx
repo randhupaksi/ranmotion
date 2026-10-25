@@ -95,7 +95,6 @@ export default function SiteLayout() {
   const progressPercent = Math.round((doneCount / lessons.length) * 100)
   const allLessonsDone = doneCount === lessons.length
   const nextLesson = nextRecommended(completed, lastLesson)
-  const nextLessonIndex = lessons.findIndex(lesson => lesson.id === nextLesson.id)
   const nextLessonTitle = text(nextLesson.title)
   return (
     <>
@@ -281,10 +280,7 @@ export default function SiteLayout() {
               <ArrowRight size={16} />
             </Link>
             <span className="footer-next__index" aria-hidden="true">
-              {String(allLessonsDone ? lessons.length : Math.max(nextLessonIndex + 1, 1)).padStart(
-                2,
-                '0',
-              )}
+              R
             </span>
           </section>
           <nav className="footer-nav" aria-label={c('Jelajahi RanMotion', 'Explore RanMotion')}>
