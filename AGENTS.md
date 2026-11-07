@@ -51,6 +51,12 @@ Route-level code is intentionally lazy outside the home page. Do not eagerly imp
 - User code is an educational experiment surface, not a hardened execution service. Do not claim stronger isolation than the implementation provides.
 - The app has no account, backend, analytics, or code-upload service. Do not add network collection, telemetry, or remote code loading without explicit product approval and documentation updates.
 
+## Licensing boundaries
+
+- RanMotion's own code and content are source-available under [LICENSE](LICENSE), not open source. Do not describe the project as open source, replace the license, or change the copyright wording as incidental cleanup.
+- GSAP is used under the Standard "No Charge" GSAP License, not MIT. Keep its notices intact: `vite.config.ts` preserves `@license` comments and emits `THIRD_PARTY_NOTICES.txt`. Do not use GSAP in a no-code visual animation builder.
+- Read the current GSAP license before upgrading GSAP. Avoid GPL or AGPL dependencies in the shipped bundle. See [docs/LICENSING.md](docs/LICENSING.md).
+
 ## Before finishing a change
 
 1. Check the affected route at desktop and narrow widths, including keyboard interaction when controls changed.

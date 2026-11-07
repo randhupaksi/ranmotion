@@ -10,6 +10,7 @@ Use this map to find the right source before changing the application. [README.m
 | [Design system](DESIGN.md)          | Visual language, interface patterns, accessibility, and responsive behavior         |
 | [Runtime safety](RUNTIME_SAFETY.md) | Preview iframe boundary, message validation, privacy model, and threat limits       |
 | [Testing](TESTING.md)               | Verification layers, commands, coverage intent, and browser-test workflow           |
+| [Licensing](LICENSING.md)           | Project license, GSAP license evidence, third-party notices, and release checklist  |
 | [Quality audit](quality-audit.md)   | Historical UX/accessibility findings and recorded evidence                          |
 
 The quality audit is a point-in-time record. Use the current source and test suite to establish the present state.

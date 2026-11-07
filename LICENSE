@@ -1,0 +1,120 @@
+RanMotion Source-Available License, Version 1.0
+
+Copyright (c) 2026 Randhu Paksi. All rights reserved.
+
+PLAIN-LANGUAGE SUMMARY (not legally binding; the numbered terms below control)
+
+  English: RanMotion is public so that you can read it and learn from it. This
+  is NOT an open-source license. You may clone it, run it on your own computer,
+  and change it there for personal, educational, or evaluation purposes. You
+  may NOT publish, host, deploy, redistribute, or sell it (or a modified
+  version), use it commercially, or present it as your own, unless the author
+  gives you written permission.
+
+  Bahasa Indonesia: RanMotion dibuka agar bisa dibaca dan dipelajari. Ini
+  BUKAN lisensi open source. Kamu boleh meng-clone, menjalankannya di
+  komputermu sendiri, dan mengubahnya di sana untuk keperluan pribadi,
+  pendidikan, atau penilaian. Kamu TIDAK boleh mempublikasikan, men-host,
+  men-deploy, mendistribusikan ulang, atau menjualnya (termasuk versi yang
+  sudah diubah), memakainya secara komersial, atau mengaku sebagai karyamu,
+  kecuali penulis memberi izin tertulis. Jika ada perbedaan, teks bahasa
+  Inggris yang berlaku.
+
+1. THE WORK
+
+   "The Work" means everything the author created and published in this
+   repository: source code, curriculum text and examples (Indonesian and
+   English), visual design, documentation, tests, configuration, and the name
+   and branding "RanMotion". It also includes contributions accepted into the
+   repository (see section 5). It does not include Third-Party Components (see
+   section 6).
+
+   "You" means any person or organization using the Work.
+
+2. WHAT YOU MAY DO
+
+   For personal, educational, or evaluation purposes, and not for commercial
+   purposes, you may:
+
+   a. view and read the Work;
+   b. clone or download it to your own devices;
+   c. run it, and modify it, on your own devices to study how it works, to
+      learn, or to evaluate the author's skills (for example during hiring or
+      portfolio review);
+   d. fork it on GitHub, as GitHub's Terms of Service allow, to study it or to
+      propose a contribution by pull request. A fork stays under this license;
+   e. quote short excerpts with clear credit to the author and a link to this
+      repository;
+   f. visit and use the version of RanMotion that the author hosts, as
+      intended.
+
+3. WHAT YOU MAY NOT DO WITHOUT PRIOR WRITTEN PERMISSION
+
+   a. Publish, host, deploy, or otherwise make available to others the Work or
+      any modified or derived version of it: on a website, web app, hosting
+      platform, package registry, mirror, or any repository other than a
+      GitHub fork allowed by section 2(d). This includes deploying an
+      unmodified or lightly modified copy under another name, domain, or
+      account.
+   b. Redistribute, sell, rent, lease, or sublicense the Work, or offer it to
+      others as a service.
+   c. Use the Work commercially, including in paid courses, products, client
+      work, or services.
+   d. Present the Work, or any part of it, as your own; remove or alter
+      copyright, license, or attribution notices; or use the name or branding
+      "RanMotion" for another product or service. No trademark license is
+      granted.
+
+   To ask for permission, contact the author through the GitHub profile
+   "randhupaksi". Permission counts only if the author gives it in writing.
+
+4. TERMINATION
+
+   If you breach this license, your rights under it end automatically. You
+   must then delete all copies of the Work that you hold and stop making it
+   available. Sections 3, 5, 6, 7, and 8 survive termination.
+
+5. CONTRIBUTIONS
+
+   If you submit a contribution to the Work (for example a pull request, a
+   patch, or suggested text), you confirm that you have the right to submit
+   it, and you grant the author a perpetual, worldwide, non-exclusive,
+   royalty-free, irrevocable license to use, reproduce, modify, publish,
+   distribute, sublicense, and relicense your contribution as part of the
+   Work, under this license or any other license the author chooses. You keep
+   the copyright in your contribution. The author may decline any
+   contribution.
+
+6. THIRD-PARTY COMPONENTS
+
+   a. The Work depends on third-party software, such as GSAP, React,
+      CodeMirror, Radix UI, Tailwind CSS, Zod, lucide-react, and the Geist
+      fonts. These components are not part of the Work and are not stored in
+      this repository; they are installed from their own packages and built
+      into the website.
+   b. Each component remains under its own license. This license neither
+      grants nor restricts rights under those licenses. The licenses of the
+      components bundled into the built website are listed in the file
+      THIRD_PARTY_NOTICES.txt, which the build generates and the website
+      serves from its root.
+   c. GSAP (including ScrollTrigger and MotionPathPlugin) is copyright
+      GreenSock and is used under the Standard "No Charge" GSAP License
+      (https://gsap.com/standard-license), which is not an open-source license
+      and is not MIT. Anyone who uses GSAP, including in a copy of the Work
+      that this license allows, must comply with that license themselves.
+   d. RanMotion is an independent project. It is not affiliated with,
+      endorsed by, or sponsored by GSAP, GreenSock, or Webflow.
+
+7. NO WARRANTY; LIMITATION OF LIABILITY
+
+   THE WORK IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+   PARTICULAR PURPOSE, AND NON-INFRINGEMENT. IN NO EVENT IS THE AUTHOR LIABLE
+   FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY ARISING FROM, OUT OF, OR IN
+   CONNECTION WITH THE WORK OR ITS USE.
+
+8. GENERAL
+
+   If a provision of this license is found unenforceable, the rest remains in
+   effect. The author's failure to enforce a provision is not a waiver of it.
+   Everything not expressly allowed above is reserved by the author.

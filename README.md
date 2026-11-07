@@ -6,7 +6,7 @@ RanMotion is an independent learning project in the Rancode family. It is not af
 
 ## Documentation
 
-The contributor and architecture documentation is organized in [docs/INDEX.md](docs/INDEX.md). It includes the learning model, design system, preview-runtime safety boundary, testing workflow, and the historical [UX and accessibility audit](docs/quality-audit.md).
+The contributor and architecture documentation is organized in [docs/INDEX.md](docs/INDEX.md). It includes the learning model, design system, preview-runtime safety boundary, testing workflow, licensing and third-party notices, and the historical [UX and accessibility audit](docs/quality-audit.md).
 
 ## Run locally
 
@@ -110,8 +110,22 @@ GitHub Actions runs the quality workflow in [`.github/workflows/ci.yml`](.github
 
 For continuous deployment, connect `randhupaksi/ranmotion` to a Vercel project through Vercel Git Integration and set `main` as the production branch. Vercel can then create preview deployments for pull requests and deploy production from the configured production branch. This provider connection and branch setting live in the Vercel dashboard; repository files cannot create them. To ensure production promotion waits for CI, enable Vercel Deployment Checks or require the CI status before merging to `main`. See [Vercel Git deployments](https://vercel.com/docs/git) and [Vercel Deployment Checks](https://vercel.com/docs/deployment-checks).
 
+## License
+
+RanMotion is **source-available, not open source**. The code is public so you can read it, clone it, run it locally, modify it locally, and learn from it. You may **not** publish, host, deploy, redistribute, or sell it (or a modified version), use it commercially, or present it as your own without written permission. The full terms are in [LICENSE](LICENSE).
+
+Ringkasnya (ID): boleh dilihat, di-clone, dijalankan, dan dipelajari secara pribadi; tidak boleh dipublikasikan ulang, di-deploy ulang, dijual, dipakai secara komersial, atau diakui sebagai karya sendiri tanpa izin tertulis.
+
+This license covers only the project's own code, curriculum content, design, and name. Third-party dependencies, including GSAP, keep their own licenses. Contributions are welcome by pull request; the license explains what you grant the author when you submit one.
+
+[docs/LICENSING.md](docs/LICENSING.md) records the license decisions, the GSAP license evidence, and the checklist to follow when dependencies change.
+
 ## References and third-party code
 
 Lesson explanations and examples are original to RanMotion. API behavior follows the [GSAP documentation](https://gsap.com/docs/v3/), [timeline documentation](https://gsap.com/docs/v3/GSAP/Timeline/), [ScrollTrigger documentation](https://gsap.com/docs/v3/Plugins/ScrollTrigger/), [MotionPath documentation](https://gsap.com/docs/v3/Plugins/MotionPathPlugin/), and [matchMedia documentation](<https://gsap.com/docs/v3/GSAP/gsap.matchMedia()/>). The editor follows [CodeMirror's basic setup](https://codemirror.net/examples/basic/).
 
-GSAP's bundled copyright and license notices are preserved in the iframe source. GSAP is subject to its [standard license](https://gsap.com/standard-license); it should not be described as MIT-licensed. Dependencies retain their own licenses. MotionPath and introductory SVG lessons are included. Flip, DrawSVGPlugin, and framework-specific integration remain beyond the current curriculum; the SVG stroke exercise uses native stroke properties.
+**GSAP.** GSAP 3.15.0 (core, ScrollTrigger, and MotionPathPlugin) is copyright GreenSock and is used under the [Standard "No Charge" GSAP License](https://gsap.com/standard-license), effective April 30, 2025. It is not MIT-licensed and must not be described that way. No GSAP file is stored in this repository: npm installs it, and the build bundles it into the site and into the preview iframe. The license allows free use, including commercial use, on any website or web application. It forbids removing GSAP's proprietary notices or branding, and forbids using GSAP in no-code visual animation tools that compete with Webflow. RanMotion keeps GSAP's notices (`vite.config.ts` preserves `@license` comments, and the preview embeds GSAP's own minified files unchanged apart from escaping `</script`) and teaches by writing code, not through a visual builder.
+
+**Other dependencies.** Every build writes `THIRD_PARTY_NOTICES.txt`, which lists the license of each dependency bundled into the site. The deployed site serves it at `/THIRD_PARTY_NOTICES.txt` and the footer links to it. The file exists only in built output, so it is missing under `npm run dev`. Dependencies retain their own licenses.
+
+MotionPath and introductory SVG lessons are included. Flip, DrawSVGPlugin, and framework-specific integration remain beyond the current curriculum; the SVG stroke exercise uses native stroke properties.

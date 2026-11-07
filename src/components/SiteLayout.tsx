@@ -296,8 +296,21 @@ export default function SiteLayout() {
             <a href="https://gsap.com/docs/v3/" target="_blank" rel="noreferrer">
               {c('Dokumentasi GSAP', 'GSAP documentation')} <span aria-hidden="true">↗</span>
             </a>
+            <a href="https://gsap.com/standard-license" target="_blank" rel="noreferrer">
+              {c('Lisensi GSAP', 'GSAP license')} <span aria-hidden="true">↗</span>
+            </a>
             <a href="https://github.com/randhupaksi/ranmotion" target="_blank" rel="noreferrer">
               RanMotion GitHub <span aria-hidden="true">↗</span>
+            </a>
+            <a
+              href="https://github.com/randhupaksi/ranmotion/blob/main/LICENSE"
+              target="_blank"
+              rel="noreferrer"
+            >
+              {c('Lisensi RanMotion', 'RanMotion license')} <span aria-hidden="true">↗</span>
+            </a>
+            <a href="/THIRD_PARTY_NOTICES.txt" target="_blank" rel="noreferrer">
+              {c('Lisensi pihak ketiga', 'Third-party licenses')} <span aria-hidden="true">↗</span>
             </a>
           </div>
         </div>
