@@ -247,6 +247,8 @@ label:has(input[type='radio']) {
   .challenge-card,
   .entry-routes-list > a,
   .lesson-list a,
+  .sidebar-modules details > summary,
+  .sidebar-modules li a,
   .progress-modules > a
 ):active {
   background: var(--interaction-press);
